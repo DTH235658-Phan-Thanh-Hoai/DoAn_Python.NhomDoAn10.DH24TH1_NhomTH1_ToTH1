@@ -20,6 +20,8 @@ class ThongKeVaBaoCao(tk.Frame):
         # === CHUỖI KẾT NỐI  ====
         self.conn = conn
 
+        self.controller = controller
+
         # === TITLE ===
         lbl_title = tk.Label(self, text="THỐNG KÊ & BÁO CÁO", font=("Segoe UI", 16, "bold"), bg="white", fg="#0D47A1")
         lbl_title.pack()
@@ -28,8 +30,13 @@ class ThongKeVaBaoCao(tk.Frame):
         tab_control = ttk.Notebook(self)
         tab_control.pack(fill="both", expand=True, padx=20, pady=10)
 
-        tab_doanhthu = tkdt.tabThongKeDoanhThu(tab_control, conn)
-        tab_sanpham = bcsp.tabBaoCaoSanPham(tab_control, conn)
+        # 2. KHỞI TẠO VÀ LƯU THAM CHIẾU VÀO self.tab_doanhthu_ref
+        self.tab_doanhthu = tkdt.tabThongKeDoanhThu(tab_control, conn)
+        self.tab_baocao  = bcsp.tabBaoCaoSanPham(tab_control, conn)
 
-        tab_control.add(tab_doanhthu, text="💹 Thống kê Doanh thu")
-        tab_control.add(tab_sanpham, text="📊 Báo cáo Sản phẩm")
+        """
+        tab_doanhthu = tkdt.tabThongKeDoanhThu(tab_control, conn)
+        tab_sanpham = bcsp.tabBaoCaoSanPham(tab_control, conn) """
+
+        tab_control.add(self.tab_doanhthu, text="💹 Thống kê Doanh thu")
+        tab_control.add(self.tab_baocao , text="📊 Báo cáo Sản phẩm")

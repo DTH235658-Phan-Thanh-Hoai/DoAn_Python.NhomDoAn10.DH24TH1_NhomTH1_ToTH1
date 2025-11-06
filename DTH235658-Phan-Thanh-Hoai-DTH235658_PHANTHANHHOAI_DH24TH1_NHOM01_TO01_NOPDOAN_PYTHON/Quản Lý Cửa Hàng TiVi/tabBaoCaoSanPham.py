@@ -24,14 +24,14 @@ class tabBaoCaoSanPham(tk.Frame):
         tk.Label(
             frame_filter, text="Chọn mã tivi:", bg="white", font=("Segoe UI", 11)
         ).grid(row=0, column=0, padx=5, pady=5)
-        self.cbo_mativi = ttk.Combobox(frame_filter, width=38, state="readonly")
+        self.cbo_mativi = ttk.Combobox(frame_filter, width=31, state="readonly")
         self.cbo_mativi.grid(row=0, column=1, padx=5, pady=5)
         self.cbo_mativi.bind("<<ComboboxSelected>>", self.on_mativi_selected)
 
         tk.Label(
             frame_filter, text="Chọn tên tivi:", bg="white", font=("Segoe UI", 11)
         ).grid(row=0, column=2, padx=5, pady=5)
-        self.cbo_tentivi = ttk.Combobox(frame_filter, width=38, state="readonly")
+        self.cbo_tentivi = ttk.Combobox(frame_filter, width=31, state="readonly")
         self.cbo_tentivi.grid(row=0, column=3, padx=5, pady=5)
         self.cbo_tentivi.bind("<<ComboboxSelected>>", self.on_tentivi_selected)
 
@@ -44,53 +44,54 @@ class tabBaoCaoSanPham(tk.Frame):
             bd=0,
             padx=15,
             pady=5,
-            command=self.xem_baocao,
+            command=self.xem_baocao
         ).grid(row=0, column=4, padx=10)
+
+        tk.Button(
+            frame_filter,
+            text="Hủy",
+            bg="#E53935",
+            fg="white",
+            font=("Segoe UI", 11, "bold"),
+            bd=0,
+            padx=15,
+            pady=5,
+            command=self.huy_xem_bao_cao
+        ).grid(row=0, column=5, padx=10)
 
         frame_table = tk.Frame(self, bg="white")
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
 
-        scroll_y = tk.Scrollbar(frame_table, orient="vertical")
-        scroll_x = tk.Scrollbar(frame_table, orient="horizontal")
+        columns = ("MaTivi", "TenTivi", "SoLuongBan", "TiLeBanChay", "DoanhThu", "LoiNhuan")
 
-        columns = (
-            "MaTivi",
-            "TenTivi",
-            "SoLuongBan",
-            "TiLeBanChay",
-            "DoanhThu",
-            "LoiNhuan",
-        )
+        # --- Tạo Scrollbar ---
+        scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
+        scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
 
-        self.trHienThi = ttk.Treeview(
-            frame_table,
-            show="headings",
-            columns=columns,
-            height=12,
-            yscrollcommand=scroll_y.set,
-            xscrollcommand=scroll_x.set,
-        )
+        self.trHienThi = ttk.Treeview( frame_table, show="headings",  columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
 
+        # --- Gắn Scrollbar ---
         scroll_y.config(command=self.trHienThi.yview)
         scroll_x.config(command=self.trHienThi.xview)
 
+        # --- Bố trí Scrollbar ---
         scroll_y.pack(side="right", fill="y")
         scroll_x.pack(side="bottom", fill="x")
         self.trHienThi.pack(fill="both", expand=True)
 
-        self.trHienThi.column("MaTivi", width=100, anchor="center")
-        self.trHienThi.column("TenTivi", width=250, anchor="w")
-        self.trHienThi.column("SoLuongBan", width=120, anchor="center")
-        self.trHienThi.column("TiLeBanChay", width=120, anchor="center")
-        self.trHienThi.column("DoanhThu", width=150, anchor="e")
-        self.trHienThi.column("LoiNhuan", width=150, anchor="e")
+        self.trHienThi.column("MaTivi", width=100)
+        self.trHienThi.column("TenTivi", width=250)
+        self.trHienThi.column("SoLuongBan", width=120)
+        self.trHienThi.column("TiLeBanChay", width=120)
+        self.trHienThi.column("DoanhThu", width=150)
+        self.trHienThi.column("LoiNhuan", width=150)
 
-        self.trHienThi.heading("MaTivi", text="Mã Tivi")
-        self.trHienThi.heading("TenTivi", text="Tên Tivi")
-        self.trHienThi.heading("SoLuongBan", text="SL Bán")
-        self.trHienThi.heading("TiLeBanChay", text="Tỉ Lệ (%)")
-        self.trHienThi.heading("DoanhThu", text="Doanh Thu (VNĐ)")
-        self.trHienThi.heading("LoiNhuan", text="Lợi Nhuận (VNĐ)")
+        self.trHienThi.heading("MaTivi", text="Mã Tivi", anchor="center")
+        self.trHienThi.heading("TenTivi", text="Tên Tivi", anchor="center")
+        self.trHienThi.heading("SoLuongBan", text="SL Bán", anchor="center")
+        self.trHienThi.heading("TiLeBanChay", text="Tỉ Lệ (%)", anchor="center")
+        self.trHienThi.heading("DoanhThu", text="Doanh Thu (VNĐ)", anchor="center")
+        self.trHienThi.heading("LoiNhuan", text="Lợi Nhuận (VNĐ)", anchor="center")
 
         style = ttk.Style()
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
@@ -273,3 +274,12 @@ class tabBaoCaoSanPham(tk.Frame):
 
         except Exception as e:
             messagebox.showerror("Lỗi", f"Không thể xem báo cáo: {str(e)}")
+
+    def huy_xem_bao_cao(self):
+        self.load_baocao_all()
+
+        self.cbo_mativi.delete(0, tk.END)
+        self.cbo_mativi.set("-- Tất cả --")
+
+        self.cbo_tentivi.delete(0, tk.END)
+        self.cbo_tentivi.set("-- Tất cả --")

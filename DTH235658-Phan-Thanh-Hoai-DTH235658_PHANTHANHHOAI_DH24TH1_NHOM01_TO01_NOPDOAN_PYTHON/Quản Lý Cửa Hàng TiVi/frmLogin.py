@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+import threading
 import ctypes
 import pyodbc
 import App
@@ -90,6 +91,8 @@ class Login(tk.Tk):
 
         self.txt_user = ttk.Entry(user_frame, width=30, font=("Segoe UI", 11))
         self.txt_user.pack(side="left")
+        self.txt_user.focus()
+        self.txt_user.bind("<Return>", self.dangnhap)
 
         # --- Mật khẩu ---
         pass_frame = tk.Frame(right_frame, bg="white")
@@ -99,9 +102,10 @@ class Login(tk.Tk):
         ).pack(side="left", padx=5)
 
         self.txt_password = ttk.Entry(
-            pass_frame, width=27, font=("Segoe UI", 11), show="*"
+            pass_frame, width=27, font=("Segoe UI", 11), show="●"
         )
         self.txt_password.pack(side="left")
+        self.txt_password.bind("<Return>", self.dangnhap)
 
         # Nút hiện/ẩn mật khẩu
         self.show_pass = False
@@ -171,7 +175,7 @@ class Login(tk.Tk):
             self.eye_btn.config(text="🚫")
         self.show_pass = not self.show_pass
 
-    def dangnhap(self):
+    def dangnhap(self, event=None):
         user = self.txt_user.get().strip()
         pw = self.txt_password.get().strip()
 
@@ -190,7 +194,9 @@ class Login(tk.Tk):
         if row:
             self.mo_form(user)
         else:
-            self.lbl_error.config(text="Sai tài khoản hoặc mật khẩu!")
+            self.lbl_error.config(text="Sai tài khoản hoặc mật khẩu!") 
+    
+
 
     def mo_form(self, user):
         self.destroy()

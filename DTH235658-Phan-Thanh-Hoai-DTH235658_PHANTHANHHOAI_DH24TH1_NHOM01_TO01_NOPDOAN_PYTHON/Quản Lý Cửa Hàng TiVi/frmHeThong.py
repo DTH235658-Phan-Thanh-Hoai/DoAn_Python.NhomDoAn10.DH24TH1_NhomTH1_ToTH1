@@ -36,7 +36,7 @@ class HeThong(tk.Frame):
         tk.Label(
             self.frame_search, text="🔍 Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
         ).pack(side="left", padx=5)
-        self.txt_timkiem = tk.Entry(self.frame_search, font=("Segoe UI", 10), width=105)
+        self.txt_timkiem = tk.Entry(self.frame_search, font=("Segoe UI", 10), width=95)
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", self.timkiem)
         tk.Button(
@@ -54,7 +54,7 @@ class HeThong(tk.Frame):
             self.frame_search,
             text="Hủy",
             font=("Segoe UI", 10, "bold"),
-            bg="#1565C0",
+            bg="#E53935",
             fg="white",
             bd=0,
             padx=10,
@@ -157,21 +157,32 @@ class HeThong(tk.Frame):
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
 
         columns = ("TenDangNhap", "MatKhau")
-        self.trHienThi = ttk.Treeview(
-            frame_table, show="headings", height=12, columns=columns
-        )
 
-        style = ttk.Style()
-        style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
-        style.configure("Treeview", font=("Segoe UI", 10), rowheight=28)
+         # --- Tạo Scrollbar ---
+        scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
+        scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
 
-        self.trHienThi.heading("TenDangNhap", text="Tên đăng nhập", anchor="center")
-        self.trHienThi.heading("MatKhau", text="Mật khẩu", anchor="center")
+        self.trHienThi = ttk.Treeview( frame_table, show="headings",  columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+
+        # --- Gắn Scrollbar ---
+        scroll_y.config(command=self.trHienThi.yview)
+        scroll_x.config(command=self.trHienThi.xview)
+
+        # --- Bố trí Scrollbar ---
+        scroll_y.pack(side="right", fill="y")
+        scroll_x.pack(side="bottom", fill="x")
+        self.trHienThi.pack(fill="both", expand=True)
+
+
+        self.trHienThi.heading("TenDangNhap", text="Tên đăng nhập")
+        self.trHienThi.heading("MatKhau", text="Mật khẩu")
 
         self.trHienThi.column("TenDangNhap", width=400, anchor="center")
         self.trHienThi.column("MatKhau", width=400, anchor="center")
 
-        self.trHienThi.pack(fill="both", expand=True)
+        style = ttk.Style()
+        style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
+        style.configure("Treeview", font=("Segoe UI", 10), rowheight=28)
 
         self.trHienThi.bind("<<TreeviewSelect>>", self.chon_dong)
 

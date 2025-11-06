@@ -17,6 +17,7 @@ class tabBanHang(tk.Frame):
         self.dict_kh = {}
         self.dict_tivi = {}
 
+        # === LƯU THAM CHIẾU  ===
         self.tab_hoadon= tab_hoadon
 
         # === KHUNG 1 – THÔNG TIN HÓA ĐƠN ===

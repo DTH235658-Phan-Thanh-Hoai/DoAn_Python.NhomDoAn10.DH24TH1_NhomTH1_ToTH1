@@ -23,7 +23,7 @@ class tabHangSanXuat(tk.Frame):
             frame_search, text="🔍 Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
         ).pack(side="left", padx=5)
         self.txt_timkiem = tk.Entry(
-            frame_search, font=("Segoe UI", 10), width=65, bg="white"
+            frame_search, font=("Segoe UI", 10), width=55, bg="white"
         )
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", lambda: self.timkiem())
@@ -60,7 +60,7 @@ class tabHangSanXuat(tk.Frame):
             frame_search,
             text="Hủy",
             font=("Segoe UI", 10, "bold"),
-            bg="#1565C0",
+            bg="#E53935",
             fg="white",
             bd=0,
             padx=10,
@@ -171,33 +171,30 @@ class tabHangSanXuat(tk.Frame):
         frame_table = tk.Frame(self, bg="white")
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
 
+        columns=("MaHang", "TenHang", "QuocGia")
+
+        # --- Tạo Scrollbar ---
         scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
-        scroll_y.pack(side="right", fill="y")
-
         scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
-        scroll_x.pack(side="bottom", fill="x")
 
-        self.trHienThi = ttk.Treeview(
-            frame_table,
-            columns=("MaHang", "TenHang", "QuocGia"),
-            show="headings",
-            height=12,
-            yscrollcommand=scroll_y.set,
-            xscrollcommand=scroll_x.set,
-        )
+        self.trHienThi = ttk.Treeview( frame_table, show="headings",  columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
 
+        # --- Gắn Scrollbar ---
         scroll_y.config(command=self.trHienThi.yview)
         scroll_x.config(command=self.trHienThi.xview)
+
+        # --- Bố trí Scrollbar ---
+        scroll_y.pack(side="right", fill="y")
+        scroll_x.pack(side="bottom", fill="x")
+        self.trHienThi.pack(fill="both", expand=True)
 
         self.trHienThi.heading("MaHang", text="Mã Hãng")
         self.trHienThi.heading("TenHang", text="Tên Hãng")
         self.trHienThi.heading("QuocGia", text="Quốc Gia")
 
         self.trHienThi.column("MaHang", width=150, anchor="center")
-        self.trHienThi.column("TenHang", width=300, anchor="w")
-        self.trHienThi.column("QuocGia", width=200, anchor="w")
-
-        self.trHienThi.pack(fill="both", expand=True)
+        self.trHienThi.column("TenHang", width=300, anchor="center")
+        self.trHienThi.column("QuocGia", width=200, anchor="center")
 
         style = ttk.Style()
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))

@@ -6,7 +6,6 @@ import tabTivi as tv
 import tabHangSanXuat as hsx
 import tabNhaCungCap as ncc
 import tabBaoHanh as bh
-import tabNhapHang as nh
 
 # === BẢNG MÀU ===
 PRIMARY_COLOR = "#0D47A1"
@@ -43,11 +42,9 @@ class QuanLySanPham(tk.Frame):
         tab_hang = hsx.tabHangSanXuat(tab_control, conn)
         tab_nhacungcap = ncc.tabNhaCungCap(tab_control, conn)
         tab_bh = bh.tabBaoHanh(tab_control, conn)
-        tab_nhaphang = nh.tabNhapHang(tab_control, conn)
 
         # Thêm vào notebook
         tab_control.add(tab_tivi, text="📺 Tivi")
         tab_control.add(tab_hang, text="🏭 Hãng sản xuất")
         tab_control.add(tab_nhacungcap, text="🤝 Nhà cung cấp")
         tab_control.add(tab_bh, text="🧾 Bảo hành")
-        tab_control.add(tab_nhaphang, text="📦 Nhập hàng")

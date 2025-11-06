@@ -25,13 +25,13 @@ class tabThongKeDoanhThu(tk.Frame):
         tk.Label(frame_filter, text="Từ ngày:", bg="white", font=("Segoe UI", 10)).grid(
             row=0, column=0, padx=5, pady=5
         )
-        self.date_tungay = DateEntry(frame_filter, width=44, date_pattern="dd/mm/yyyy")
+        self.date_tungay = DateEntry(frame_filter, width=36, date_pattern="dd/mm/yyyy")
         self.date_tungay.grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(
             frame_filter, text="Đến ngày:", bg="white", font=("Segoe UI", 10)
         ).grid(row=0, column=2, padx=5, pady=5)
-        self.date_denngay = DateEntry(frame_filter, width=44, date_pattern="dd/mm/yyyy")
+        self.date_denngay = DateEntry(frame_filter, width=36, date_pattern="dd/mm/yyyy")
         self.date_denngay.grid(row=0, column=3, padx=5, pady=5)
 
         btn_thongke = tk.Button(
@@ -46,11 +46,12 @@ class tabThongKeDoanhThu(tk.Frame):
             command=self.thongke_doanhthu,
         )
         btn_thongke.grid(row=0, column=4, padx=10)
+        
         tk.Button(
             frame_filter,
             text="Hủy",
             font=("Segoe UI", 10, "bold"),
-            bg="#1565C0",
+            bg="#E53935",
             fg="white",
             bd=0,
             padx=10,
@@ -100,37 +101,34 @@ class tabThongKeDoanhThu(tk.Frame):
         frame_table = tk.Frame(self, bg="white")
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
 
-        scroll_y = tk.Scrollbar(frame_table, orient="vertical")
-        scroll_x = tk.Scrollbar(frame_table, orient="horizontal")
+        columns = ("MaHD", "NgayBan", "MaNV", "MaKH", "TongTien")
 
-        self.trHienThi = ttk.Treeview(
-            frame_table,
-            show="headings",
-            height=12,
-            yscrollcommand=scroll_y.set,
-            xscrollcommand=scroll_x.set,
-        )
+        # --- Tạo Scrollbar ---
+        scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
+        scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
 
+        self.trHienThi = ttk.Treeview( frame_table, show="headings",  columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+
+        # --- Gắn Scrollbar ---
         scroll_y.config(command=self.trHienThi.yview)
         scroll_x.config(command=self.trHienThi.xview)
 
+        # --- Bố trí Scrollbar ---
         scroll_y.pack(side="right", fill="y")
         scroll_x.pack(side="bottom", fill="x")
         self.trHienThi.pack(fill="both", expand=True)
 
-        self.trHienThi["columns"] = ("MaHD", "NgayBan", "MaNV", "MaKH", "TongTien")
+        self.trHienThi.column("MaHD", width=100)
+        self.trHienThi.column("NgayBan", width=120)
+        self.trHienThi.column("MaNV", width=100)
+        self.trHienThi.column("MaKH", width=100)
+        self.trHienThi.column("TongTien", width=150)
 
-        self.trHienThi.column("MaHD", width=100, anchor="center")
-        self.trHienThi.column("NgayBan", width=120, anchor="center")
-        self.trHienThi.column("MaNV", width=100, anchor="center")
-        self.trHienThi.column("MaKH", width=100, anchor="center")
-        self.trHienThi.column("TongTien", width=150, anchor="e")
-
-        self.trHienThi.heading("MaHD", text="Mã HĐ")
-        self.trHienThi.heading("NgayBan", text="Ngày bán")
-        self.trHienThi.heading("MaNV", text="Mã NV")
-        self.trHienThi.heading("MaKH", text="Mã KH")
-        self.trHienThi.heading("TongTien", text="Tổng tiền (VNĐ)")
+        self.trHienThi.heading("MaHD", text="Mã hóa đơn", anchor="center")
+        self.trHienThi.heading("NgayBan", text="Ngày bán", anchor="center")
+        self.trHienThi.heading("MaNV", text="Mã nhân viên", anchor="center")
+        self.trHienThi.heading("MaKH", text="Mã khách hàng", anchor="center")
+        self.trHienThi.heading("TongTien", text="Tổng tiền (VNĐ)", anchor="center")
 
         style = ttk.Style()
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
@@ -261,7 +259,7 @@ class tabThongKeDoanhThu(tk.Frame):
 
         except Exception as e:
             messagebox.showerror("Lỗi", f"Không thể thống kê: {str(e)}")
-
+    
     def tinh_loinhuan(self, tungay=None, denngay=None):
         try:
             cursor = self.conn.cursor()

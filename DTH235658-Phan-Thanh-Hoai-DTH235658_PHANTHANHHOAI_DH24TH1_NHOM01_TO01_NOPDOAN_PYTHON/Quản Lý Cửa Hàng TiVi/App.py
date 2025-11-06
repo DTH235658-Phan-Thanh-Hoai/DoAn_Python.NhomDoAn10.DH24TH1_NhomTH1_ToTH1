@@ -171,6 +171,9 @@ class App(tk.Tk):
                 **self.DinhDangNut(),
             )
             btn_banhangvahoadon.pack(fill="x")
+            btn_nhaphangvaphieunhap = tk.Button(pnlGiaoDien, text="📦 Nhập hàng & Phiếu nhập", command=lambda: self.HienThiFrame("NhapHangVaPhieuNhap"), **self.DinhDangNut())
+            btn_nhaphangvaphieunhap.pack(fill="x")
+
 
             btn_thongkevabaocao = tk.Button(
                 pnlGiaoDien,

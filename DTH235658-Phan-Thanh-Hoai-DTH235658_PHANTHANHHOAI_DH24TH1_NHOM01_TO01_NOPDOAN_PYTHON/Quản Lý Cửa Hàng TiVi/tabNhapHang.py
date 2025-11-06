@@ -69,18 +69,11 @@ class tabNhapHang(tk.Frame):
 
         columns = ("MaPhieu", "NgayNhap", "MaNV", "TenNV", "MaNCC", "TenNCC", "MaTivi", "TenTivi", "SoLuong", "GiaNhap", "ThanhTien")
 
-                # --- Tạo Scrollbar ---
+        # --- Tạo Scrollbar ---
         scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
         scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
 
-        self.trHienThi = ttk.Treeview(
-            frame_table,
-            show="headings",
-            columns=columns,
-            height=12,
-            yscrollcommand=scroll_y.set,
-            xscrollcommand=scroll_x.set
-        )
+        self.trHienThi = ttk.Treeview( frame_table, show="headings",  columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
 
         # --- Gắn Scrollbar ---
         scroll_y.config(command=self.trHienThi.yview)
@@ -102,9 +95,7 @@ class tabNhapHang(tk.Frame):
         self.trHienThi.heading("SoLuong", text="Số lượng")
         self.trHienThi.heading("GiaNhap", text="Giá nhập")
         self.trHienThi.heading("ThanhTien", text="Thành tiền")
-
-        self.trHienThi.bind("<<TreeviewSelect>>", self.HienThi_ChiTiet)
-
+        
         # Style Treeview
         style = ttk.Style()
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
@@ -119,7 +110,8 @@ class tabNhapHang(tk.Frame):
         self.lbl_tongtien.pack(side="left", padx=5)
         tk.Button(frame_bottom, text="📦 Nhập hàng", bg="#43A047", fg="white",font=("Segoe UI", 11, "bold"), command=self.TaoPhieuNhap, padx=15, pady=5, bd=0).pack(side="right", padx=5)
 
-
+        self.trHienThi.bind("<<TreeviewSelect>>", self.HienThi_ChiTiet)
+        
         self.Load_Comnobox()
     
     def Load_Comnobox(self):

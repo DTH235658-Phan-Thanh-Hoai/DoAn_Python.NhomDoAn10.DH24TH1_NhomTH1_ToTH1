@@ -39,7 +39,7 @@ class QuanLyNhanVien(tk.Frame):
         tk.Label(
             self.frame_search, text="🔍 Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
         ).pack(side="left", padx=5)
-        self.txt_timkiem = tk.Entry(self.frame_search, font=("Segoe UI", 10), width=65)
+        self.txt_timkiem = tk.Entry(self.frame_search, font=("Segoe UI", 10), width=55)
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", lambda e: self.timkiem())
 
@@ -75,7 +75,7 @@ class QuanLyNhanVien(tk.Frame):
             self.frame_search,
             text="Hủy",
             font=("Segoe UI", 10, "bold"),
-            bg="#1565C0",
+            bg="#E53935",
             fg="white",
             bd=0,
             padx=10,
@@ -106,8 +106,8 @@ class QuanLyNhanVien(tk.Frame):
         self.pic_anhnhanvien.create_text(
             30,
             40,
-            text="Ảnh\nnhân viên",
-            font=("Segoe UI", 6),
+            text="Ảnh\nnhân\nviên",
+            font=("Segoe UI", 7),
             fill="#888",
             tags="placeholder",
         )
@@ -130,13 +130,13 @@ class QuanLyNhanVien(tk.Frame):
         tk.Label(
             frame_form, text="Mã nhân viên:", font=("Segoe UI", 10), bg="white"
         ).grid(row=0, column=1, sticky="w", pady=5, padx=5)
-        self.txt_manv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=44)
+        self.txt_manv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=41)
         self.txt_manv.grid(row=0, column=2, pady=5, padx=5)
 
         tk.Label(
             frame_form, text="Tên nhân viên:", font=("Segoe UI", 10), bg="white"
         ).grid(row=0, column=3, sticky="w", pady=5, padx=5)
-        self.txt_tennv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=44)
+        self.txt_tennv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=41)
         self.txt_tennv.grid(row=0, column=4, pady=5, padx=5)
 
         tk.Label(frame_form, text="Giới tính:", font=("Segoe UI", 10), bg="white").grid(
@@ -146,7 +146,7 @@ class QuanLyNhanVien(tk.Frame):
             frame_form,
             font=("Segoe UI", 10),
             values=["Nam", "Nữ"],
-            width=42,
+            width=39,
             state="readonly",
         )
         self.cbo_gioitinh.grid(row=1, column=2, pady=5, padx=5)
@@ -155,20 +155,20 @@ class QuanLyNhanVien(tk.Frame):
             row=1, column=3, sticky="w", pady=5, padx=5
         )
         self.date_ngaysinh = DateEntry(
-            frame_form, font=("Segoe UI", 10), width=42, date_pattern="dd/mm/yyyy"
+            frame_form, font=("Segoe UI", 10), width=39, date_pattern="dd/mm/yyyy"
         )
         self.date_ngaysinh.grid(row=1, column=4, pady=5, padx=5)
 
         tk.Label(
             frame_form, text="Số điện thoại:", font=("Segoe UI", 10), bg="white"
         ).grid(row=2, column=1, sticky="w", pady=5, padx=5)
-        self.txt_sodienthoai = ttk.Entry(frame_form, font=("Segoe UI", 10), width=44)
+        self.txt_sodienthoai = ttk.Entry(frame_form, font=("Segoe UI", 10), width=41)
         self.txt_sodienthoai.grid(row=2, column=2, pady=5, padx=5)
 
         tk.Label(frame_form, text="CCCD:", font=("Segoe UI", 10), bg="white").grid(
             row=2, column=3, sticky="w", pady=5, padx=5
         )
-        self.txt_cccd = ttk.Entry(frame_form, font=("Segoe UI", 10), width=44)
+        self.txt_cccd = ttk.Entry(frame_form, font=("Segoe UI", 10), width=41)
         self.txt_cccd.grid(row=2, column=4, pady=5, padx=5)
 
         frame_buttons = tk.Frame(self, bg="white")
@@ -243,29 +243,39 @@ class QuanLyNhanVien(tk.Frame):
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
 
         columns = ("MaNV", "TenNV", "GioiTinh", "NgaySinh", "SoDienThoai", "CCCD")
-        self.trHienThi = ttk.Treeview(
-            frame_table, show="headings", height=12, columns=columns
-        )
+        
+         # --- Tạo Scrollbar ---
+        scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
+        scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
 
-        style = ttk.Style()
-        style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
-        style.configure("Treeview", font=("Segoe UI", 10), rowheight=28)
+        self.trHienThi = ttk.Treeview( frame_table, show="headings",  columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
 
-        self.trHienThi.heading("MaNV", text="Mã nhân viên", anchor="center")
-        self.trHienThi.heading("TenNV", text="Tên nhân viên", anchor="center")
-        self.trHienThi.heading("GioiTinh", text="Giới tính", anchor="center")
-        self.trHienThi.heading("NgaySinh", text="Ngày sinh", anchor="center")
-        self.trHienThi.heading("SoDienThoai", text="Số điện thoại", anchor="center")
+        # --- Gắn Scrollbar ---
+        scroll_y.config(command=self.trHienThi.yview)
+        scroll_x.config(command=self.trHienThi.xview)
+
+        # --- Bố trí Scrollbar ---
+        scroll_y.pack(side="right", fill="y")
+        scroll_x.pack(side="bottom", fill="x")
+        self.trHienThi.pack(fill="both", expand=True)
+
+        self.trHienThi.heading("MaNV", text="Mã nhân viên")
+        self.trHienThi.heading("TenNV", text="Tên nhân viên")
+        self.trHienThi.heading("GioiTinh", text="Giới tính")
+        self.trHienThi.heading("NgaySinh", text="Ngày sinh")
+        self.trHienThi.heading("SoDienThoai", text="Số điện thoại")
         self.trHienThi.heading("CCCD", text="CCCD", anchor="center")
 
-        self.trHienThi.column("MaNV", width=120, anchor="center")
-        self.trHienThi.column("TenNV", width=200, anchor="center")
-        self.trHienThi.column("GioiTinh", width=100, anchor="center")
+        self.trHienThi.column("MaNV", width=120)
+        self.trHienThi.column("TenNV", width=200)
+        self.trHienThi.column("GioiTinh", width=100)
         self.trHienThi.column("NgaySinh", width=120, anchor="center")
         self.trHienThi.column("SoDienThoai", width=150, anchor="center")
         self.trHienThi.column("CCCD", width=150, anchor="center")
 
-        self.trHienThi.pack(fill="both", expand=True)
+        style = ttk.Style()
+        style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
+        style.configure("Treeview", font=("Segoe UI", 10), rowheight=28)
 
         self.trHienThi.bind("<<TreeviewSelect>>", self.chon_dong)
 
@@ -406,7 +416,7 @@ class QuanLyNhanVien(tk.Frame):
             else:
                 self.pic_anhnhanvien.delete("all")
                 self.pic_anhnhanvien.create_text(
-                    30, 40, text="Ảnh\nnhân viên", font=("Segoe UI", 10), fill="#888"
+                    30, 40, text="Ảnh\nnhân\nviên", font=("Segoe UI", 7), fill="#888"
                 )
                 self.image_data = None
         except Exception as e:
@@ -753,7 +763,7 @@ class QuanLyNhanVien(tk.Frame):
 
         self.pic_anhnhanvien.delete("all")
         self.pic_anhnhanvien.create_text(
-            30, 40, text="Ảnh\nnhân viên", font=("Segoe UI", 10), fill="#888"
+            30, 40, text="Ảnh\nnhân\nviên", font=("Segoe UI", 7), fill="#888"
         )
         self.image_path = None
         self.image_data = None

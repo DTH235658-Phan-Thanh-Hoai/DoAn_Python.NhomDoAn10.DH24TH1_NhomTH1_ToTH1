@@ -26,7 +26,7 @@ class QuanLyKhachHang(tk.Frame):
             frame_search, text="🔍 Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
         ).pack(side="left", padx=5)
         self.txt_timkiem = tk.Entry(
-            frame_search, font=("Segoe UI", 10), width=65, bg="white"
+            frame_search, font=("Segoe UI", 10), width=50, bg="white"
         )
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", lambda e: self.timkiem())
@@ -63,7 +63,7 @@ class QuanLyKhachHang(tk.Frame):
             frame_search,
             text="Hủy",
             font=("Segoe UI", 10, "bold"),
-            bg="#1565C0",
+            bg="#E53935",
             fg="white",
             bd=0,
             padx=10,
@@ -87,32 +87,32 @@ class QuanLyKhachHang(tk.Frame):
         tk.Label(
             frame_form, text="Mã khách hàng:", bg="white", font=("Segoe UI", 10)
         ).grid(row=0, column=0, sticky="w", padx=5, pady=5)
-        self.txt_ma = ttk.Entry(frame_form, width=30)
+        self.txt_ma = ttk.Entry(frame_form, width=28)
         self.txt_ma.grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(
             frame_form, text="Tên khách hàng:", bg="white", font=("Segoe UI", 10)
         ).grid(row=0, column=2, sticky="w", padx=5, pady=5)
-        self.txt_ten = ttk.Entry(frame_form, width=30)
+        self.txt_ten = ttk.Entry(frame_form, width=28)
         self.txt_ten.grid(row=0, column=3, padx=5, pady=5)
 
         tk.Label(
             frame_form, text="Số điện thoại:", bg="white", font=("Segoe UI", 10)
         ).grid(row=0, column=4, sticky="w", padx=5, pady=5)
-        self.txt_sdt = ttk.Entry(frame_form, width=30)
+        self.txt_sdt = ttk.Entry(frame_form, width=28)
         self.txt_sdt.grid(row=0, column=5, padx=5, pady=5)
 
         # Dòng 2
         tk.Label(frame_form, text="Email:", bg="white", font=("Segoe UI", 10)).grid(
             row=1, column=0, sticky="w", padx=5, pady=5
         )
-        self.txt_email = ttk.Entry(frame_form, width=30)
+        self.txt_email = ttk.Entry(frame_form, width=28)
         self.txt_email.grid(row=1, column=1, padx=5, pady=5)
 
         tk.Label(frame_form, text="Địa chỉ:", bg="white", font=("Segoe UI", 10)).grid(
             row=1, column=2, sticky="w", padx=5, pady=5
         )
-        self.txt_diachi = ttk.Entry(frame_form, width=66)
+        self.txt_diachi = ttk.Entry(frame_form, width=64)
         self.txt_diachi.grid(row=1, column=3, columnspan=3, padx=5, pady=5, sticky="we")
 
         # ==== NÚT CHỨC NĂNG ====
@@ -188,23 +188,23 @@ class QuanLyKhachHang(tk.Frame):
         frame_table = tk.Frame(self, bg="white")
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
 
+        columns=("MaKH", "TenKH", "SoDienThoai", "Email", "DiaChi")
+
+         # --- Tạo Scrollbar ---
         scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
-        scroll_y.pack(side="right", fill="y")
-
         scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
-        scroll_x.pack(side="bottom", fill="x")
 
-        self.trHienThi = ttk.Treeview(
-            frame_table,
-            columns=("MaKH", "TenKH", "SoDienThoai", "Email", "DiaChi"),
-            show="headings",
-            height=12,
-            yscrollcommand=scroll_y.set,
-            xscrollcommand=scroll_x.set,
-        )
+        self.trHienThi = ttk.Treeview( frame_table, show="headings",  columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
 
+        # --- Gắn Scrollbar ---
         scroll_y.config(command=self.trHienThi.yview)
         scroll_x.config(command=self.trHienThi.xview)
+
+        # --- Bố trí Scrollbar ---
+        scroll_y.pack(side="right", fill="y")
+        scroll_x.pack(side="bottom", fill="x")
+        self.trHienThi.pack(fill="both", expand=True)
+
 
         self.trHienThi.heading("MaKH", text="Mã Khách Hàng")
         self.trHienThi.heading("TenKH", text="Tên Khách Hàng")
@@ -213,12 +213,10 @@ class QuanLyKhachHang(tk.Frame):
         self.trHienThi.heading("DiaChi", text="Địa Chỉ")
 
         self.trHienThi.column("MaKH", width=120, anchor="center")
-        self.trHienThi.column("TenKH", width=200, anchor="w")
+        self.trHienThi.column("TenKH", width=200)
         self.trHienThi.column("SoDienThoai", width=120, anchor="center")
-        self.trHienThi.column("Email", width=200, anchor="w")
-        self.trHienThi.column("DiaChi", width=250, anchor="w")
-
-        self.trHienThi.pack(fill="both", expand=True)
+        self.trHienThi.column("Email", width=200)
+        self.trHienThi.column("DiaChi", width=250)
 
         style = ttk.Style()
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
