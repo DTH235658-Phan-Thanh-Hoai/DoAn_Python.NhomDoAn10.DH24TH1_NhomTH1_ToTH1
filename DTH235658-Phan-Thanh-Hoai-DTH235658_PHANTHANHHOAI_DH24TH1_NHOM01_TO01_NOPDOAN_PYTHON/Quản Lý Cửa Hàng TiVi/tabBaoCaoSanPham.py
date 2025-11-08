@@ -154,18 +154,22 @@ class tabBaoCaoSanPham(tk.Frame):
                 SELECT 
                     t.MaTivi,
                     t.TenTivi,
-                    ISNULL(SUM(ct.SoLuong), 0) as TongSoLuongBan,
-                    ISNULL(SUM(ct.ThanhTien), 0) as TongDoanhThu,
-                    ISNULL(AVG(pn.DonGia), 0) as GiaNhap
+                    ISNULL(SUM(ct.SoLuong), 0) AS TongSoLuongBan,
+                    ISNULL(SUM(ct.ThanhTien), 0) AS TongDoanhThu,
+                    ISNULL(AVG(pn.DonGia), 0) AS GiaNhap
                 FROM Tivi t
                 LEFT JOIN ChiTietHoaDon ct ON t.MaTivi = ct.MaTivi
+                LEFT JOIN HoaDonBan hd 
+                    ON ct.MaHD = hd.MaHD
+                    AND hd.TrangThai = N'Đã thanh toán'
                 LEFT JOIN (
-                    SELECT MaTivi, AVG(GiaNhap) as DonGia
+                    SELECT MaTivi, AVG(GiaNhap) AS DonGia
                     FROM ChiTietPhieuNhap
                     GROUP BY MaTivi
-                ) pn ON t.MaTivi = pn.MaTivi
+                ) pn 
+                    ON t.MaTivi = pn.MaTivi
                 GROUP BY t.MaTivi, t.TenTivi
-                ORDER BY TongSoLuongBan DESC
+                ORDER BY TongSoLuongBan DESC;
             """
 
             cursor.execute(query)

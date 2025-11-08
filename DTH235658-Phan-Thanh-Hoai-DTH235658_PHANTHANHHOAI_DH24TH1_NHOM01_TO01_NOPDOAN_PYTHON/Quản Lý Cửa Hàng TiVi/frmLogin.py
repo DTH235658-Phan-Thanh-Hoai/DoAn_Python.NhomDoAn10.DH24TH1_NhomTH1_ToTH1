@@ -12,6 +12,9 @@ ACCENT_COLOR = "#42A5F5"
 HIGHLIGHT_COLOR = "#BBDEFB"
 TEXT_COLOR = "white"
 
+# Hien: LAPTOP-IFECMD9V
+# Hoai: DESKTOP-LJVV0KQ
+
 # === LÀM NÉT GIAO DIỆN ===
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(1)
@@ -30,7 +33,7 @@ class Login(tk.Tk):
         # ==== CHUỖI KẾT NỐI SQL ====
         self.conn = pyodbc.connect(
             "DRIVER={SQL Server};"
-            "SERVER=DESKTOP-LJVV0KQ;"
+            "SERVER=LAPTOP-IFECMD9V;"
             "DATABASE=QLTV;"
             "Trusted_Connection=yes;"
         )
@@ -194,14 +197,13 @@ class Login(tk.Tk):
         if row:
             self.mo_form(user)
         else:
-            self.lbl_error.config(text="Sai tài khoản hoặc mật khẩu!") 
-    
-
+            self.lbl_error.config(text="Sai tài khoản hoặc mật khẩu!")
 
     def mo_form(self, user):
-        self.destroy()
+        self.withdraw()
         main_app = App.App(user)
-        main_app.mainloop()
+        main_app.wait_window()
+        self.deiconify()
 
 
 if __name__ == "__main__":

@@ -7,10 +7,8 @@ import pyodbc
 class tabHangSanXuat(tk.Frame):
     def __init__(self, parent, conn):
         super().__init__(parent, bg="white")
-
         self.conn = conn
         self.cursor = conn.cursor()
-
         self.ds_them = []
         self.ds_sua = []
         self.ds_xoa = []
@@ -20,13 +18,14 @@ class tabHangSanXuat(tk.Frame):
         frame_search.pack(fill="x", padx=20, pady=5)
 
         tk.Label(
-            frame_search, text="🔍 Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
+            frame_search, text="Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
         ).pack(side="left", padx=5)
+
         self.txt_timkiem = tk.Entry(
             frame_search, font=("Segoe UI", 10), width=55, bg="white"
         )
         self.txt_timkiem.pack(side="left", padx=5)
-        self.txt_timkiem.bind("<Return>", lambda: self.timkiem())
+        self.txt_timkiem.bind("<Return>", lambda event: self.timkiem())
 
         self.search_option = tk.StringVar(value="ma")
         tk.Radiobutton(
@@ -45,6 +44,7 @@ class tabHangSanXuat(tk.Frame):
             bg="#E3F2FD",
             font=("Segoe UI", 10),
         ).pack(side="left")
+
         tk.Button(
             frame_search,
             text="Tìm",
@@ -56,6 +56,7 @@ class tabHangSanXuat(tk.Frame):
             pady=5,
             command=self.timkiem,
         ).pack(side="left", padx=10)
+
         tk.Button(
             frame_search,
             text="Hủy",
@@ -93,7 +94,7 @@ class tabHangSanXuat(tk.Frame):
         self.txt_ten.grid(row=0, column=3, padx=5, pady=5)
 
         tk.Label(frame_form, text="Quốc gia:", bg="white", font=("Segoe UI", 10)).grid(
-            row=0, column=5, sticky="w", padx=5, pady=5
+            row=0, column=5, pady=5, padx=5, sticky="w"
         )
         self.txt_quocgia = ttk.Entry(frame_form, width=32)
         self.txt_quocgia.grid(row=0, column=6, padx=5, pady=5)
@@ -104,7 +105,7 @@ class tabHangSanXuat(tk.Frame):
 
         btn_them = tk.Button(
             frame_buttons,
-            text="➕ Thêm",
+            text="Thêm",
             bg="#EBDA42",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -117,7 +118,7 @@ class tabHangSanXuat(tk.Frame):
 
         btn_sua = tk.Button(
             frame_buttons,
-            text="✏️ Sửa",
+            text="Sửa",
             bg="#FB8C00",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -130,7 +131,7 @@ class tabHangSanXuat(tk.Frame):
 
         btn_xoa = tk.Button(
             frame_buttons,
-            text="🗑️ Xóa",
+            text="Xóa",
             bg="#E53935",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -143,7 +144,7 @@ class tabHangSanXuat(tk.Frame):
 
         btn_lammoi = tk.Button(
             frame_buttons,
-            text="🔄 Làm mới",
+            text="Làm mới",
             bg="#1E88E5",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -156,7 +157,7 @@ class tabHangSanXuat(tk.Frame):
 
         btn_luu = tk.Button(
             frame_buttons,
-            text="💾 Lưu",
+            text="Lưu",
             bg="#43A047",
             fg="white",
             font=("Segoe UI", 10, "bold"),
@@ -171,19 +172,23 @@ class tabHangSanXuat(tk.Frame):
         frame_table = tk.Frame(self, bg="white")
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
 
-        columns=("MaHang", "TenHang", "QuocGia")
+        columns = ("MaHang", "TenHang", "QuocGia")
 
-        # --- Tạo Scrollbar ---
         scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
         scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
 
-        self.trHienThi = ttk.Treeview( frame_table, show="headings",  columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+        self.trHienThi = ttk.Treeview(
+            frame_table,
+            show="headings",
+            columns=columns,
+            height=12,
+            yscrollcommand=scroll_y.set,
+            xscrollcommand=scroll_x.set,
+        )
 
-        # --- Gắn Scrollbar ---
         scroll_y.config(command=self.trHienThi.yview)
         scroll_x.config(command=self.trHienThi.xview)
 
-        # --- Bố trí Scrollbar ---
         scroll_y.pack(side="right", fill="y")
         scroll_x.pack(side="bottom", fill="x")
         self.trHienThi.pack(fill="both", expand=True)
@@ -208,15 +213,14 @@ class tabHangSanXuat(tk.Frame):
         try:
             for item in self.trHienThi.get_children():
                 self.trHienThi.delete(item)
-
-            self.cursor.execute("SELECT MaHang, TenHang, QuocGia FROM HangSanXuat")
+            self.cursor.execute(
+                "SELECT MaHang, TenHang, QuocGia FROM HangSanXuat ORDER BY MaHang"
+            )
             rows = self.cursor.fetchall()
-
             for row in rows:
                 self.trHienThi.insert(
                     "", "end", values=(row.MaHang, row.TenHang, row.QuocGia)
                 )
-
         except Exception as e:
             messagebox.showerror("Lỗi", f"Không thể tải dữ liệu: {str(e)}")
 
@@ -225,12 +229,22 @@ class tabHangSanXuat(tk.Frame):
         if selected:
             item = self.trHienThi.item(selected[0])
             values = item["values"]
-
             self.xoa_form()
-
             self.txt_ma.insert(0, values[0])
             self.txt_ten.insert(0, values[1])
             self.txt_quocgia.insert(0, values[2] if values[2] else "")
+
+    def kiemtra_trung_ten_hang(self, ten_hang, ma_hang_hien_tai=None):
+        ten_hang = str(ten_hang).strip().lower()
+        for item in self.trHienThi.get_children():
+            values = self.trHienThi.item(item)["values"]
+            ma_trong_bang = values[0]
+            ten_trong_bang = values[1].lower() if values[1] else ""
+            if ma_hang_hien_tai and ma_trong_bang == ma_hang_hien_tai:
+                continue
+            if ten_trong_bang == ten_hang:
+                return True
+        return False
 
     def them(self):
         ma = self.txt_ma.get().strip()
@@ -241,7 +255,6 @@ class tabHangSanXuat(tk.Frame):
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập Mã hãng!")
             self.txt_ma.focus()
             return
-
         if not ten:
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập Tên hãng!")
             self.txt_ten.focus()
@@ -252,10 +265,13 @@ class tabHangSanXuat(tk.Frame):
                 messagebox.showwarning("Cảnh báo", f"Mã hãng '{ma}' đã tồn tại!")
                 return
 
+        if self.kiemtra_trung_ten_hang(ten):
+            messagebox.showwarning("Cảnh báo", f"Tên hãng '{ten}' đã tồn tại!")
+            self.txt_ten.focus()
+            return
+
         self.trHienThi.insert("", "end", values=(ma, ten, quocgia))
-
         self.ds_them.append((ma, ten, quocgia))
-
         self.xoa_form()
         messagebox.showinfo(
             "Thành công", "Đã thêm dòng mới! Nhấn 'Lưu' để lưu vào CSDL."
@@ -274,13 +290,17 @@ class tabHangSanXuat(tk.Frame):
         if not ma:
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập Mã hãng!")
             return
-
         if not ten:
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập Tên hãng!")
             return
 
         item = self.trHienThi.item(selected[0])
         ma_cu = item["values"][0]
+
+        if self.kiemtra_trung_ten_hang(ten, ma_cu):
+            messagebox.showwarning("Cảnh báo", f"Tên hãng '{ten}' đã tồn tại!")
+            self.txt_ten.focus()
+            return
 
         self.trHienThi.item(selected[0], values=(ma, ten, quocgia))
 
@@ -294,7 +314,6 @@ class tabHangSanXuat(tk.Frame):
             ]
 
         self.xoa_form()
-
         messagebox.showinfo(
             "Thành công", "Đã cập nhật dòng! Nhấn 'Lưu' để lưu vào CSDL."
         )
@@ -311,7 +330,6 @@ class tabHangSanXuat(tk.Frame):
 
         item = self.trHienThi.item(selected[0])
         ma = item["values"][0]
-
         self.trHienThi.delete(selected[0])
 
         is_new = any(x[0] == ma for x in self.ds_them)
@@ -352,7 +370,6 @@ class tabHangSanXuat(tk.Frame):
                 )
 
             self.conn.commit()
-
             messagebox.showinfo("Thành công", "Đã lưu thay đổi vào CSDL!")
 
         except pyodbc.IntegrityError as e:
@@ -362,21 +379,20 @@ class tabHangSanXuat(tk.Frame):
             self.conn.rollback()
             messagebox.showerror("Lỗi", f"Không thể lưu dữ liệu: {str(e)}")
 
-        self.hienthi_dulieu()
-        self.xoa_form()
-        self.ds_them.clear()
-        self.ds_sua.clear()
-        self.ds_xoa.clear()
+        finally:
+            self.hienthi_dulieu()
+            self.xoa_form()
+            self.ds_them.clear()
+            self.ds_sua.clear()
+            self.ds_xoa.clear()
 
     def lammoi(self):
         confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn hủy các thay đổi?")
         if not confirm:
             return
-
         self.ds_them.clear()
         self.ds_sua.clear()
         self.ds_xoa.clear()
-
         self.hienthi_dulieu()
         self.xoa_form()
         self.txt_timkiem.delete(0, tk.END)
@@ -385,7 +401,7 @@ class tabHangSanXuat(tk.Frame):
     def timkiem(self):
         tu_khoa_tim = self.txt_timkiem.get().strip()
         if not tu_khoa_tim:
-            messagebox.showinfo("Thông báo", "Vui lòng nhập từ khóa tìm kiếm.")
+            messagebox.showinfo("Thông báo", "Vui lòng nhập từ khóa tìm kiếm.")
             self.hienthi_dulieu()
             return
 
@@ -405,7 +421,6 @@ class tabHangSanXuat(tk.Frame):
                 )
 
             rows = self.cursor.fetchall()
-
             for row in rows:
                 self.trHienThi.insert(
                     "", "end", values=(row.MaHang, row.TenHang, row.QuocGia)

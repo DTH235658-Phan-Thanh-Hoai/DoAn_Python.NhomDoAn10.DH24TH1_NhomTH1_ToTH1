@@ -8,9 +8,9 @@ from datetime import date, datetime
 class tabThongKeDoanhThu(tk.Frame):
     def __init__(self, parent, conn):
         super().__init__(parent, bg="white")
-
         self.conn = conn
 
+        # === Bộ lọc thống kê ===
         frame_filter = tk.LabelFrame(
             self,
             text="Bộ lọc thống kê",
@@ -25,28 +25,42 @@ class tabThongKeDoanhThu(tk.Frame):
         tk.Label(frame_filter, text="Từ ngày:", bg="white", font=("Segoe UI", 10)).grid(
             row=0, column=0, padx=5, pady=5
         )
-        self.date_tungay = DateEntry(frame_filter, width=36, date_pattern="dd/mm/yyyy")
+        self.date_tungay = DateEntry(
+            frame_filter,
+            width=36,
+            date_pattern="dd/mm/yyyy",
+            background="#1565C0",
+            foreground="white",
+            borderwidth=2,
+        )
         self.date_tungay.grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(
             frame_filter, text="Đến ngày:", bg="white", font=("Segoe UI", 10)
         ).grid(row=0, column=2, padx=5, pady=5)
-        self.date_denngay = DateEntry(frame_filter, width=36, date_pattern="dd/mm/yyyy")
+        self.date_denngay = DateEntry(
+            frame_filter,
+            width=36,
+            date_pattern="dd/mm/yyyy",
+            background="#1565C0",
+            foreground="white",
+            borderwidth=2,
+        )
         self.date_denngay.grid(row=0, column=3, padx=5, pady=5)
 
         btn_thongke = tk.Button(
             frame_filter,
-            text="📅 Thống kê",
+            text="Thống kê",
             bg="#1E88E5",
             fg="white",
             font=("Segoe UI", 11, "bold"),
             bd=0,
             padx=15,
             pady=5,
-            command=self.thongke_doanhthu,
+            command=self.thongke_doanhthu_loc,
         )
         btn_thongke.grid(row=0, column=4, padx=10)
-        
+
         tk.Button(
             frame_filter,
             text="Hủy",
@@ -59,6 +73,7 @@ class tabThongKeDoanhThu(tk.Frame):
             command=self.huy,
         ).grid(row=0, column=5, padx=10)
 
+        # === Kết quả tổng hợp ===
         frame_result = tk.Frame(self, bg="white")
         frame_result.pack(fill="x", padx=20, pady=10)
 
@@ -98,106 +113,130 @@ class tabThongKeDoanhThu(tk.Frame):
         )
         self.lbl_loinhuan.grid(row=0, column=5, padx=5, pady=5)
 
+        # === Treeview hiển thị hóa đơn ===
         frame_table = tk.Frame(self, bg="white")
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
 
-        columns = ("MaHD", "NgayBan", "MaNV", "MaKH", "TongTien")
+        columns = ("MaHD", "MaKH", "TenKH", "NgayBan", "TongTien")
 
-        # --- Tạo Scrollbar ---
         scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
         scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
 
-        self.trHienThi = ttk.Treeview( frame_table, show="headings",  columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+        self.trHienThi = ttk.Treeview(
+            frame_table,
+            show="headings",
+            columns=columns,
+            height=12,
+            yscrollcommand=scroll_y.set,
+            xscrollcommand=scroll_x.set,
+        )
 
-        # --- Gắn Scrollbar ---
         scroll_y.config(command=self.trHienThi.yview)
         scroll_x.config(command=self.trHienThi.xview)
 
-        # --- Bố trí Scrollbar ---
         scroll_y.pack(side="right", fill="y")
         scroll_x.pack(side="bottom", fill="x")
         self.trHienThi.pack(fill="both", expand=True)
 
-        self.trHienThi.column("MaHD", width=100)
-        self.trHienThi.column("NgayBan", width=120)
-        self.trHienThi.column("MaNV", width=100)
-        self.trHienThi.column("MaKH", width=100)
-        self.trHienThi.column("TongTien", width=150)
+        # Cấu hình cột
+        self.trHienThi.column("MaHD", width=100, anchor="center")
+        self.trHienThi.column("MaKH", width=100, anchor="center")
+        self.trHienThi.column("TenKH", width=180, anchor="w")
+        self.trHienThi.column("NgayBan", width=120, anchor="center")
+        self.trHienThi.column("TongTien", width=150, anchor="e")
 
-        self.trHienThi.heading("MaHD", text="Mã hóa đơn", anchor="center")
-        self.trHienThi.heading("NgayBan", text="Ngày bán", anchor="center")
-        self.trHienThi.heading("MaNV", text="Mã nhân viên", anchor="center")
-        self.trHienThi.heading("MaKH", text="Mã khách hàng", anchor="center")
-        self.trHienThi.heading("TongTien", text="Tổng tiền (VNĐ)", anchor="center")
+        self.trHienThi.heading("MaHD", text="Mã hóa đơn")
+        self.trHienThi.heading("MaKH", text="Mã KH")
+        self.trHienThi.heading("TenKH", text="Tên khách hàng")
+        self.trHienThi.heading("NgayBan", text="Ngày bán")
+        self.trHienThi.heading("TongTien", text="Tổng tiền (VNĐ)")
 
+        # Style
         style = ttk.Style()
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
         style.configure("Treeview", font=("Segoe UI", 10), rowheight=28)
+        style.map("Treeview", background=[("selected", "#BBDEFB")])
 
+        # === Khu vực biểu đồ (chưa triển khai) ===
         chart_frame = tk.Frame(self, bg="white")
         chart_frame.pack(fill="x", padx=20, pady=10)
         tk.Label(
             chart_frame,
-            text="📊 (Khu vực biểu đồ doanh thu theo tháng)",
+            text="(Khu vực biểu đồ doanh thu theo tháng)",
             font=("Segoe UI", 11, "italic"),
             bg="white",
             fg="gray",
         ).pack()
 
-        self.lay_tatca_hoadon()
+        self.thongke_doanhthu_tatca()
 
-    def lay_tatca_hoadon(self):
+    def thongke_doanhthu_tatca(self):
         try:
+            cursor = self.conn.cursor()
+
             for item in self.trHienThi.get_children():
                 self.trHienThi.delete(item)
 
-            cursor = self.conn.cursor()
-            query = """
-                SELECT MaHD, NgayBan, MaNV, MaKH, TongTien 
-                FROM HoaDonBan 
-                ORDER BY NgayBan DESC
-            """
-            cursor.execute(query)
+            cursor.execute(
+                """
+                SELECT hdb.MaHD, hdb.MaKH, kh.TenKH, hdb.NgayBan, hdb.TongTien
+                FROM HoaDonBan hdb
+                JOIN KhachHang kh ON kh.MaKH = hdb.MaKH
+                ORDER BY hdb.NgayBan DESC
+                """
+            )
             rows = cursor.fetchall()
 
             tong_hoadon = 0
-            tong_doanhthu = 0
-
-            for row in rows:
-                mahd, ngayban, manv, makh, tongtien = row
-                ngayban_str = ngayban if ngayban else ""
+            for mahd, makh, tenkh, ngayban, tongtien in rows:
+                ngayban_str = self.chuyen_yyyy_sang_dd(ngayban)
                 tongtien_str = f"{tongtien:,.0f}" if tongtien else "0"
 
                 self.trHienThi.insert(
                     "",
                     "end",
-                    values=(
-                        mahd,
-                        ngayban_str,
-                        manv,
-                        makh if makh else "",
-                        tongtien_str,
-                    ),
+                    values=(mahd, makh, tenkh or "", ngayban_str, tongtien_str),
                 )
-
                 tong_hoadon += 1
-                tong_doanhthu += tongtien if tongtien else 0
+
+            cursor.execute(
+                """
+                SELECT SUM(TongTien)
+                FROM HoaDonBan
+                WHERE TrangThai = N'Đã thanh toán'
+                """
+            )
+            tong_doanhthu = cursor.fetchone()[0] or 0
+
+            cursor.execute(
+                """
+                SELECT SUM(TongTien)
+                FROM PhieuNhapHang
+                WHERE TrangThai = N'Đã duyệt'
+                """
+            )
+            tong_nhap = cursor.fetchone()[0] or 0
+
+            loinhuan = tong_doanhthu - tong_nhap
 
             self.lbl_tonghd.config(text=str(tong_hoadon))
             self.lbl_doanhthu.config(text=f"{tong_doanhthu:,.0f} VNĐ")
-
-            loinhuan = self.tinh_loinhuan()
             self.lbl_loinhuan.config(text=f"{loinhuan:,.0f} VNĐ")
 
             cursor.close()
 
         except Exception as e:
-            messagebox.showerror("Lỗi", f"Không thể tải dữ liệu: {str(e)}")
+            messagebox.showerror("Lỗi", f"Không thể thống kê: {str(e)}")
 
-    def thongke_doanhthu(self):
+    def thongke_doanhthu_loc(self):
         try:
-            tungay = self.date_tungay.get_date()
-            denngay = self.date_denngay.get_date()
+            cursor = self.conn.cursor()
+
+            for item in self.trHienThi.get_children():
+                self.trHienThi.delete(item)
+
+            tungay = str(self.date_tungay.get_date())
+            denngay = str(self.date_denngay.get_date())
 
             if tungay > denngay:
                 messagebox.showwarning(
@@ -205,49 +244,56 @@ class tabThongKeDoanhThu(tk.Frame):
                 )
                 return
 
-            for item in self.trHienThi.get_children():
-                self.trHienThi.delete(item)
-
-            tungay_str = tungay.strftime("%Y-%m-%d")
-            denngay_str = denngay.strftime("%Y-%m-%d")
-
-            cursor = self.conn.cursor()
-            query = """
-                SELECT MaHD, NgayBan, MaNV, MaKH, TongTien 
-                FROM HoaDonBan 
-                WHERE NgayBan BETWEEN ? AND ?
-                ORDER BY NgayBan DESC
-            """
-            cursor.execute(query, (tungay_str, denngay_str))
+            cursor.execute(
+                """
+                SELECT hdb.MaHD, hdb.MaKH, kh.TenKH, hdb.NgayBan, hdb.TongTien
+                FROM HoaDonBan hdb
+                JOIN KhachHang kh ON kh.MaKH = hdb.MaKH
+                WHERE hdb.NgayBan BETWEEN ? AND ?
+                ORDER BY hdb.NgayBan DESC
+                """,
+                (tungay, denngay),
+            )
             rows = cursor.fetchall()
 
             tong_hoadon = 0
-            tong_doanhthu = 0
-
-            for row in rows:
-                mahd, ngayban, manv, makh, tongtien = row
-                ngayban_str = ngayban if ngayban else ""
+            for mahd, makh, tenkh, ngayban, tongtien in rows:
+                ngayban_str = self.chuyen_yyyy_sang_dd(ngayban)
                 tongtien_str = f"{tongtien:,.0f}" if tongtien else "0"
 
                 self.trHienThi.insert(
                     "",
                     "end",
-                    values=(
-                        mahd,
-                        ngayban_str,
-                        manv,
-                        makh if makh else "",
-                        tongtien_str,
-                    ),
+                    values=(mahd, makh, tenkh or "", ngayban_str, tongtien_str),
                 )
-
                 tong_hoadon += 1
-                tong_doanhthu += tongtien if tongtien else 0
+
+            cursor.execute(
+                """
+                SELECT SUM(TongTien)
+                FROM HoaDonBan
+                WHERE TrangThai = N'Đã thanh toán'
+                AND NgayBan BETWEEN ? AND ?
+                """,
+                (tungay, denngay),
+            )
+            tong_doanhthu = cursor.fetchone()[0] or 0
+
+            cursor.execute(
+                """
+                SELECT SUM(TongTien)
+                FROM PhieuNhapHang
+                WHERE TrangThai = N'Đã duyệt'
+                AND NgayNhap BETWEEN ? AND ?
+                """,
+                (tungay, denngay),
+            )
+            tong_nhap = cursor.fetchone()[0] or 0
+
+            loinhuan = tong_doanhthu - tong_nhap
 
             self.lbl_tonghd.config(text=str(tong_hoadon))
             self.lbl_doanhthu.config(text=f"{tong_doanhthu:,.0f} VNĐ")
-
-            loinhuan = self.tinh_loinhuan(tungay_str, denngay_str)
             self.lbl_loinhuan.config(text=f"{loinhuan:,.0f} VNĐ")
 
             cursor.close()
@@ -259,47 +305,42 @@ class tabThongKeDoanhThu(tk.Frame):
 
         except Exception as e:
             messagebox.showerror("Lỗi", f"Không thể thống kê: {str(e)}")
-    
-    def tinh_loinhuan(self, tungay=None, denngay=None):
-        try:
-            cursor = self.conn.cursor()
-
-            if tungay and denngay:
-                query = """
-                    SELECT SUM(ct.SoLuong * (ct.DonGia - ISNULL(pn.GiaNhap, 0)))
-                    FROM ChiTietHoaDon ct
-                    INNER JOIN HoaDonBan hd ON ct.MaHD = hd.MaHD
-                    LEFT JOIN (
-                        SELECT MaTivi, AVG(GiaNhap) as GiaNhap
-                        FROM ChiTietPhieuNhap
-                        GROUP BY MaTivi
-                    ) pn ON ct.MaTivi = pn.MaTivi
-                    WHERE hd.NgayBan BETWEEN ? AND ?
-                """
-                cursor.execute(query, (tungay, denngay))
-            else:
-                query = """
-                    SELECT SUM(ct.SoLuong * (ct.DonGia - ISNULL(pn.GiaNhap, 0)))
-                    FROM ChiTietHoaDon ct
-                    LEFT JOIN (
-                        SELECT MaTivi, AVG(GiaNhap) as GiaNhap
-                        FROM ChiTietPhieuNhap
-                        GROUP BY MaTivi
-                    ) pn ON ct.MaTivi = pn.MaTivi
-                """
-                cursor.execute(query)
-
-            result = cursor.fetchone()
-            loinhuan = result[0] if result[0] else 0
-
-            cursor.close()
-            return loinhuan
-
-        except Exception as e:
-            print(f"Lỗi tính lợi nhuận: {str(e)}")
-            return 0
 
     def huy(self):
-        self.date_tungay.set_date(datetime.now().date())
-        self.date_denngay.set_date(datetime.now().date())
-        self.lay_tatca_hoadon()
+        self.date_tungay.set_date(date.today())
+        self.date_denngay.set_date(date.today())
+        self.thongke_doanhthu_tatca()
+
+    def chuyen_yyyy_sang_dd(self, ngay_db):
+        if ngay_db is None:
+            return ""
+        ngay_str = str(ngay_db).strip()
+        if "-" in ngay_str:
+            parts = ngay_str.split("-")
+        else:
+            return ngay_str
+
+        if len(parts) != 3:
+            return ngay_str
+        try:
+            y, m, d = parts
+            return f"{d.zfill(2)}/{m.zfill(2)}/{y}"
+        except:
+            return ngay_str
+
+    def chuyen_dd_sang_datetime(self, ngay_entry):
+        if not ngay_entry:
+            return date.today()
+        ngay_str = str(ngay_entry).strip()
+        if "-" in ngay_str:
+            parts = ngay_str.split("-")
+        else:
+            return ngay_str
+
+        if len(parts) != 3:
+            return date.today()
+        try:
+            d, m, y = map(int, parts)
+            return datetime(y, m, d).date()
+        except:
+            return date.today()

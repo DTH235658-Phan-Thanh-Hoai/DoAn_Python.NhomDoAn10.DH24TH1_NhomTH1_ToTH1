@@ -12,6 +12,10 @@ import frmThongKeVaBaoCao as tkvbc
 import frmQuanLySanPham as sp
 import frmNhapHangVaPhieuNhap as nhvpn
 
+
+# Hien: LAPTOP-IFECMD9V
+# Hoai: DESKTOP-LJVV0KQ
+
 # === BẢNG MÀU ===
 PRIMARY_COLOR = "#0D47A1"    
 SECONDARY_COLOR = "#1565C0" 
@@ -30,7 +34,7 @@ class App(tk.Tk):
     def __init__(self, user):
         super().__init__()
         self.center_window(1500, 885)
-        self.resizable(False, False)
+        self.resizable(True, True)
         self.title("HỆ THỐNG QUẢN LÝ CỬA HÀNG TIVI")
         self.user = user
 
@@ -38,7 +42,7 @@ class App(tk.Tk):
         try:
             self.conn = pyodbc.connect(
                 'DRIVER={SQL Server};'
-                'SERVER=DESKTOP-LJVV0KQ;'
+                'SERVER=LAPTOP-IFECMD9V;'
                 'DATABASE=QLTV;'
                 'Trusted_Connection=yes;'
             )

@@ -262,9 +262,31 @@ class QuanLyKhachHang(tk.Frame):
 
             self.txt_ma.insert(0, values[0])
             self.txt_ten.insert(0, values[1])
-            self.txt_sdt.insert(0, values[2] if values[2] else "")
+            if str(values[2])[0] == "0":
+                std = str(values[2])
+            else:
+                std = "0" + str(values[2])
+            self.txt_sdt.insert(0, std)
             self.txt_email.insert(0, values[3] if values[3] else "")
             self.txt_diachi.insert(0, values[4] if values[4] else "")
+
+    def bo_so_0_dau(self, chuoi):
+        if isinstance(chuoi, str) and chuoi[0] == "0":
+            return chuoi.lstrip("0") or "0"
+        return str(chuoi)
+    
+    def kiemtra_trung(self, ma= "", sdt= "", email= "", ma_hien_tai= ""):
+        for iid in self.trHienThi.get_children():
+            v = self.trHienThi.item(iid)["values"]
+            if ma_hien_tai and v[0] == ma_hien_tai:
+                continue
+            if ma and v[0] == ma:
+                return "Mã khách hàng"
+            if self.bo_so_0_dau(str(sdt)) and self.bo_so_0_dau(str(v[2])) == self.bo_so_0_dau(str(sdt)):
+                return "Số điện thoại"
+            if email and v[3].strip().lower() == str(email).strip().lower():
+                return "Email"
+        return None
 
     def them(self):
         ma = self.txt_ma.get().strip()
@@ -283,10 +305,11 @@ class QuanLyKhachHang(tk.Frame):
             self.txt_ten.focus()
             return
 
-        for item in self.trHienThi.get_children():
-            if self.trHienThi.item(item)["values"][0] == ma:
-                messagebox.showwarning("Cảnh báo", f"Mã khách hàng '{ma}' đã tồn tại!")
-                return
+        trung = self.kiemtra_trung(ma=ma, sdt=sdt, email=email)
+
+        if trung:
+            messagebox.showwarning("Cảnh báo", f"{trung} đã tồn tại!")
+            return
 
         self.trHienThi.insert("", "end", values=(ma, ten, sdt, email, diachi))
 
@@ -319,6 +342,12 @@ class QuanLyKhachHang(tk.Frame):
 
         item = self.trHienThi.item(selected[0])
         ma_cu = item["values"][0]
+
+        trung = self.kiemtra_trung(ma=ma, sdt=sdt, email=email, ma_hien_tai=ma_cu)
+
+        if trung:
+            messagebox.showwarning("Cảnh báo", f"{trung} đã tồn tại!")
+            return
 
         self.trHienThi.item(selected[0], values=(ma, ten, sdt, email, diachi))
 

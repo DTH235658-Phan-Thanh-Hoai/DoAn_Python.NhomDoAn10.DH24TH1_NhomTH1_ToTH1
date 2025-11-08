@@ -21,25 +21,30 @@ class QuanLyNhanVien(tk.Frame):
         self.cursor = conn.cursor()
         self.user = user
 
-        self.image_path = None
-        self.image_data = None
+        self.selected_item = None
+        self.image_data = None  
+        self.anh_hien_tai = None 
 
         self.ds_them = []
         self.ds_sua = []
         self.ds_xoa = []
 
-        self.dict_anh = {}
-
-        lbl_title = tk.Label(self, text="QUẢN LÝ NHÂN VIÊN", font=("Segoe UI", 16, "bold"), bg="white", fg="#0D47A1",)
+        lbl_title = tk.Label(
+            self,
+            text="QUẢN LÝ NHÂN VIÊN",
+            font=("Segoe UI", 16, "bold"),
+            bg="white",
+            fg="#0D47A1",
+        )
         lbl_title.pack()
 
         self.frame_search = tk.Frame(self, bg="#E3F2FD", padx=10, pady=10)
         self.frame_search.pack(fill="x", padx=20, pady=5)
 
         tk.Label(
-            self.frame_search, text="🔍 Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
+            self.frame_search, text="Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
         ).pack(side="left", padx=5)
-        self.txt_timkiem = tk.Entry(self.frame_search, font=("Segoe UI", 10), width=55)
+        self.txt_timkiem = tk.Entry(self.frame_search, font=("Segoe UI", 10), width=65)
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", lambda e: self.timkiem())
 
@@ -106,8 +111,8 @@ class QuanLyNhanVien(tk.Frame):
         self.pic_anhnhanvien.create_text(
             30,
             40,
-            text="Ảnh\nnhân\nviên",
-            font=("Segoe UI", 7),
+            text="Ảnh\nnhân viên",
+            font=("Segoe UI", 10),
             fill="#888",
             tags="placeholder",
         )
@@ -130,13 +135,13 @@ class QuanLyNhanVien(tk.Frame):
         tk.Label(
             frame_form, text="Mã nhân viên:", font=("Segoe UI", 10), bg="white"
         ).grid(row=0, column=1, sticky="w", pady=5, padx=5)
-        self.txt_manv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=41)
+        self.txt_manv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=44)
         self.txt_manv.grid(row=0, column=2, pady=5, padx=5)
 
         tk.Label(
             frame_form, text="Tên nhân viên:", font=("Segoe UI", 10), bg="white"
         ).grid(row=0, column=3, sticky="w", pady=5, padx=5)
-        self.txt_tennv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=41)
+        self.txt_tennv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=44)
         self.txt_tennv.grid(row=0, column=4, pady=5, padx=5)
 
         tk.Label(frame_form, text="Giới tính:", font=("Segoe UI", 10), bg="white").grid(
@@ -146,7 +151,7 @@ class QuanLyNhanVien(tk.Frame):
             frame_form,
             font=("Segoe UI", 10),
             values=["Nam", "Nữ"],
-            width=39,
+            width=40,
             state="readonly",
         )
         self.cbo_gioitinh.grid(row=1, column=2, pady=5, padx=5)
@@ -155,20 +160,20 @@ class QuanLyNhanVien(tk.Frame):
             row=1, column=3, sticky="w", pady=5, padx=5
         )
         self.date_ngaysinh = DateEntry(
-            frame_form, font=("Segoe UI", 10), width=39, date_pattern="dd/mm/yyyy"
+            frame_form, font=("Segoe UI", 10), width=42, date_pattern="dd/mm/yyyy"
         )
         self.date_ngaysinh.grid(row=1, column=4, pady=5, padx=5)
 
         tk.Label(
             frame_form, text="Số điện thoại:", font=("Segoe UI", 10), bg="white"
         ).grid(row=2, column=1, sticky="w", pady=5, padx=5)
-        self.txt_sodienthoai = ttk.Entry(frame_form, font=("Segoe UI", 10), width=41)
+        self.txt_sodienthoai = ttk.Entry(frame_form, font=("Segoe UI", 10), width=44)
         self.txt_sodienthoai.grid(row=2, column=2, pady=5, padx=5)
 
         tk.Label(frame_form, text="CCCD:", font=("Segoe UI", 10), bg="white").grid(
             row=2, column=3, sticky="w", pady=5, padx=5
         )
-        self.txt_cccd = ttk.Entry(frame_form, font=("Segoe UI", 10), width=41)
+        self.txt_cccd = ttk.Entry(frame_form, font=("Segoe UI", 10), width=44)
         self.txt_cccd.grid(row=2, column=4, pady=5, padx=5)
 
         frame_buttons = tk.Frame(self, bg="white")
@@ -176,7 +181,7 @@ class QuanLyNhanVien(tk.Frame):
 
         self.btn_them = tk.Button(
             frame_buttons,
-            text="➕ Thêm",
+            text="Thêm",
             bg="#EBDA42",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -189,7 +194,7 @@ class QuanLyNhanVien(tk.Frame):
 
         self.btn_sua = tk.Button(
             frame_buttons,
-            text="✏️ Sửa",
+            text="Sửa",
             bg="#FB8C00",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -202,7 +207,7 @@ class QuanLyNhanVien(tk.Frame):
 
         self.btn_xoa = tk.Button(
             frame_buttons,
-            text="🗑️ Xóa",
+            text="Xóa",
             bg="#E53935",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -215,7 +220,7 @@ class QuanLyNhanVien(tk.Frame):
 
         self.btn_lammoi = tk.Button(
             frame_buttons,
-            text="🔄 Làm mới",
+            text="Làm mới",
             bg="#1E88E5",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -228,7 +233,7 @@ class QuanLyNhanVien(tk.Frame):
 
         self.btn_luu = tk.Button(
             frame_buttons,
-            text="💾 Lưu",
+            text="Lưu",
             bg="#43A047",
             fg="white",
             font=("Segoe UI", 10, "bold"),
@@ -243,39 +248,29 @@ class QuanLyNhanVien(tk.Frame):
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
 
         columns = ("MaNV", "TenNV", "GioiTinh", "NgaySinh", "SoDienThoai", "CCCD")
-        
-         # --- Tạo Scrollbar ---
-        scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
-        scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
-
-        self.trHienThi = ttk.Treeview( frame_table, show="headings",  columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
-
-        # --- Gắn Scrollbar ---
-        scroll_y.config(command=self.trHienThi.yview)
-        scroll_x.config(command=self.trHienThi.xview)
-
-        # --- Bố trí Scrollbar ---
-        scroll_y.pack(side="right", fill="y")
-        scroll_x.pack(side="bottom", fill="x")
-        self.trHienThi.pack(fill="both", expand=True)
-
-        self.trHienThi.heading("MaNV", text="Mã nhân viên")
-        self.trHienThi.heading("TenNV", text="Tên nhân viên")
-        self.trHienThi.heading("GioiTinh", text="Giới tính")
-        self.trHienThi.heading("NgaySinh", text="Ngày sinh")
-        self.trHienThi.heading("SoDienThoai", text="Số điện thoại")
-        self.trHienThi.heading("CCCD", text="CCCD", anchor="center")
-
-        self.trHienThi.column("MaNV", width=120)
-        self.trHienThi.column("TenNV", width=200)
-        self.trHienThi.column("GioiTinh", width=100)
-        self.trHienThi.column("NgaySinh", width=120, anchor="center")
-        self.trHienThi.column("SoDienThoai", width=150, anchor="center")
-        self.trHienThi.column("CCCD", width=150, anchor="center")
+        self.trHienThi = ttk.Treeview(
+            frame_table, show="headings", height=12, columns=columns
+        )
 
         style = ttk.Style()
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
         style.configure("Treeview", font=("Segoe UI", 10), rowheight=28)
+
+        self.trHienThi.heading("MaNV", text="Mã nhân viên", anchor="center")
+        self.trHienThi.heading("TenNV", text="Tên nhân viên", anchor="center")
+        self.trHienThi.heading("GioiTinh", text="Giới tính", anchor="center")
+        self.trHienThi.heading("NgaySinh", text="Ngày sinh", anchor="center")
+        self.trHienThi.heading("SoDienThoai", text="Số điện thoại", anchor="center")
+        self.trHienThi.heading("CCCD", text="CCCD", anchor="center")
+
+        self.trHienThi.column("MaNV", width=120, anchor="center")
+        self.trHienThi.column("TenNV", width=200, anchor="center")
+        self.trHienThi.column("GioiTinh", width=100, anchor="center")
+        self.trHienThi.column("NgaySinh", width=120, anchor="center")
+        self.trHienThi.column("SoDienThoai", width=150, anchor="center")
+        self.trHienThi.column("CCCD", width=150, anchor="center")
+
+        self.trHienThi.pack(fill="both", expand=True)
 
         self.trHienThi.bind("<<TreeviewSelect>>", self.chon_dong)
 
@@ -285,8 +280,6 @@ class QuanLyNhanVien(tk.Frame):
         try:
             for item in self.trHienThi.get_children():
                 self.trHienThi.delete(item)
-
-            self.dict_anh.clear()
 
             if self.user != "admin":
                 self.cursor.execute(
@@ -299,9 +292,6 @@ class QuanLyNhanVien(tk.Frame):
                     self.txt_manv.delete(0, tk.END)
                     self.txt_manv.insert(0, row[0])
 
-                    if row[1]:
-                        self.dict_anh[row[0]] = row[1]
-
                     self.hienthi_anh(row[0])
 
                     self.txt_tennv.delete(0, tk.END)
@@ -309,26 +299,22 @@ class QuanLyNhanVien(tk.Frame):
 
                     self.cbo_gioitinh.set(row[3])
 
-                    ngay_sinh = row[4]
-                    if isinstance(ngay_sinh, date):
-                        self.date_ngaysinh.set_date(ngay_sinh)
-                    elif isinstance(ngay_sinh, str) and ngay_sinh.strip():
-                        try:
-                            self.date_ngaysinh.set_date(
-                                datetime.strptime(ngay_sinh, "%d/%m/%Y")
-                            )
-                        except:
-                            self.date_ngaysinh.set_date(
-                                datetime.strptime(ngay_sinh, "%Y-%m-%d")
-                            )
+                    if row[4]:
+                        self.date_ngaysinh.set_date(self.chuyen_dd_sang_datetime(row[4]))
                     else:
                         self.date_ngaysinh.set_date(date.today())
 
+                    sdt = str(row[5]) or ""
+                    if sdt and not sdt[0] == "0":
+                        sdt = "0" + sdt
                     self.txt_sodienthoai.delete(0, tk.END)
-                    self.txt_sodienthoai.insert(0, row[5] or "")
+                    self.txt_sodienthoai.insert(0, sdt)
 
+                    cccd = str(row[6]) or ""
+                    if cccd and not cccd[0] == "0":
+                        cccd = "0" + cccd
                     self.txt_cccd.delete(0, tk.END)
-                    self.txt_cccd.insert(0, row[6] or "")
+                    self.txt_cccd.insert(0, cccd)
 
                     self.txt_manv.configure(state="disabled")
                     self.cbo_gioitinh.configure(state="disabled")
@@ -337,16 +323,18 @@ class QuanLyNhanVien(tk.Frame):
                     self.txt_tennv.configure(state="disabled")
                     self.txt_cccd.configure(state="disabled")
                     self.btn_chonanh.configure(state="disabled")
-                    self.btn_them.destroy()
-                    self.btn_xoa.destroy()
-                    self.btn_sua.destroy()
-                    self.btn_lammoi.destroy()
-                    self.btn_luu.destroy()
+                    for btn in [
+                        self.btn_them,
+                        self.btn_xoa,
+                        self.btn_sua,
+                        self.btn_lammoi,
+                        self.btn_luu,
+                    ]:
+                        btn.destroy()
                     self.trHienThi.destroy()
                     self.frame_search.destroy()
 
             else:
-
                 self.cursor.execute(
                     "SELECT MaNV, HinhAnh, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD FROM NhanVien"
                 )
@@ -355,31 +343,80 @@ class QuanLyNhanVien(tk.Frame):
                 for row in rows:
                     ma_nv = row[0]
 
-                    if row[1]:
-                        self.dict_anh[ma_nv] = row[1]
-
-                    ngay_sinh = row[4]
-                    if isinstance(ngay_sinh, date):
-                        ngay_sinh_str = ngay_sinh.strftime("%d/%m/%Y")
-                    elif isinstance(ngay_sinh, str):
-                        ngay_sinh_str = ngay_sinh
+                    if row[4]:
+                        ngay_sinh_str = self.chuyen_yyyy_sang_dd(row[4])
                     else:
                         ngay_sinh_str = ""
+
+                    sdt = str(row[5]) or ""
+                    if sdt and not sdt[0] == "0":
+                        sdt = "0" + sdt
+
+                    cccd = str(row[6]) or ""
+                    if cccd and not cccd[0] == "0":
+                        cccd = "0" + cccd
 
                     self.trHienThi.insert(
                         "",
                         "end",
-                        values=(ma_nv, row[2], row[3], ngay_sinh_str, row[5], row[6]),
+                        values=(
+                            ma_nv,
+                            row[2],
+                            row[3],
+                            ngay_sinh_str,
+                            sdt,
+                            cccd,
+                        ),
                     )
         except Exception as e:
             messagebox.showerror("Lỗi", f"Không thể tải dữ liệu: {str(e)}")
+
+    def chuyen_yyyy_sang_dd(self, ngay_db):
+        if ngay_db is None:
+            return ""
+        ngay_str = str(ngay_db).strip()
+        if "-" in ngay_str:
+            parts = ngay_str.split("-")
+        else:
+            return ngay_str
+        
+        if len(parts) != 3:
+            return ngay_str
+        try:
+            y, m, d = parts
+            return f"{d.zfill(2)}/{m.zfill(2)}/{y}"
+        except:
+            return ngay_str
+
+    def chuyen_dd_sang_datetime(self, ngay_entry):
+        if not ngay_entry:
+            return date.today()
+        ngay_str = str(ngay_entry).strip()
+        if "-" in ngay_str:
+            parts = ngay_str.split("-")
+        else:
+            return ngay_str
+
+        if len(parts) != 3:
+            return date.today()
+        try:
+            d, m, y = map(int, parts)
+            return datetime(y, m, d).date()
+        except:
+            return date.today()
+
+    def bo_so_0_dau(self, chuoi):
+        if isinstance(chuoi, str) and chuoi[0] == "0":
+            return chuoi.lstrip("0") or "0"
+        return str(chuoi)
 
     def chon_dong(self, event=None):
         selected = self.trHienThi.selection()
         if not selected:
             return
 
-        item = self.trHienThi.item(selected[0])
+        self.selected_item = selected[0]
+        item = self.trHienThi.item(self.selected_item)
         values = item["values"]
 
         self.xoa_form()
@@ -387,44 +424,71 @@ class QuanLyNhanVien(tk.Frame):
         self.txt_manv.insert(0, values[0])
         self.txt_tennv.insert(0, values[1])
         self.cbo_gioitinh.set(values[2])
+        self.date_ngaysinh.set_date(self.chuyen_dd_sang_datetime(values[3]))
 
-        if values[3]:
-            ngay_parts = values[3].split("/")
-            if len(ngay_parts) == 3:
-                self.date_ngaysinh.set_date(
-                    date(int(ngay_parts[2]), int(ngay_parts[1]), int(ngay_parts[0]))
-                )
+        sdt = str(values[4])
+        if sdt and not sdt[0] == "0":
+            sdt = "0" + sdt
+        self.txt_sodienthoai.insert(0, sdt)
 
-        self.txt_sodienthoai.insert(0, values[4])
-        self.txt_cccd.insert(0, values[5])
+        cccd = str(values[5])
+        if cccd and not cccd[0] == "0":
+            cccd = "0" + cccd
+        self.txt_cccd.insert(0, cccd)
 
         self.hienthi_anh(values[0])
 
     def hienthi_anh(self, ma_nv):
         try:
-            if ma_nv in self.dict_anh:
-                image_data = self.dict_anh[ma_nv]
-                self.image_data = image_data
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT HinhAnh FROM NhanVien WHERE MaNV = ?", (ma_nv,))
+            row = cursor.fetchone()
 
-                image = Image.open(io.BytesIO(image_data))
-                image = image.resize((60, 80), Image.Resampling.LANCZOS)
-                photo = ImageTk.PhotoImage(image)
+            if row and row[0]:
+                image_data = row[0]
+                anh_pil = Image.open(io.BytesIO(image_data))
+                anh_pil = anh_pil.resize((120, 120))
+
+                self.anh_hien_tai = ImageTk.PhotoImage(anh_pil, master=self)
 
                 self.pic_anhnhanvien.delete("all")
-                self.pic_anhnhanvien.create_image(30, 40, image=photo)
-                self.pic_anhnhanvien.image = photo
+                self.pic_anhnhanvien.create_image(60, 60, image=self.anh_hien_tai, anchor="center")
+
+                self.pic_anhnhanvien.image = self.anh_hien_tai
+
             else:
                 self.pic_anhnhanvien.delete("all")
-                self.pic_anhnhanvien.create_text(
-                    30, 40, text="Ảnh\nnhân\nviên", font=("Segoe UI", 7), fill="#888"
-                )
-                self.image_data = None
+                self.pic_anhnhanvien.create_text(60, 60, text="(Không có ảnh)", fill="gray")
+
         except Exception as e:
-            print(f"Lỗi hiển thị ảnh: {str(e)}")
-            self.pic_anhnhanvien.delete("all")
-            self.pic_anhnhanvien.create_text(
-                30, 40, text="Lỗi\nảnh", font=("Segoe UI", 10), fill="#f00"
-            )
+            messagebox.showerror("Lỗi hiển thị ảnh", str(e))
+
+    def chon_anh(self):
+        if not self.selected_item:
+            messagebox.showerror("Lỗi", "Vui lòng chọn nhân viên trên danh sách.")
+            return
+            
+        duong_dan_anh = filedialog.askopenfilename(
+            title="Chọn ảnh",
+            filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")],
+        )
+
+        if duong_dan_anh:
+            try:
+                with open(duong_dan_anh, "rb") as file:
+                    self.image_data = file.read()
+
+                anh_pil = Image.open(io.BytesIO(self.image_data))
+                anh_pil = anh_pil.resize((120, 120))
+
+                self.anh_hien_tai = ImageTk.PhotoImage(anh_pil, master=self)
+
+                self.pic_anhnhanvien.delete("all")
+                self.pic_anhnhanvien.create_image(60, 60, image=self.anh_hien_tai, anchor="center")
+                self.pic_anhnhanvien.image = self.anh_hien_tai
+
+            except Exception as e:
+                messagebox.showerror("Lỗi chọn ảnh", str(e))
 
     def them(self):
         if not self.xac_nhan_du_lieu():
@@ -433,7 +497,7 @@ class QuanLyNhanVien(tk.Frame):
         ma = self.txt_manv.get().strip()
         ten = self.txt_tennv.get().strip()
         gioitinh = self.cbo_gioitinh.get()
-        ngaysinh = self.date_ngaysinh.get_date()
+        ngaysinh = str(self.date_ngaysinh.get_date())
         sdt = self.txt_sodienthoai.get().strip()
         cccd = self.txt_cccd.get().strip()
 
@@ -442,25 +506,43 @@ class QuanLyNhanVien(tk.Frame):
                 messagebox.showwarning("Cảnh báo", f"Mã nhân viên '{ma}' đã tồn tại!")
                 return
 
+            if self.bo_so_0_dau(
+                self.trHienThi.item(item)["values"][4]
+            ) == self.bo_so_0_dau(sdt):
+                messagebox.showwarning("Cảnh báo", f"Số điện thoại '{sdt}' đã tồn tại!")
+                return
+
+            if self.bo_so_0_dau(
+                self.trHienThi.item(item)["values"][5]
+            ) == self.bo_so_0_dau(cccd):
+                messagebox.showwarning("Cảnh báo", f"Số CCCD '{cccd}' đã tồn tại!")
+                return
+
+        if sdt[0] == "0":
+            sdt_hien_thi = sdt
+        else:
+            sdt_hien_thi = "0" + sdt
+
+        if cccd[0] == "0":
+            cccd_hien_thi = cccd
+        else:
+            cccd_hien_thi = "0" + cccd
+
         self.trHienThi.insert(
             "",
             "end",
-            values=(ma, ten, gioitinh, ngaysinh.strftime("%d/%m/%Y"), sdt, cccd),
+            values=(
+                ma,
+                ten,
+                gioitinh,
+                self.chuyen_yyyy_sang_dd(ngaysinh),
+                sdt_hien_thi,
+                cccd_hien_thi,
+            ),
         )
 
-        if self.image_data:
-            self.dict_anh[ma] = self.image_data
-
         self.ds_them.append(
-            {
-                "ma": ma,
-                "anh": self.image_data,
-                "ten": ten,
-                "gioitinh": gioitinh,
-                "ngaysinh": ngaysinh,
-                "sdt": sdt,
-                "cccd": cccd,
-            }
+            (ma, self.image_data, ten, gioitinh, ngaysinh, sdt_hien_thi, cccd_hien_thi)
         )
 
         self.xoa_form()
@@ -474,64 +556,78 @@ class QuanLyNhanVien(tk.Frame):
             messagebox.showwarning("Cảnh báo", "Vui lòng chọn dòng cần sửa!")
             return
 
-        if not self.validate_input():
+        if not self.xac_nhan_du_lieu():
             return
 
         ma = self.txt_manv.get().strip()
         ten = self.txt_tennv.get().strip()
         gioitinh = self.cbo_gioitinh.get()
-        ngaysinh = self.date_ngaysinh.get_date()
+        ngaysinh = str(self.date_ngaysinh.get_date())
         sdt = self.txt_sodienthoai.get().strip()
         cccd = self.txt_cccd.get().strip()
 
         item = self.trHienThi.item(selected[0])
         ma_cu = item["values"][0]
 
+        for item in self.trHienThi.get_children():
+            if self.trHienThi.item(item)["values"][0] == ma_cu:
+                continue
+            else:
+                if self.trHienThi.item(item)["values"][0] == ma:
+                    messagebox.showwarning(
+                        "Cảnh báo", f"Mã nhân viên '{ma}' đã tồn tại!"
+                    )
+                    return
+
+                if self.bo_so_0_dau(
+                    self.trHienThi.item(item)["values"][4]
+                ) == self.bo_so_0_dau(sdt):
+                    messagebox.showwarning(
+                        "Cảnh báo", f"Số điện thoại '{sdt}' đã tồn tại!"
+                    )
+                    return
+
+                if self.bo_so_0_dau(
+                    self.trHienThi.item(item)["values"][5]
+                ) == self.bo_so_0_dau(cccd):
+                    messagebox.showwarning("Cảnh báo", f"Số CCCD '{cccd}' đã tồn tại!")
+                    return
+
+        if sdt[0] == "0":
+            sdt_hien_thi = sdt
+        else:
+            sdt_hien_thi = "0" + sdt
+
+        if cccd[0] == "0":
+            cccd_hien_thi = cccd
+        else:
+            cccd_hien_thi = "0" + cccd
+
         self.trHienThi.item(
             selected[0],
-            values=(ma, ten, gioitinh, ngaysinh.strftime("%d/%m/%Y"), sdt, cccd),
+            values=(
+                ma,
+                ten,
+                gioitinh,
+                self.chuyen_yyyy_sang_dd(ngaysinh),
+                sdt_hien_thi,
+                cccd_hien_thi,
+            ),
         )
 
-        if self.image_data:
-            self.dict_anh[ma] = self.image_data
-        elif ma in self.dict_anh:
-            if ma != ma_cu and ma_cu in self.dict_anh:
-                self.dict_anh[ma] = self.dict_anh[ma_cu]
-                del self.dict_anh[ma_cu]
+        is_new = any(item[0] == ma_cu for item in self.ds_them)
 
-        is_new = any(x["ma"] == ma_cu for x in self.ds_them)
-
-        if not is_new:
-            self.ds_sua = [x for x in self.ds_sua if x["ma_cu"] != ma_cu]
-            self.ds_sua.append(
-                {
-                    "ma": ma,
-                    "anh": (
-                        self.image_data if self.image_data else self.dict_anh.get(ma)
-                    ),
-                    "ten": ten,
-                    "gioitinh": gioitinh,
-                    "ngaysinh": ngaysinh,
-                    "sdt": sdt,
-                    "cccd": cccd,
-                    "ma_cu": ma_cu,
-                }
+        if is_new:
+            self.ds_them = [item for item in self.ds_them if item[0] != ma_cu]
+            self.ds_them.append(
+                (ma, self.image_data, ten, gioitinh, ngaysinh, sdt_hien_thi, cccd_hien_thi)
             )
         else:
-            for i, item in enumerate(self.ds_them):
-                if item["ma"] == ma_cu:
-                    self.ds_them[i] = {
-                        "ma": ma,
-                        "anh": self.image_data if self.image_data else item["anh"],
-                        "ten": ten,
-                        "gioitinh": gioitinh,
-                        "ngaysinh": ngaysinh,
-                        "sdt": sdt,
-                        "cccd": cccd,
-                    }
-                    break
+            self.ds_sua = [item for item in self.ds_sua if item[7] != ma_cu]
+            self.ds_sua.append(
+                (ma, self.image_data, ten, gioitinh, ngaysinh, sdt_hien_thi, cccd_hien_thi, ma_cu)
+            )
 
-        self.xoa_form()
         messagebox.showinfo(
             "Thành công", "Đã cập nhật dòng! Nhấn 'Lưu' để lưu vào CSDL."
         )
@@ -551,18 +647,16 @@ class QuanLyNhanVien(tk.Frame):
 
         self.trHienThi.delete(selected[0])
 
-        if ma in self.dict_anh:
-            del self.dict_anh[ma]
-
-        is_new = any(x["ma"] == ma for x in self.ds_them)
+        is_new = any(x[0] == ma for x in self.ds_them)
 
         if is_new:
-            self.ds_them = [x for x in self.ds_them if x["ma"] != ma]
+            self.ds_them = [x for x in self.ds_them if x[0] != ma]
         else:
             if ma not in self.ds_xoa:
                 self.ds_xoa.append(ma)
 
         self.xoa_form()
+        self.selected_item = None
         messagebox.showinfo("Thành công", "Đã xóa dòng! Nhấn 'Lưu' để lưu vào CSDL.")
 
     def luu(self):
@@ -581,53 +675,23 @@ class QuanLyNhanVien(tk.Frame):
                 self.cursor.execute("DELETE FROM NhanVien WHERE MaNV = ?", (ma,))
 
             for item in self.ds_them:
-                ngaysinh_str = (
-                    item["ngaysinh"].strftime("%Y-%m-%d")
-                    if isinstance(item["ngaysinh"], date)
-                    else item["ngaysinh"]
-                )
-
-                anh_binary = pyodbc.Binary(item["anh"]) if item["anh"] else None
-
-                self.cursor.execute(
-                    "INSERT INTO NhanVien (MaNV, HinhAnh, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (
-                        item["ma"],
-                        anh_binary,
-                        item["ten"],
-                        item["gioitinh"],
-                        ngaysinh_str,
-                        item["sdt"],
-                        item["cccd"],
-                    ),
-                )
+                query = """
+                    INSERT INTO NhanVien (MaNV, HinhAnh, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                """
+                self.cursor.execute(query, item)
 
             for item in self.ds_sua:
-                ngaysinh_str = (
-                    item["ngaysinh"].strftime("%Y-%m-%d")
-                    if isinstance(item["ngaysinh"], date)
-                    else item["ngaysinh"]
-                )
-
-                anh_binary = pyodbc.Binary(item["anh"]) if item["anh"] else None
-
-                self.cursor.execute(
-                    "UPDATE NhanVien SET MaNV=?, HinhAnh=?, TenNV=?, GioiTinh=?, NgaySinh=?, SoDienThoai=?, CCCD=? WHERE MaNV=?",
-                    (
-                        item["ma"],
-                        anh_binary,
-                        item["ten"],
-                        item["gioitinh"],
-                        ngaysinh_str,
-                        item["sdt"],
-                        item["cccd"],
-                        item["ma_cu"],
-                    ),
-                )
+                query = """
+                    UPDATE NhanVien 
+                    SET MaNV = ?, HinhAnh = ?, TenNV = ?, GioiTinh = ?, NgaySinh = ?, SoDienThoai = ?, CCCD = ?
+                    WHERE MaNV = ?
+                """
+                self.cursor.execute(query, item)
 
             self.conn.commit()
-
             messagebox.showinfo("Thành công", "Đã lưu thay đổi vào CSDL!")
+
         except pyodbc.IntegrityError as e:
             self.conn.rollback()
             messagebox.showerror("Lỗi", f"Lỗi ràng buộc dữ liệu: {str(e)}")
@@ -658,7 +722,7 @@ class QuanLyNhanVien(tk.Frame):
     def timkiem(self):
         tu_khoa_tim = self.txt_timkiem.get().strip()
         if not tu_khoa_tim:
-            messagebox.showinfo("Thông báo", "Vui lòng nhập từ khóa tìm kiếm.")
+            messagebox.showinfo("Thông báo", "Vui lòng nhập từ khóa tìm kiếm.")
             self.hienthi_dulieu()
             return
 
@@ -666,88 +730,74 @@ class QuanLyNhanVien(tk.Frame):
             for item in self.trHienThi.get_children():
                 self.trHienThi.delete(item)
 
-            self.dict_anh.clear()
-
             if self.search_option.get() == "ma":
-                self.cursor.execute(
-                    "SELECT MaNV, HinhAnh, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD FROM NhanVien WHERE MaNV LIKE ?",
-                    (f"%{tu_khoa_tim}%",),
-                )
+                query = """
+                    SELECT MaNV, HinhAnh, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD 
+                    FROM NhanVien 
+                    WHERE MaNV LIKE ?
+                    ORDER BY MaNV
+                """
             else:
-                self.cursor.execute(
-                    "SELECT MaNV, HinhAnh, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD FROM NhanVien WHERE TenNV LIKE ?",
-                    (f"%{tu_khoa_tim}%",),
-                )
+                query = """
+                    SELECT MaNV, HinhAnh, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD 
+                    FROM NhanVien 
+                    WHERE TenNV LIKE ?
+                    ORDER BY MaNV
+                """
 
+            self.cursor.execute(query, (f"%{tu_khoa_tim}%",))
             rows = self.cursor.fetchall()
 
             for row in rows:
                 ma_nv = row[0]
+                ngay_sinh_str = self.chuyen_yyyy_sang_dd(row[4]) if row[4] else ""
 
-                if row[1]:
-                    self.dict_anh[ma_nv] = row[1]
+                sdt = str(row[5]) or ""
+                if sdt and not sdt[0] == "0":
+                    sdt = "0" + sdt
 
-                ngay_sinh = row[4]
-                if isinstance(ngay_sinh, date):
-                    ngay_sinh_str = ngay_sinh.strftime("%d/%m/%Y")
-                else:
-                    ngay_sinh_str = ""
+                cccd = str(row[6]) or ""
+                if cccd and not cccd[0] == "0":
+                    cccd = "0" + cccd
 
                 self.trHienThi.insert(
                     "",
                     "end",
-                    values=(ma_nv, row[2], row[3], ngay_sinh_str, row[5], row[6]),
+                    values=(ma_nv, row[2], row[3], ngay_sinh_str, sdt, cccd),
                 )
 
             if not rows:
                 messagebox.showinfo("Thông báo", "Không tìm thấy kết quả!")
 
         except Exception as e:
-            messagebox.showerror("Lỗi", f"Không thể tải dữ liệu: {str(e)}")
-
-    def chon_anh(self):
-        file_path = filedialog.askopenfilename(
-            title="Chọn ảnh",
-            filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")],
-        )
-
-        if file_path:
-            try:
-                with open(file_path, "rb") as file:
-                    self.image_data = file.read()
-
-                image = Image.open(file_path)
-                image = image.resize((60, 80), Image.Resampling.LANCZOS)
-                photo = ImageTk.PhotoImage(image)
-
-                self.pic_anhnhanvien.delete("all")
-                self.pic_anhnhanvien.create_image(30, 40, image=photo)
-                self.pic_anhnhanvien.image = photo
-
-                self.image_path = file_path
-
-            except Exception as e:
-                messagebox.showerror("Lỗi", f"Không thể load ảnh: {str(e)}")
+            messagebox.showerror("Lỗi", f"Không thể tìm kiếm: {str(e)}")
 
     def xac_nhan_du_lieu(self):
-        if not self.txt_manv.get().strip():
+        ma = self.txt_manv.get().strip()
+        if not ma:
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập mã nhân viên!")
             self.txt_manv.focus()
             return False
 
-        if not self.txt_tennv.get().strip():
+        ten = self.txt_tennv.get().strip()
+        if not ten:
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập tên nhân viên!")
             self.txt_tennv.focus()
             return False
 
         if not self.cbo_gioitinh.get():
             messagebox.showwarning("Cảnh báo", "Vui lòng chọn giới tính!")
-            self.cbo_gioitinh.focus()
+            return False
+
+        sdt = self.txt_sodienthoai.get().strip()
+        if not sdt or len(sdt) != 10 or not sdt.isdigit():
+            messagebox.showwarning("Cảnh báo", "Số điện thoại phải có 10 chữ số!")
+            self.txt_sodienthoai.focus()
             return False
 
         cccd = self.txt_cccd.get().strip()
-        if cccd and len(cccd) != 12:
-            messagebox.showwarning("Cảnh báo", "CCCD phải có 12 số!")
+        if not cccd or len(cccd) not in (9, 12) or not cccd.isdigit():
+            messagebox.showwarning("Cảnh báo", "CCCD phải là 9 hoặc 12 chữ số!")
             self.txt_cccd.focus()
             return False
 
@@ -761,13 +811,12 @@ class QuanLyNhanVien(tk.Frame):
         self.txt_sodienthoai.delete(0, tk.END)
         self.txt_cccd.delete(0, tk.END)
 
+        self.image_data = None
+        self.anh_hien_tai = None
         self.pic_anhnhanvien.delete("all")
         self.pic_anhnhanvien.create_text(
-            30, 40, text="Ảnh\nnhân\nviên", font=("Segoe UI", 7), fill="#888"
+            30, 40, text="Ảnh\nnhân viên", font=("Segoe UI", 10), fill="#888"
         )
-        self.image_path = None
-        self.image_data = None
-        self.selected_item = None
 
     def huy(self):
         self.txt_timkiem.delete(0, tk.END)

@@ -82,7 +82,6 @@ class tabBaoHanh(tk.Frame):
         )
         frame_form.pack(fill="x", padx=20, pady=10)
 
-        # Dòng 1
         tk.Label(
             frame_form, text="Mã bảo hành:", bg="white", font=("Segoe UI", 10)
         ).grid(row=0, column=0, sticky="w", padx=5, pady=5)
@@ -101,7 +100,6 @@ class tabBaoHanh(tk.Frame):
         self.txt_thoigian = ttk.Entry(frame_form, width=24)
         self.txt_thoigian.grid(row=0, column=5, padx=5, pady=5)
 
-        # Dòng 2
         tk.Label(frame_form, text="Điều kiện:", bg="white", font=("Segoe UI", 10)).grid(
             row=1, column=0, sticky="w", padx=5, pady=5
         )

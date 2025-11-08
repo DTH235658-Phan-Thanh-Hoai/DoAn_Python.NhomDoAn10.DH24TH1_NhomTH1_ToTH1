@@ -14,26 +14,24 @@ class tabTivi(tk.Frame):
         self.conn = conn
         self.cursor = conn.cursor()
 
-        self.image_path = None
-        self.image_data = None
         self.selected_item = None
+        self.image_data = None 
+        self.anh_hien_tai = None  
 
-        self.ds_them = []  
-        self.ds_sua = []  
+        self.ds_them = []
+        self.ds_sua = []
         self.ds_xoa = []
-        
-        self.dict_anh = {}
 
         # === KHUNG TÌM KIẾM ===
         frame_search = tk.Frame(self, bg="#E3F2FD", padx=10, pady=10)
         frame_search.pack(fill="x", padx=20, pady=5)
 
         tk.Label(
-            frame_search, text="🔍 Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
+            frame_search, text="Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
         ).pack(side="left", padx=5)
-        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=55)
+        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=65)
         self.txt_timkiem.pack(side="left", padx=5)
-        self.txt_timkiem.bind('<Return>', lambda e: self.tim_kiem())
+        self.txt_timkiem.bind("<Return>", lambda e: self.tim_kiem())
 
         self.search_option = tk.StringVar(value="ma")
         tk.Radiobutton(
@@ -67,7 +65,7 @@ class tabTivi(tk.Frame):
             frame_search,
             text="Hủy",
             font=("Segoe UI", 10, "bold"),
-            bg="#E53935",
+            bg="#1565C0",
             fg="white",
             bd=0,
             padx=10,
@@ -165,7 +163,7 @@ class tabTivi(tk.Frame):
         tk.Label(frame_form, text="Số lượng:", bg="white", font=("Segoe UI", 11)).grid(
             row=2, column=3, sticky="w", padx=5, pady=5
         )
-        self.txt_soluong = ttk.Entry(frame_form, width=24, state="disabled")
+        self.txt_soluong = ttk.Entry(frame_form, width=24)
         self.txt_soluong.grid(row=2, column=4, padx=5, pady=5)
 
         tk.Label(frame_form, text="Mô tả:", bg="white", font=("Segoe UI", 11)).grid(
@@ -180,7 +178,7 @@ class tabTivi(tk.Frame):
 
         btn_them = tk.Button(
             frame_buttons,
-            text="➕ Thêm",
+            text="Thêm",
             bg="#EBDA42",
             fg="white",
             font=("Segoe UI", 10, "bold"),
@@ -193,7 +191,7 @@ class tabTivi(tk.Frame):
 
         btn_sua = tk.Button(
             frame_buttons,
-            text="✏️ Sửa",
+            text="Sửa",
             bg="#FB8C00",
             fg="white",
             font=("Segoe UI", 10, "bold"),
@@ -206,7 +204,7 @@ class tabTivi(tk.Frame):
 
         btn_xoa = tk.Button(
             frame_buttons,
-            text="🗑️ Xóa",
+            text="Xóa",
             bg="#E53935",
             fg="white",
             font=("Segoe UI", 10, "bold"),
@@ -219,7 +217,7 @@ class tabTivi(tk.Frame):
 
         btn_lammoi = tk.Button(
             frame_buttons,
-            text="🔄 Làm mới",
+            text="Làm mới",
             bg="#1E88E5",
             fg="white",
             font=("Segoe UI", 10, "bold"),
@@ -232,7 +230,7 @@ class tabTivi(tk.Frame):
 
         btn_luu = tk.Button(
             frame_buttons,
-            text="💾 Lưu",
+            text="Lưu",
             bg="#449A2D",
             fg="white",
             font=("Segoe UI", 10, "bold"),
@@ -246,21 +244,34 @@ class tabTivi(tk.Frame):
         frame_table = tk.Frame(self, bg="white")
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
 
-        columns = ("MaTivi", "TenTivi","TenHang", "KichThuoc", "DoPhanGiai", "GiaBan", "SoLuongTon", "NamSanXuat", "MoTa")
-        # --- Tạo Scrollbar ---
         scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
+        scroll_y.pack(side="right", fill="y")
+
         scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
+        scroll_x.pack(side="bottom", fill="x")
 
-        self.trHienThi = ttk.Treeview( frame_table, show="headings",  columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+        columns = (
+            "MaTivi",
+            "TenTivi",
+            "TenHang",
+            "KichThuoc",
+            "DoPhanGiai",
+            "GiaBan",
+            "SoLuongTon",
+            "NamSanXuat",
+            "MoTa",
+        )
+        self.trHienThi = ttk.Treeview(
+            frame_table,
+            columns=columns,
+            show="headings",
+            height=12,
+            yscrollcommand=scroll_y.set,
+            xscrollcommand=scroll_x.set,
+        )
 
-        # --- Gắn Scrollbar ---
         scroll_y.config(command=self.trHienThi.yview)
         scroll_x.config(command=self.trHienThi.xview)
-
-        # --- Bố trí Scrollbar ---
-        scroll_y.pack(side="right", fill="y")
-        scroll_x.pack(side="bottom", fill="x")
-        self.trHienThi.pack(fill="both", expand=True)
 
         self.trHienThi.heading("MaTivi", text="Mã Tivi")
         self.trHienThi.heading("TenTivi", text="Tên Tivi")
@@ -269,18 +280,18 @@ class tabTivi(tk.Frame):
         self.trHienThi.heading("DoPhanGiai", text="Độ phân giải")
         self.trHienThi.heading("GiaBan", text="Giá bán")
         self.trHienThi.heading("SoLuongTon", text="Số lượng")
-        self.trHienThi.heading("NamSanXuat", text="Năm sản xuất")
+        self.trHienThi.heading("NamSanXuat", text="Năm SX")
         self.trHienThi.heading("MoTa", text="Mô tả")
 
-        self.trHienThi.column("MaTivi", width=80)
-        self.trHienThi.column("TenTivi", width=200)
-        self.trHienThi.column("TenHang", width=100)
+        self.trHienThi.column("MaTivi", width=80, anchor="center")
+        self.trHienThi.column("TenTivi", width=150, anchor="w")
+        self.trHienThi.column("TenHang", width=100, anchor="w")
         self.trHienThi.column("KichThuoc", width=80, anchor="center")
-        self.trHienThi.column("DoPhanGiai", width=130, anchor="center")
-        self.trHienThi.column("GiaBan", width=100)
+        self.trHienThi.column("DoPhanGiai", width=100, anchor="center")
+        self.trHienThi.column("GiaBan", width=100, anchor="e")
         self.trHienThi.column("SoLuongTon", width=80, anchor="center")
-        self.trHienThi.column("NamSanXuat", width=120, anchor="center")
-        self.trHienThi.column("MoTa", width=200)
+        self.trHienThi.column("NamSanXuat", width=80, anchor="center")
+        self.trHienThi.column("MoTa", width=200, anchor="w")
 
         self.trHienThi.pack(fill="both", expand=True)
 
@@ -295,7 +306,9 @@ class tabTivi(tk.Frame):
 
     def load_hang_san_xuat(self):
         try:
-            self.cursor.execute("SELECT MaHang, TenHang FROM HangSanXuat ORDER BY TenHang")
+            self.cursor.execute(
+                "SELECT MaHang, TenHang FROM HangSanXuat ORDER BY TenHang"
+            )
 
             self.hang_dict = {}
             hang_list = []
@@ -316,8 +329,6 @@ class tabTivi(tk.Frame):
             for item in self.trHienThi.get_children():
                 self.trHienThi.delete(item)
 
-            self.dict_anh.clear()
-
             query = """
                 SELECT t.MaTivi, t.HinhAnh, t.TenTivi, h.TenHang, t.KichThuoc, 
                        t.DoPhanGiai, t.GiaBan, t.SoLuongTon, t.NamSanXuat, t.MoTa, h.MaHang
@@ -329,9 +340,6 @@ class tabTivi(tk.Frame):
 
             for row in self.cursor.fetchall():
                 ma_tivi = row.MaTivi
-                
-                if row.HinhAnh:
-                    self.dict_anh[ma_tivi] = row.HinhAnh
 
                 self.trHienThi.insert(
                     "",
@@ -367,14 +375,11 @@ class tabTivi(tk.Frame):
         self.cbo_hang.set(values[2])
         self.txt_kichthuoc.insert(0, values[3])
         self.txt_dophangiai.insert(0, values[4])
-        
+
         gia_ban = str(values[5]).replace(",", "")
         self.txt_giaban.insert(0, gia_ban)
-        
-        self.txt_soluong.config(state="normal")
-        self.txt_soluong.insert(0, values[6])
-        self.txt_soluong.config(state="disabled")
 
+        self.txt_soluong.insert(0, values[6])
         self.txt_namsanxuat.insert(0, values[7])
         self.txt_mota.insert(0, values[8])
 
@@ -382,29 +387,54 @@ class tabTivi(tk.Frame):
 
     def hienthi_anh(self, ma_tivi):
         try:
-            if ma_tivi in self.dict_anh:
-                image_data = self.dict_anh[ma_tivi]
-                self.image_data = image_data
-                
-                image = Image.open(io.BytesIO(image_data))
-                image = image.resize((60, 80), Image.Resampling.LANCZOS)
-                photo = ImageTk.PhotoImage(image)
-                
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT HinhAnh FROM Tivi WHERE MaTivi = ?", (ma_tivi,))
+            row = cursor.fetchone()
+
+            if row and row[0]:
+                image_data = row[0]
+                anh_pil = Image.open(io.BytesIO(image_data))
+                anh_pil = anh_pil.resize((120, 120)) 
+
+                self.anh_hien_tai = ImageTk.PhotoImage(anh_pil, master=self)
+
                 self.pic_anhtivi.delete("all")
-                self.pic_anhtivi.create_image(30, 40, image=photo)
-                self.pic_anhtivi.image = photo
+                self.pic_anhtivi.create_image(60, 60, image=self.anh_hien_tai, anchor="center")
+
+                self.pic_anhtivi.image = self.anh_hien_tai
+
             else:
                 self.pic_anhtivi.delete("all")
-                self.pic_anhtivi.create_text(
-                    30, 40, text="Ảnh\ntivi", font=("Segoe UI", 10), fill="#888"
-                )
-                self.image_data = None
+                self.pic_anhtivi.create_text(60, 60, text="(Không có ảnh)", fill="gray")
+
         except Exception as e:
-            print(f"Lỗi hiển thị ảnh: {str(e)}")
-            self.pic_anhtivi.delete("all")
-            self.pic_anhtivi.create_text(
-                30, 40, text="Lỗi\nảnh", font=("Segoe UI", 10), fill="#f00"
-            )
+            messagebox.showerror("Lỗi hiển thị ảnh", str(e))
+
+    def chon_anh(self):
+        if not self.selected_item:
+            messagebox.showerror("Lỗi", "Vui long chọn tivi trên danh sách.")
+            return
+        file_path = filedialog.askopenfilename(
+            title="Chọn ảnh",
+            filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")],
+        )
+
+        if file_path:
+            try:
+                with open(file_path, "rb") as file:
+                    self.image_data = file.read()
+
+                anh_pil = Image.open(io.BytesIO(self.image_data))
+                anh_pil = anh_pil.resize((120, 120))
+
+                self.anh_hien_tai = ImageTk.PhotoImage(anh_pil, master=self)
+
+                self.pic_anhtivi.delete("all")
+                self.pic_anhtivi.create_image(60, 60, image=self.anh_hien_tai, anchor="center")
+                self.pic_anhtivi.image = self.anh_hien_tai
+
+            except Exception as e:
+                messagebox.showerror("Lỗi chọn ảnh", str(e))
 
     def them_tivi(self):
         if not self.xac_nhan_du_lieu():
@@ -417,17 +447,22 @@ class tabTivi(tk.Frame):
         kichthuoc = self.txt_kichthuoc.get().strip()
         dophangiai = self.txt_dophangiai.get().strip()
         giaban = float(self.txt_giaban.get()) if self.txt_giaban.get().strip() else 0
-        soluong = int(self.txt_soluong.get()) if self.txt_soluong.get().strip() else 0
-        namsanxuat = int(self.txt_namsanxuat.get()) if self.txt_namsanxuat.get().strip() else None
+        soluong = 0
+        namsanxuat = (
+            int(self.txt_namsanxuat.get())
+            if self.txt_namsanxuat.get().strip()
+            else None
+        )
         mota = self.txt_mota.get().strip()
 
         for item in self.trHienThi.get_children():
-            if self.trHienThi.item(item)['values'][0] == ma:
+            if self.trHienThi.item(item)["values"][0] == ma:
                 messagebox.showwarning("Cảnh báo", f"Mã tivi '{ma}' đã tồn tại!")
                 return
 
         self.trHienThi.insert(
-            "", "end",
+            "",
+            "end",
             values=(
                 ma,
                 ten,
@@ -437,35 +472,36 @@ class tabTivi(tk.Frame):
                 f"{giaban:,.0f}",
                 soluong,
                 namsanxuat if namsanxuat else "",
-                mota
+                mota,
+            ),
+        )
+
+        self.ds_them.append(
+            (
+                ma,
+                self.image_data,
+                ten,
+                ma_hang,
+                kichthuoc or None,
+                dophangiai or None,
+                giaban,
+                soluong,
+                namsanxuat,
+                mota or None,
             )
         )
 
-        if self.image_data:
-            self.dict_anh[ma] = self.image_data
-
-        self.ds_them.append({
-            'ma': ma,
-            'anh': self.image_data,
-            'ten': ten,
-            'ma_hang': ma_hang,
-            'kichthuoc': kichthuoc,
-            'dophangiai': dophangiai,
-            'giaban': giaban,
-            'soluong': soluong,
-            'namsanxuat': namsanxuat,
-            'mota': mota
-        })
-
         self.xoa_form()
-        messagebox.showinfo("Thành công", "Đã thêm dòng mới! Nhấn 'Lưu' để lưu vào CSDL.")
+        messagebox.showinfo(
+            "Thành công", "Đã thêm dòng mới! Nhấn 'Lưu' để lưu vào CSDL."
+        )
 
     def sua_tivi(self):
         if not self.selected_item:
             messagebox.showwarning("Cảnh báo", "Vui lòng chọn dòng cần sửa!")
             return
 
-        if not self.validate_input():
+        if not self.xac_nhan_du_lieu():
             return
 
         ma = self.txt_matv.get().strip()
@@ -475,12 +511,16 @@ class tabTivi(tk.Frame):
         kichthuoc = self.txt_kichthuoc.get().strip()
         dophangiai = self.txt_dophangiai.get().strip()
         giaban = float(self.txt_giaban.get()) if self.txt_giaban.get().strip() else 0
-        soluong = int(self.txt_soluong.get()) if self.txt_soluong.get().strip() else 0
-        namsanxuat = int(self.txt_namsanxuat.get()) if self.txt_namsanxuat.get().strip() else None
+        soluong = 0
+        namsanxuat = (
+            int(self.txt_namsanxuat.get())
+            if self.txt_namsanxuat.get().strip()
+            else None
+        )
         mota = self.txt_mota.get().strip()
 
         item = self.trHienThi.item(self.selected_item)
-        ma_cu = item['values'][0]
+        ma_cu = item["values"][0]
 
         self.trHienThi.item(
             self.selected_item,
@@ -493,51 +533,49 @@ class tabTivi(tk.Frame):
                 f"{giaban:,.0f}",
                 soluong,
                 namsanxuat if namsanxuat else "",
-                mota
-            )
+                mota,
+            ),
         )
 
-        if self.image_data:
-            self.dict_anh[ma] = self.image_data
-        elif ma in self.dict_anh:
-            if ma != ma_cu and ma_cu in self.dict_anh:
-                self.dict_anh[ma] = self.dict_anh[ma_cu]
-                del self.dict_anh[ma_cu]
+        is_new = any(item[0] == ma_cu for item in self.ds_them)
 
-        is_new = any(x['ma'] == ma_cu for x in self.ds_them)
-        if not is_new:
-            self.ds_sua = [x for x in self.ds_sua if x['ma_cu'] != ma_cu]
-            self.ds_sua.append({
-                'ma': ma,
-                'anh': self.image_data if self.image_data else self.dict_anh.get(ma),
-                'ten': ten,
-                'ma_hang': ma_hang,
-                'kichthuoc': kichthuoc,
-                'dophangiai': dophangiai,
-                'giaban': giaban,
-                'soluong': soluong,
-                'namsanxuat': namsanxuat,
-                'mota': mota,
-                'ma_cu': ma_cu
-            })
+        if is_new:
+            self.ds_them = [item for item in self.ds_them if item[0] != ma_cu]
+            self.ds_them.append(
+                (
+                    ma,
+                    self.image_data, 
+                    ten,
+                    ma_hang,
+                    kichthuoc or None,
+                    dophangiai or None,
+                    giaban,
+                    soluong,
+                    namsanxuat,
+                    mota or None,
+                )
+            )
         else:
-            for i, item in enumerate(self.ds_them):
-                if item['ma'] == ma_cu:
-                    self.ds_them[i] = {
-                        'ma': ma,
-                        'anh': self.image_data if self.image_data else item['anh'],
-                        'ten': ten,
-                        'ma_hang': ma_hang,
-                        'kichthuoc': kichthuoc,
-                        'dophangiai': dophangiai,
-                        'giaban': giaban,
-                        'soluong': soluong,
-                        'namsanxuat': namsanxuat,
-                        'mota': mota
-                    }
-                    break
+            self.ds_sua = [item for item in self.ds_sua if item[10] != ma_cu]
+            self.ds_sua.append(
+                (
+                    ma,
+                    self.image_data, 
+                    ten,
+                    ma_hang,
+                    kichthuoc or None,
+                    dophangiai or None,
+                    giaban,
+                    soluong,
+                    namsanxuat,
+                    mota or None,
+                    ma_cu,  
+                )
+            )
 
-        messagebox.showinfo("Thành công", "Đã cập nhật dòng! Nhấn 'Lưu' để lưu vào CSDL.")
+        messagebox.showinfo(
+            "Thành công", "Đã cập nhật dòng! Nhấn 'Lưu' để lưu vào CSDL."
+        )
 
     def xoa_tivi(self):
         if not self.selected_item:
@@ -549,16 +587,13 @@ class tabTivi(tk.Frame):
             return
 
         item = self.trHienThi.item(self.selected_item)
-        ma = item['values'][0]
+        ma = item["values"][0]
 
         self.trHienThi.delete(self.selected_item)
 
-        if ma in self.dict_anh:
-            del self.dict_anh[ma]
-
-        is_new = any(x['ma'] == ma for x in self.ds_them)
+        is_new = any(item[0] == ma for item in self.ds_them)
         if is_new:
-            self.ds_them = [x for x in self.ds_them if x['ma'] != ma]
+            self.ds_them = [item for item in self.ds_them if item[0] != ma]
         else:
             if ma not in self.ds_xoa:
                 self.ds_xoa.append(ma)
@@ -573,7 +608,9 @@ class tabTivi(tk.Frame):
                 messagebox.showinfo("Thông báo", "Không có thay đổi để lưu!")
                 return
 
-            confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn lưu các thay đổi?")
+            confirm = messagebox.askyesno(
+                "Xác nhận", "Bạn có chắc muốn lưu các thay đổi?"
+            )
             if not confirm:
                 return
 
@@ -586,18 +623,7 @@ class tabTivi(tk.Frame):
                                       DoPhanGiai, GiaBan, SoLuongTon, NamSanXuat, MoTa)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """
-                self.cursor.execute(query, (
-                    item['ma'],
-                    item['anh'],
-                    item['ten'],
-                    item['ma_hang'],
-                    item['kichthuoc'] or None,
-                    item['dophangiai'] or None,
-                    item['giaban'],
-                    item['soluong'],
-                    item['namsanxuat'],
-                    item['mota'] or None
-                ))
+                self.cursor.execute(query, item)
 
             for item in self.ds_sua:
                 query = """
@@ -606,24 +632,10 @@ class tabTivi(tk.Frame):
                         DoPhanGiai = ?, GiaBan = ?, SoLuongTon = ?, NamSanXuat = ?, MoTa = ?
                     WHERE MaTivi = ?
                 """
-                self.cursor.execute(query, (
-                    item['ma'],
-                    item['anh'],
-                    item['ten'],
-                    item['ma_hang'],
-                    item['kichthuoc'] or None,
-                    item['dophangiai'] or None,
-                    item['giaban'],
-                    item['soluong'],
-                    item['namsanxuat'],
-                    item['mota'] or None,
-                    item['ma_cu']
-                ))
+                self.cursor.execute(query, item)
 
             self.conn.commit()
-
             messagebox.showinfo("Thành công", "Đã lưu thay đổi vào CSDL!")
-            
 
         except pyodbc.IntegrityError as e:
             self.conn.rollback()
@@ -655,15 +667,13 @@ class tabTivi(tk.Frame):
     def tim_kiem(self):
         tu_tim_kiem = self.txt_timkiem.get().strip()
         if not tu_tim_kiem:
-            messagebox.showinfo("Thông báo", "Vui lòng nhập từ khóa tìm kiếm.")
+            messagebox.showinfo("Thông báo", "Vui lòng nhập từ khóa tìm kiếm.")
             self.hienthi_dulieu()
             return
 
         try:
             for item in self.trHienThi.get_children():
                 self.trHienThi.delete(item)
-
-            self.dict_anh.clear()
 
             if self.search_option.get() == "ma":
                 query = """
@@ -689,9 +699,6 @@ class tabTivi(tk.Frame):
 
             for row in rows:
                 ma_tivi = row.MaTivi
-                
-                if row.HinhAnh:
-                    self.dict_anh[ma_tivi] = row.HinhAnh
 
                 self.trHienThi.insert(
                     "",
@@ -714,30 +721,6 @@ class tabTivi(tk.Frame):
 
         except Exception as e:
             messagebox.showerror("Lỗi", f"Không thể tìm kiếm: {str(e)}")
-
-    def chon_anh(self):
-        file_path = filedialog.askopenfilename(
-            title="Chọn ảnh",
-            filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")],
-        )
-
-        if file_path:
-            try:
-                with open(file_path, "rb") as file:
-                    self.image_data = file.read()
-
-                image = Image.open(file_path)
-                image = image.resize((60, 80), Image.Resampling.LANCZOS)
-                photo = ImageTk.PhotoImage(image)
-
-                self.pic_anhtivi.delete("all")
-                self.pic_anhtivi.create_image(30, 40, image=photo)
-                self.pic_anhtivi.image = photo
-
-                self.image_path = file_path
-
-            except Exception as e:
-                messagebox.showerror("Lỗi", f"Không thể load ảnh: {str(e)}")
 
     def xac_nhan_du_lieu(self):
         if not self.txt_matv.get().strip():
@@ -800,18 +783,16 @@ class tabTivi(tk.Frame):
         self.txt_kichthuoc.delete(0, tk.END)
         self.txt_dophangiai.delete(0, tk.END)
         self.txt_giaban.delete(0, tk.END)
-        self.txt_soluong.config(state="normal")
         self.txt_soluong.delete(0, tk.END)
-        self.txt_soluong.config(state="disabled")
         self.txt_namsanxuat.delete(0, tk.END)
         self.txt_mota.delete(0, tk.END)
 
+        self.image_data = None
+        self.anh_hien_tai = None
         self.pic_anhtivi.delete("all")
         self.pic_anhtivi.create_text(
             30, 40, text="Ảnh\ntivi", font=("Segoe UI", 10), fill="#888"
         )
-        self.image_path = None
-        self.image_data = None
 
     def huy(self):
         self.txt_timkiem.delete(0, tk.END)

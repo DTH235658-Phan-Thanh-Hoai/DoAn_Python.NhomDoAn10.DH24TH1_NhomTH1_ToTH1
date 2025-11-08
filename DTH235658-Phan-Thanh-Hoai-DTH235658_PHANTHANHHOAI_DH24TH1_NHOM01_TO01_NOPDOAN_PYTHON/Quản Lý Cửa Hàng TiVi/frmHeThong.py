@@ -158,11 +158,18 @@ class HeThong(tk.Frame):
 
         columns = ("TenDangNhap", "MatKhau")
 
-         # --- Tạo Scrollbar ---
+        # --- Tạo Scrollbar ---
         scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
         scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
 
-        self.trHienThi = ttk.Treeview( frame_table, show="headings",  columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+        self.trHienThi = ttk.Treeview(
+            frame_table,
+            show="headings",
+            columns=columns,
+            height=12,
+            yscrollcommand=scroll_y.set,
+            xscrollcommand=scroll_x.set,
+        )
 
         # --- Gắn Scrollbar ---
         scroll_y.config(command=self.trHienThi.yview)
@@ -172,7 +179,6 @@ class HeThong(tk.Frame):
         scroll_y.pack(side="right", fill="y")
         scroll_x.pack(side="bottom", fill="x")
         self.trHienThi.pack(fill="both", expand=True)
-
 
         self.trHienThi.heading("TenDangNhap", text="Tên đăng nhập")
         self.trHienThi.heading("MatKhau", text="Mật khẩu")
@@ -256,7 +262,7 @@ class HeThong(tk.Frame):
                 messagebox.showwarning("Cảnh báo", f"Tên đăng nhập '{ten}' đã tồn tại!")
                 return
 
-        self.trHienThi.insert("", "end", values=(ten, "●" * len(mk)))
+        self.trHienThi.insert("", "end", values=(ten, mk))
         self.ds_them.append((ten, mk))
 
         self.xoa_form()
@@ -286,7 +292,7 @@ class HeThong(tk.Frame):
         item = self.trHienThi.item(selected[0])
         ten_cu = item["values"][0]
 
-        self.trHienThi.item(selected[0], values=(ten, "●" * len(mk)))
+        self.trHienThi.item(selected[0], values=(ten, mk))
 
         is_new = any(x[0] == ten_cu for x in self.ds_them)
 
