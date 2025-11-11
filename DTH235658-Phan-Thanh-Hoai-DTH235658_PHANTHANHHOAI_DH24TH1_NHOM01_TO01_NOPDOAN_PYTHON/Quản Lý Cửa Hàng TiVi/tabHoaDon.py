@@ -241,6 +241,7 @@ class tabHoaDon(tk.Frame):
                         WHERE MaTivi = ? """, (so_luong, ma_tivi))
                 
                 self.conn.commit()
+
                 cursor.close()
                 messagebox.showinfo("Thành công", "Hóa đơn đã thanh toán thành công!")
 
