@@ -105,7 +105,7 @@ class tabHangSanXuat(tk.Frame):
 
         btn_them = tk.Button(
             frame_buttons,
-            text="Thêm",
+            text="➕ Thêm",
             bg="#EBDA42",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -118,7 +118,7 @@ class tabHangSanXuat(tk.Frame):
 
         btn_sua = tk.Button(
             frame_buttons,
-            text="Sửa",
+            text="✏️ Sửa",
             bg="#FB8C00",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -144,7 +144,7 @@ class tabHangSanXuat(tk.Frame):
 
         btn_lammoi = tk.Button(
             frame_buttons,
-            text="Làm mới",
+            text="🔄 Làm mới",
             bg="#1E88E5",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -157,7 +157,7 @@ class tabHangSanXuat(tk.Frame):
 
         btn_luu = tk.Button(
             frame_buttons,
-            text="Lưu",
+            text="💾 Lưu",
             bg="#43A047",
             fg="white",
             font=("Segoe UI", 10, "bold"),

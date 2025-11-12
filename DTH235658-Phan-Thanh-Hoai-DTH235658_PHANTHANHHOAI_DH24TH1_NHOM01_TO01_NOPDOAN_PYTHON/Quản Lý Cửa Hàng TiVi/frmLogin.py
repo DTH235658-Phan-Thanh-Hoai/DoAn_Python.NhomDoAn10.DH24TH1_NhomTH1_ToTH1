@@ -33,7 +33,7 @@ class Login(tk.Tk):
         # ==== CHUỖI KẾT NỐI SQL ====
         self.conn = pyodbc.connect(
             "DRIVER={SQL Server};"
-            "SERVER=LAPTOP-IFECMD9V;"
+            "SERVER=DESKTOP-LJVV0KQ;"
             "DATABASE=QLTV;"
             "Trusted_Connection=yes;"
         )

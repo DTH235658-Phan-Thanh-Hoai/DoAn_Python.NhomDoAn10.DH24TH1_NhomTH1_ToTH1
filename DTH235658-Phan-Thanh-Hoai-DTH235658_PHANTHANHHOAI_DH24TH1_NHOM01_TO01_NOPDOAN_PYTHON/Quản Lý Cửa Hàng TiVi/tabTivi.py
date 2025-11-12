@@ -178,7 +178,7 @@ class tabTivi(tk.Frame):
 
         btn_them = tk.Button(
             frame_buttons,
-            text="Thêm",
+            text="➕ Thêm",
             bg="#EBDA42",
             fg="white",
             font=("Segoe UI", 10, "bold"),
@@ -191,7 +191,7 @@ class tabTivi(tk.Frame):
 
         btn_sua = tk.Button(
             frame_buttons,
-            text="Sửa",
+            text="✏️ Sửa",
             bg="#FB8C00",
             fg="white",
             font=("Segoe UI", 10, "bold"),
@@ -204,7 +204,7 @@ class tabTivi(tk.Frame):
 
         btn_xoa = tk.Button(
             frame_buttons,
-            text="Xóa",
+            text="🗑️ Xóa",
             bg="#E53935",
             fg="white",
             font=("Segoe UI", 10, "bold"),
@@ -217,7 +217,7 @@ class tabTivi(tk.Frame):
 
         btn_lammoi = tk.Button(
             frame_buttons,
-            text="Làm mới",
+            text="🔄 Làm mới",
             bg="#1E88E5",
             fg="white",
             font=("Segoe UI", 10, "bold"),
@@ -230,7 +230,7 @@ class tabTivi(tk.Frame):
 
         btn_luu = tk.Button(
             frame_buttons,
-            text="Lưu",
+            text="💾 Lưu",
             bg="#449A2D",
             fg="white",
             font=("Segoe UI", 10, "bold"),
