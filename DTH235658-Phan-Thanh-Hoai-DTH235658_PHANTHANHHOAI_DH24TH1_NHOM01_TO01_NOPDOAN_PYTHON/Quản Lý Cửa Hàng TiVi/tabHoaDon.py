@@ -38,7 +38,7 @@ class tabHoaDon(tk.Frame):
         frame_table = tk.Frame(self, bg="white")
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
 
-        columns = ("MaHD", "NgayBan", "MaNV", "MaKH", "TongTien", "TrangThai")
+        columns = ("MaHD", "NgayBan", "MaNV", "MaKH", "ThanhTien", "TrangThai")
         # --- Tạo Scrollbar ---
         scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
         scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
@@ -58,14 +58,14 @@ class tabHoaDon(tk.Frame):
         self.trHienThi.heading("NgayBan", text="Ngày bán")
         self.trHienThi.heading("MaNV", text="Mã nhân viên")
         self.trHienThi.heading("MaKH", text="Mã khách hàng")
-        self.trHienThi.heading("TongTien", text="Tổng tiền")
+        self.trHienThi.heading("ThanhTien", text="Thành tiền")
         self.trHienThi.heading("TrangThai", text="Trạng thái")
 
         self.trHienThi.column("MaHD", width=100)
         self.trHienThi.column("NgayBan", width=100, anchor="center")
         self.trHienThi.column("MaNV", width=100)
         self.trHienThi.column("MaKH", width=100)
-        self.trHienThi.column("TongTien", width=100, anchor="center")
+        self.trHienThi.column("ThanhTien", width=100, anchor="center")
         self.trHienThi.column("TrangThai", width=100)
 
         # Thêm style cho Treeview
@@ -90,14 +90,14 @@ class tabHoaDon(tk.Frame):
         try:
             self.trHienThi.delete(*self.trHienThi.get_children())
             cursor = self.conn.cursor()
-            cursor.execute("SELECT MaHD, NgayBan, MaNV, MaKH, TongTien, TrangThai FROM HOADONBAN")
+            cursor.execute("SELECT MaHD, NgayBan, MaNV, MaKH, ThanhTien, TrangThai FROM HOADONBAN")
 
             for row in cursor.fetchall():
                 ngay_ban = datetime.strptime(str(row.NgayBan).split(" ")[0], "%Y-%m-%d")
 
                 formatted_row = (
                     row.MaHD, ngay_ban.strftime("%d/%m/%Y"), row.MaNV, row.MaKH,
-                    f"{float(row.TongTien):,.0f}" if row.TongTien else "0", row.TrangThai
+                    f"{float(row.ThanhTien):,.0f}" if row.ThanhTien else "0", row.TrangThai
                 )
                 self.trHienThi.insert("", tk.END, values=formatted_row)
 
@@ -124,7 +124,7 @@ class tabHoaDon(tk.Frame):
             tk.Label(chitiethoadon, text="Chi tiết hóa đơn bán " + ma_hd, font=("Segoe UI", 12, "bold"), bg="white", fg="#0D47A1").pack(pady=10)
             
             cursor = self.conn.cursor()
-            cursor.execute("""SELECT nv.MaNV, nv.TenNV, kh.MaKH, kh.TenKH, hdb.NgayBan, hba.TongTien, hdb.TrangThai
+            cursor.execute("""SELECT nv.MaNV, nv.TenNV, kh.MaKH, kh.TenKH, hdb.NgayBan, hba.ThanhTien, hdb.TrangThai
                               FROM HOADONBAN hdb JOIN NHANVIEN nv ON hdb.MaNV = nv.MaNV
                               JOIN KHACHHANG kh ON hdb.MaKH = kh.MaKH
                               WHERE hdb.MaHD = ?""", (ma_hd,))
@@ -171,7 +171,7 @@ class tabHoaDon(tk.Frame):
             tree.column("ThanhTien", width=100, anchor="center")
 
             tk.Label(chitiethoadon, text="Tổng tiền:", font=("Segoe UI", 10, "bold"), bg="white").pack(side="left", padx=20)
-            tk.Label(chitiethoadon, text=f"{float(thong_tin.TongTien):,.0f} đ", font=("Segoe UI", 10, "bold"), bg="white", fg="red").pack(side="right", padx=20)
+            tk.Label(chitiethoadon, text=f"{float(thong_tin.ThanhTien):,.0f} đ", font=("Segoe UI", 10, "bold"), bg="white", fg="red").pack(side="right", padx=20)
             
             cursor.execute("""
                 SELECT cthd.MaCTHD, cthd.MaTivi, tv.TenTivi, cthd.SoLuong, cthd.DonGia, (cthd.SoLuong * cthd.DonGia) AS ThanhTien
@@ -338,21 +338,21 @@ class tabHoaDon(tk.Frame):
             if timkkiem == "mahd":
                 keyword = self.txt_timkiem.get()
                 cursor.execute("""
-                    SELECT MaHD, NgayBan, MaNV, MaKH, TongTien, TrangThai
+                    SELECT MaHD, NgayBan, MaNV, MaKH, ThanhTien, TrangThai
                     FROM HOADONBAN
                     WHERE MaHD = ?""", (keyword,))
             
             elif timkkiem == "makh":
                 keyword = self.txt_timkiem.get()
                 cursor.execute("""
-                    SELECT MaHD, NgayBan, MaNV, MaKH, TongTien, TrangThai
+                    SELECT MaHD, NgayBan, MaNV, MaKH, ThanhTien, TrangThai
                     FROM HOADONBAN
                     WHERE MaKH = ?""", (keyword,))
             
             elif timkkiem == "trangthai":
                 keyword = self.txt_timkiem.get()
                 cursor.execute("""
-                    SELECT MaHD, NgayBan, MaNV, MaKH, TongTien, TrangThai
+                    SELECT MaHD, NgayBan, MaNV, MaKH, ThanhTien, TrangThai
                     FROM HOADONBAN
                     WHERE TrangThai = ?""", (keyword,))
                 
@@ -362,7 +362,7 @@ class tabHoaDon(tk.Frame):
 
                 formatted_row = (
                     row.MaHD, ngay_ban.strftime("%d/%m/%y"), row.MaNV, row.MaKH,
-                    f"{float(row.TongTien):,.0f}" if row.TongTien else "0", row.TrangThai
+                    f"{float(row.ThanhTien):,.0f}" if row.ThanhTien else "0", row.TrangThai
                 )
                 self.trHienThi.insert("", tk.END, values=formatted_row)
             cursor.close()
@@ -388,7 +388,7 @@ class tabHoaDon(tk.Frame):
             cursor = self.conn.cursor()
             
             # 1. Lấy thông tin chung của hóa đơn
-            cursor.execute("""SELECT hdb.MaHD, nv.MaNV, nv.TenNV, kh.MaKH, kh.TenKH, hdb.NgayBan, hdb.TongTien, hdb.TrangThai
+            cursor.execute("""SELECT hdb.MaHD, nv.MaNV, nv.TenNV, kh.MaKH, kh.TenKH, hdb.NgayBan, hdb.ThanhTien, hdb.TrangThai
                               FROM HOADONBAN hdb 
                               JOIN NHANVIEN nv ON hdb.MaNV = nv.MaNV
                               JOIN KHACHHANG kh ON hdb.MaKH = kh.MaKH
@@ -428,7 +428,7 @@ class tabHoaDon(tk.Frame):
 
             # Dữ liệu định dạng
             ngay_ban_date = datetime.strptime(str(thong_tin.NgayBan).split(" ")[0], "%Y-%m-%d")
-            tong_tien_str = f"{float(thong_tin.TongTien):,.0f} đ"
+            tong_tien_str = f"{float(thong_tin.ThanhTien):,.0f} đ"
             
 
             # Tiêu đề chính (Căn giữa)

@@ -1,8 +1,13 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 from tkcalendar import DateEntry
-from datetime import date, timedelta, datetime
+from datetime import date, datetime, timedelta
 import pyodbc
+import os
+
+from docx import Document
+from docx.shared import Inches, Pt, RGBColor, Cm
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT, WD_TAB_LEADER
 
 
 class tabBaoHanh(tk.Frame):
@@ -204,6 +209,7 @@ class tabBaoHanh(tk.Frame):
             bd=0,
             command=self.luu,
         ).grid(row=0, column=4, padx=8)
+        tk.Button(frame_buttons, text="In bao hanh", bg="#E51E9C", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.InBaoHanh, pady=5, bd=0).grid(row=0, column=5, padx=8)
 
         # === BẢNG HIỂN THỊ ===
         frame_table = tk.Frame(self, bg="white")
@@ -612,3 +618,138 @@ class tabBaoHanh(tk.Frame):
     def huy(self):
         self.txt_timkiem.delete(0, tk.END)
         self.hienthi_dulieu()
+
+    def InBaoHanh(self):
+        selected = self.trHienThi.selection()
+        if not selected:
+            messagebox.showwarning("Thông báo", "Vui lòng chọn 1 bảo hành để in.")
+            return
+
+        ma_bh = self.trHienThi.item(selected[0], "values")[0]
+
+        # --- Lấy dữ liệu từ SQL ---
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("""
+                SELECT bh.MaBH, bh.MaCTHD, bh.ThoiGianBaoHanh, bh.DieuKien, bh.NgayBaoHanh,
+                    cthd.MaHD, tv.MaTivi, tv.TenTivi, kh.MaKH, kh.TenKH
+                FROM BaoHanh bh
+                JOIN ChiTietHoaDon cthd ON bh.MaCTHD = cthd.MaCTHD
+                JOIN HoaDonBan hdb ON cthd.MaHD = hdb.MaHD
+                JOIN KhachHang kh ON hdb.MaKH = kh.MaKH
+                JOIN Tivi tv ON cthd.MaTivi = tv.MaTivi
+                WHERE bh.MaBH = ?
+            """, (ma_bh,))
+            bh = cursor.fetchone()
+            cursor.close()
+
+            if not bh:
+                messagebox.showerror("Lỗi", f"Không tìm thấy thông tin bảo hành {ma_bh}")
+                return
+
+        except Exception as e:
+            messagebox.showerror("Lỗi CSDL", f"Không thể lấy dữ liệu để in phiếu bảo hành:\n{e}")
+            return
+
+        # --- Tạo file Word ---
+        try:
+            document = Document()
+
+            # Cấu hình font mặc định
+            style = document.styles['Normal']
+            style.font.name = 'Times New Roman'
+            style.font.size = Pt(11)
+
+            # --- Tiêu đề ---
+            title = document.add_paragraph()
+            title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            run = title.add_run("PHIẾU BẢO HÀNH SẢN PHẨM")
+            run.bold = True
+            run.font.size = Pt(16)
+            document.add_paragraph()
+
+            # --- Thông tin chung ---
+            TAB_POS = Cm(8)
+
+            p1 = document.add_paragraph()
+            p1.paragraph_format.tab_stops.add_tab_stop(TAB_POS, WD_TAB_ALIGNMENT.LEFT, WD_TAB_LEADER.SPACES)
+            p1.add_run("Mã bảo hành: ").bold = True
+            run = p1.add_run(bh.MaBH)
+            run.bold = True
+            run.font.color.rgb = RGBColor(0x15, 0x65, 0xC0)
+            p1.add_run("\t")
+            p1.add_run("Mã chi tiết hóa đơn: ").bold = True
+            p1.add_run(bh.MaCTHD)
+
+            p2 = document.add_paragraph()
+            p2.paragraph_format.tab_stops.add_tab_stop(TAB_POS, WD_TAB_ALIGNMENT.LEFT, WD_TAB_LEADER.SPACES)
+            p2.add_run("Mã hóa đơn: ").bold = True
+            p2.add_run(bh.MaHD)
+            p2.add_run("\t")
+            p2.add_run("Mã khách hàng: ").bold = True
+            p2.add_run(bh.MaKH)
+
+            p3 = document.add_paragraph()
+            p3.paragraph_format.tab_stops.add_tab_stop(TAB_POS, WD_TAB_ALIGNMENT.LEFT, WD_TAB_LEADER.SPACES)
+            p3.add_run("Tên khách hàng: ").bold = True
+            p3.add_run(bh.TenKH)
+            p3.add_run("\t")
+            p3.add_run("Sản phẩm: ").bold = True
+            p3.add_run(f"{bh.MaTivi} - {bh.TenTivi}")
+
+            document.add_paragraph()
+
+            # --- Thông tin bảo hành ---
+            ngay_bh = bh.NgayBaoHanh.date() if hasattr(bh.NgayBaoHanh, 'date') else datetime.strptime(str(bh.NgayBaoHanh).split()[0], "%Y-%m-%d").date()
+            ngay_het = ngay_bh + timedelta(days=bh.ThoiGianBaoHanh * 30)
+            tt = "CÒN HẠN" if ngay_het >= datetime.today().date() else "HẾT HẠN"
+
+            document.add_paragraph(f"Ngày bảo hành: {ngay_bh.strftime('%d/%m/%Y')}")
+            document.add_paragraph(f"Thời gian bảo hành: {bh.ThoiGianBaoHanh} tháng")
+            document.add_paragraph(f"Ngày hết hạn: {ngay_het.strftime('%d/%m/%Y')}")
+            document.add_paragraph(f"Tình trạng: {tt}")
+            document.add_paragraph(f"Điều kiện bảo hành: {bh.DieuKien or 'Không có'}")
+
+            document.add_paragraph()
+            document.add_paragraph("Sản phẩm sẽ được bảo hành miễn phí nếu đáp ứng các điều kiện nêu trên.", style="Normal")
+
+            # --- Khu vực ký tên ---
+            document.add_paragraph()
+            document.add_paragraph()
+            sig_table = document.add_table(rows=2, cols=3)
+            sig_table.style = None
+            sig_table.autofit = False
+
+            headers = ["Người lập phiếu", "Kỹ thuật viên", "Khách hàng"]
+            for i, h in enumerate(headers):
+                cell = sig_table.cell(0, i)
+                p = cell.paragraphs[0]
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                run = p.add_run(h)
+                run.bold = True
+
+            for i in range(3):
+                cell = sig_table.cell(1, i)
+                p = cell.paragraphs[0]
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                p.add_run("(Ký, ghi rõ họ tên)")
+
+            # --- Chọn nơi lưu file ---
+            default_name = f"PhieuBaoHanh_{ma_bh}.docx"
+            file_path = filedialog.asksaveasfilename(
+                title="Chọn nơi lưu phiếu bảo hành",
+                defaultextension=".docx",
+                initialfile=default_name,
+                filetypes=[("Word Document", "*.docx")]
+            )
+
+            if not file_path:
+                messagebox.showinfo("Thông báo", "Đã hủy lưu file.")
+                return
+
+            # --- Lưu file ---
+            document.save(file_path)
+            messagebox.showinfo("Thành công", f"Đã tạo phiếu bảo hành tại:\n{file_path}")
+
+        except Exception as e:
+            messagebox.showerror("Lỗi", f"Lỗi khi tạo file Word:\n{e}")
