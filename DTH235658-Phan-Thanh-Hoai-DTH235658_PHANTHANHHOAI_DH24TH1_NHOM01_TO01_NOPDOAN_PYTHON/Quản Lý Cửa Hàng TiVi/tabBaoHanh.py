@@ -29,7 +29,7 @@ class tabBaoHanh(tk.Frame):
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", lambda e: self.timkiem())
 
-        self.search_option = tk.StringVar(value="mabh")
+        self.search_option = tk.StringVar(master=self, value="mabh")
         tk.Radiobutton(
             frame_search,
             text="Mã BH",
@@ -151,8 +151,8 @@ class tabBaoHanh(tk.Frame):
 
         tk.Button(
             frame_buttons,
-            text="Thêm",
-            bg="#43A047",
+            text="➕ Thêm",
+            bg="#EBDA42",
             fg="white",
             font=("Segoe UI", 11, "bold"),
             padx=20,
@@ -162,7 +162,7 @@ class tabBaoHanh(tk.Frame):
         ).grid(row=0, column=0, padx=8)
         tk.Button(
             frame_buttons,
-            text="Sửa",
+            text="✏️ Sửa",
             bg="#FB8C00",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -173,7 +173,7 @@ class tabBaoHanh(tk.Frame):
         ).grid(row=0, column=1, padx=8)
         tk.Button(
             frame_buttons,
-            text="Xóa",
+            text="🗑️ Xóa",
             bg="#E53935",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -184,7 +184,7 @@ class tabBaoHanh(tk.Frame):
         ).grid(row=0, column=2, padx=8)
         tk.Button(
             frame_buttons,
-            text="Làm mới",
+            text="🔄 Làm mới",
             bg="#1E88E5",
             fg="white",
             font=("Segoe UI", 11, "bold"),
@@ -195,8 +195,8 @@ class tabBaoHanh(tk.Frame):
         ).grid(row=0, column=3, padx=8)
         tk.Button(
             frame_buttons,
-            text="Lưu",
-            bg="#8E24AA",
+            text="💾 Lưu",
+            bg="#43A047",
             fg="white",
             font=("Segoe UI", 10, "bold"),
             padx=20,

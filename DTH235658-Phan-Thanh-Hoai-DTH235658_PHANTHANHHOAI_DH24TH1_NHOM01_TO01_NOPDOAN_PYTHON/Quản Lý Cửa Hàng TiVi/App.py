@@ -34,7 +34,7 @@ class App(tk.Tk):
     def __init__(self, user):
         super().__init__()
         self.center_window(1500, 885)
-        self.resizable(True, True)
+        self.resizable(False, False)
         self.title("HỆ THỐNG QUẢN LÝ CỬA HÀNG TIVI")
         self.user = user
 
