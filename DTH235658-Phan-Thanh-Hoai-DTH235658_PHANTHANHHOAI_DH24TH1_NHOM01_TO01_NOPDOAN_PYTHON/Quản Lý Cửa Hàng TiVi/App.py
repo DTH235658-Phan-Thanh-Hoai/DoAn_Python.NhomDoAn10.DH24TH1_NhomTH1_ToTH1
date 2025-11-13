@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import messagebox
 import ctypes
 import pyodbc
 
@@ -41,7 +41,7 @@ class App(tk.Tk):
          # === CHUỖI KẾT NỐI ===
         try:
             self.conn = pyodbc.connect(
-                'DRIVER={SQL Server};'
+                'DRIVER={ODBC Driver 17 for SQL Server};'
                 'SERVER=LAPTOP-IFECMD9V;'
                 'DATABASE=QLTV;'
                 'Trusted_Connection=yes;'

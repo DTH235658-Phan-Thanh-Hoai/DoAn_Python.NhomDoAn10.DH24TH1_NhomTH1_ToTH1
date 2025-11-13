@@ -1,6 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
-import threading
+from tkinter import ttk
 import ctypes
 import pyodbc
 import App
@@ -32,7 +31,7 @@ class Login(tk.Tk):
 
         # ==== CHUỖI KẾT NỐI SQL ====
         self.conn = pyodbc.connect(
-            "DRIVER={SQL Server};"
+            "DRIVER={ODBC Driver 17 for SQL Server};"
             "SERVER=LAPTOP-IFECMD9V;"
             "DATABASE=QLTV;"
             "Trusted_Connection=yes;"
@@ -200,11 +199,9 @@ class Login(tk.Tk):
             self.lbl_error.config(text="Sai tài khoản hoặc mật khẩu!")
 
     def mo_form(self, user):
-        self.withdraw()
-        main_app = App.App(user)
-        main_app.wait_window()
-        self.deiconify()
-
+        self.destroy()
+        App.App(user)
+        # main_app.wait_window()
 
 if __name__ == "__main__":
     app = Login()

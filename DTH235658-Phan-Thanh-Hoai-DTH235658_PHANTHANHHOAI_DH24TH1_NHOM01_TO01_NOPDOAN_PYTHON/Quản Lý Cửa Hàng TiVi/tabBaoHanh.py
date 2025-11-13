@@ -40,9 +40,9 @@ class tabBaoHanh(tk.Frame):
         ).pack(side="left", padx=5)
         tk.Radiobutton(
             frame_search,
-            text="Mã Tivi",
+            text="Mã CTHD",
             variable=self.search_option,
-            value="mativi",
+            value="macthd",
             bg="#E3F2FD",
             font=("Segoe UI", 10),
         ).pack(side="left", padx=5)
@@ -96,15 +96,15 @@ class tabBaoHanh(tk.Frame):
         self.txt_mabh = ttk.Entry(frame_form, width=20)
         self.txt_mabh.grid(row=0, column=1, padx=5, pady=5)
 
-        tk.Label(frame_form, text="Mã Tivi:", bg="white", font=("Segoe UI", 10)).grid(
+        tk.Label(frame_form, text="Mã CTHD:", bg="white", font=("Segoe UI", 10)).grid(
             row=0, column=2, sticky="w", padx=5, pady=5
         )
-        self.cb_mativi = ttk.Combobox(
+        self.cb_macthd = ttk.Combobox(
             frame_form, width=18, font=("Segoe UI", 10), state="readonly"
         )
-        self.cb_mativi.grid(row=0, column=3, padx=5, pady=5)
-        self.cb_mativi.bind(
-            "<<ComboboxSelected>>", lambda e: self.capnhat_mahd_theo_tivi()
+        self.cb_macthd.grid(row=0, column=3, padx=5, pady=5)
+        self.cb_macthd.bind(
+            "<<ComboboxSelected>>", lambda e: self.capnhat_mahd_theo_cthd()
         )
 
         tk.Label(frame_form, text="Mã HD:", bg="white", font=("Segoe UI", 10)).grid(
@@ -211,7 +211,7 @@ class tabBaoHanh(tk.Frame):
 
         columns = (
             "MaBH",
-            "MaTivi",
+            "MaCTHD",
             "MaHD",
             "ThoiGianBaoHanh",
             "DieuKien",
@@ -235,7 +235,7 @@ class tabBaoHanh(tk.Frame):
         self.trHienThi.pack(fill="both", expand=True)
 
         self.trHienThi.heading("MaBH", text="Mã BH")
-        self.trHienThi.heading("MaTivi", text="Mã Tivi")
+        self.trHienThi.heading("MaCTHD", text="Mã CTHD")
         self.trHienThi.heading("MaHD", text="Mã HD")
         self.trHienThi.heading("ThoiGianBaoHanh", text="Thời gian (tháng)")
         self.trHienThi.heading("DieuKien", text="Điều kiện")
@@ -243,7 +243,7 @@ class tabBaoHanh(tk.Frame):
         self.trHienThi.heading("TrangThai", text="Trạng thái")
 
         self.trHienThi.column("MaBH", width=100, anchor="center")
-        self.trHienThi.column("MaTivi", width=100, anchor="center")
+        self.trHienThi.column("MaCTHD", width=100, anchor="center")
         self.trHienThi.column("MaHD", width=100, anchor="center")
         self.trHienThi.column("ThoiGianBaoHanh", width=100, anchor="center")
         self.trHienThi.column("DieuKien", width=250, anchor="w")
@@ -256,50 +256,49 @@ class tabBaoHanh(tk.Frame):
 
         self.trHienThi.bind("<<TreeviewSelect>>", self.chon_dong)
 
-        self.hien_thi_du_lieu_tivi_mahd()
+        self.hien_thi_du_lieu_cthd()
         self.hienthi_dulieu()
 
-    def hien_thi_du_lieu_tivi_mahd(self):
+    def hien_thi_du_lieu_cthd(self):
         try:
             self.cursor.execute(
                 """
-                SELECT DISTINCT cthd.MaTivi
+                SELECT DISTINCT cthd.MaCTHD
                 FROM ChiTietHoaDon cthd
                 JOIN HoaDonBan hdb ON hdb.MaHD = cthd.MaHD
                 WHERE hdb.TrangThai = N'Đã thanh toán'
-                ORDER BY cthd.MaTivi
-            """
+                ORDER BY cthd.MaCTHD
+                """
             )
             rows = self.cursor.fetchall()
-            self.cb_mativi["values"] = [row.MaTivi for row in rows]
+            self.cb_macthd["values"] = [row.MaCTHD for row in rows]
             if rows:
-                self.cb_mativi.current(0)
-                self.capnhat_mahd_theo_tivi()
+                self.cb_macthd.current(0)
+                self.capnhat_mahd_theo_cthd()
         except Exception as e:
-            messagebox.showerror("Lỗi", f"Không tải được danh sách Tivi: {e}")
+            messagebox.showerror("Lỗi", f"Không tải được danh sách CTHD: {e}")
 
-    def capnhat_mahd_theo_tivi(self):
-        mativi = self.cb_mativi.get()
-        if not mativi:
+    def capnhat_mahd_theo_cthd(self):
+        macthd = self.cb_macthd.get()
+        if not macthd:
             self.cb_mahd["values"] = []
             return
         try:
             self.cursor.execute(
                 """
-                SELECT cthd.MaHD
-                FROM ChiTietHoaDon cthd
-                JOIN HoaDonBan hdb ON hdb.MaHD = cthd.MaHD
-                WHERE cthd.MaTivi = ? AND hdb.TrangThai = N'Đã thanh toán'
-                ORDER BY cthd.MaHD
-            """,
-                (mativi,),
+                SELECT MaHD FROM ChiTietHoaDon WHERE MaCTHD = ?
+                """,
+                (macthd,)
             )
-            rows = self.cursor.fetchall()
-            self.cb_mahd["values"] = [row.MaHD for row in rows]
-            if rows:
-                self.cb_mahd.current(0)
+            row = self.cursor.fetchone()
+            if row:
+                self.cb_mahd["values"] = [row.MaHD]
+                self.cb_mahd.set(row.MaHD)
+            else:
+                self.cb_mahd["values"] = []
+                self.cb_mahd.set("")
         except Exception as e:
-            messagebox.showerror("Lỗi", f"Không tải được danh sách HD: {e}")
+            messagebox.showerror("Lỗi", f"Không tải được Mã HD: {e}")
 
     def hienthi_dulieu(self):
         for item in self.trHienThi.get_children():
@@ -308,19 +307,16 @@ class tabBaoHanh(tk.Frame):
         try:
             self.cursor.execute(
                 """
-                SELECT MaBH, MaTivi, MaHD, ThoiGianBaoHanh, DieuKien, NgayBaoHanh
-                FROM BaoHanh
-                ORDER BY MaBH
-            """
+                SELECT bh.MaBH, bh.MaCTHD, cthd.MaHD, bh.ThoiGianBaoHanh, bh.DieuKien, bh.NgayBaoHanh
+                FROM BaoHanh bh
+                JOIN ChiTietHoaDon cthd ON bh.MaCTHD = cthd.MaCTHD
+                ORDER BY bh.MaBH
+                """
             )
             rows = self.cursor.fetchall()
 
             for row in rows:
-                ngay_bh = (
-                    row.NgayBaoHanh
-                    if isinstance(row.NgayBaoHanh, date)
-                    else date.fromisoformat(str(row.NgayBaoHanh).split()[0])
-                )
+                ngay_bh = row.NgayBaoHanh.date() if hasattr(row.NgayBaoHanh, 'date') else date.fromisoformat(str(row.NgayBaoHanh).split()[0])
                 ngay_het = ngay_bh + timedelta(days=row.ThoiGianBaoHanh * 30)
                 trangthai = "CÒN HẠN" if ngay_het >= date.today() else "HẾT HẠN"
 
@@ -329,7 +325,7 @@ class tabBaoHanh(tk.Frame):
                     "end",
                     values=(
                         row.MaBH,
-                        row.MaTivi,
+                        row.MaCTHD,
                         row.MaHD,
                         row.ThoiGianBaoHanh,
                         row.DieuKien or "",
@@ -339,40 +335,15 @@ class tabBaoHanh(tk.Frame):
                 )
         except Exception as e:
             messagebox.showerror("Lỗi", f"Không thể tải dữ liệu: {e}")
-    
+
     def chuyen_yyyy_sang_dd(self, ngay_db):
         if ngay_db is None:
             return ""
-        ngay_str = str(ngay_db).strip()
-        if "-" in ngay_str:
-            parts = ngay_str.split("-")
-        else:
-            return ngay_str
-        
-        if len(parts) != 3:
-            return ngay_str
-        try:
-            y, m, d = parts
+        ngay_str = str(ngay_db).strip().split()[0]
+        if "-" in ngay_str and len(ngay_str.split("-")) == 3:
+            y, m, d = ngay_str.split("-")
             return f"{d.zfill(2)}/{m.zfill(2)}/{y}"
-        except:
-            return ngay_str
-
-    def chuyen_dd_sang_datetime(self, ngay_entry):
-        if not ngay_entry:
-            return date.today()
-        ngay_str = str(ngay_entry).strip()
-        if "-" in ngay_str:
-            parts = ngay_str.split("-")
-        else:
-            return ngay_str
-
-        if len(parts) != 3:
-            return date.today()
-        try:
-            d, m, y = map(int, parts)
-            return datetime(y, m, d).date()
-        except:
-            return date.today()
+        return ngay_str
 
     def chon_dong(self, event):
         selected = self.trHienThi.selection()
@@ -383,9 +354,8 @@ class tabBaoHanh(tk.Frame):
         self.xoa_form()
 
         self.txt_mabh.insert(0, values[0])
-        self.cb_mativi.set(values[1])
-        self.capnhat_mahd_theo_tivi()
-        self.cb_mahd.set(values[2])
+        self.cb_macthd.set(values[1])
+        self.capnhat_mahd_theo_cthd()
         self.txt_thoigian.insert(0, values[3])
         self.txt_dieukien.insert(0, values[4])
 
@@ -393,24 +363,20 @@ class tabBaoHanh(tk.Frame):
         self.date_ngaybaohanh.set_date(date(y, m, d))
 
         self.lbl_trangthai.config(
-            text=(
-                "CÒN HẠN BẢO HÀNH" if values[6] == "CÒN HẠN" else "ĐÃ HẾT HẠN BẢO HÀNH"
-            ),
+            text="CÒN HẠN BẢO HÀNH" if values[6] == "CÒN HẠN" else "ĐÃ HẾT HẠN BẢO HÀNH",
             fg="green" if values[6] == "CÒN HẠN" else "red",
         )
 
     def them(self):
         mabh = self.txt_mabh.get().strip()
-        mativi = self.cb_mativi.get()
+        macthd = self.cb_macthd.get()
         mahd = self.cb_mahd.get()
         thoigian = self.txt_thoigian.get().strip()
         dieukien = self.txt_dieukien.get().strip()
         ngaybh = self.date_ngaybaohanh.get_date()
 
-        if not all([mabh, mativi, mahd, thoigian]):
-            messagebox.showwarning(
-                "Cảnh báo", "Vui lòng nhập đầy đủ thông tin bắt buộc!"
-            )
+        if not all([mabh, macthd, thoigian]):
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập đầy đủ thông tin bắt buộc!")
             return
 
         try:
@@ -434,7 +400,7 @@ class tabBaoHanh(tk.Frame):
             "end",
             values=(
                 mabh,
-                mativi,
+                macthd,
                 mahd,
                 thoigian_int,
                 dieukien,
@@ -443,7 +409,7 @@ class tabBaoHanh(tk.Frame):
             ),
         )
 
-        self.ds_them.append((mabh, mativi, mahd, thoigian_int, dieukien, ngaybh))
+        self.ds_them.append((mabh, macthd, thoigian_int, dieukien, ngaybh))
         self.xoa_form()
         messagebox.showinfo("Thành công", "Đã thêm! Nhấn 'Lưu' để lưu vào CSDL.")
 
@@ -454,13 +420,12 @@ class tabBaoHanh(tk.Frame):
             return
 
         mabh = self.txt_mabh.get().strip()
-        mativi = self.cb_mativi.get()
-        mahd = self.cb_mahd.get()
+        macthd = self.cb_macthd.get()
         thoigian = self.txt_thoigian.get().strip()
         dieukien = self.txt_dieukien.get().strip()
         ngaybh = self.date_ngaybaohanh.get_date()
 
-        if not all([mabh, mativi, mahd, thoigian]):
+        if not all([mabh, macthd, thoigian]):
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập đầy đủ!")
             return
 
@@ -480,8 +445,8 @@ class tabBaoHanh(tk.Frame):
             selected[0],
             values=(
                 mabh,
-                mativi,
-                mahd,
+                macthd,
+                self.cb_mahd.get(),
                 thoigian_int,
                 dieukien,
                 self.chuyen_yyyy_sang_dd(ngaybh),
@@ -490,9 +455,7 @@ class tabBaoHanh(tk.Frame):
         )
 
         self.ds_sua = [x for x in self.ds_sua if x[0] != old_mabh]
-        self.ds_sua.append(
-            (mabh, mativi, mahd, thoigian_int, dieukien, ngaybh, old_mabh)
-        )
+        self.ds_sua.append((mabh, macthd, thoigian_int, dieukien, ngaybh, old_mabh))
 
         self.xoa_form()
         messagebox.showinfo("Thành công", "Đã sửa! Nhấn 'Lưu' để cập nhật.")
@@ -528,24 +491,24 @@ class tabBaoHanh(tk.Frame):
             for mabh in self.ds_xoa:
                 self.cursor.execute("DELETE FROM BaoHanh WHERE MaBH = ?", (mabh,))
 
-            for mabh, mativi, mahd, thoigian, dieukien, ngaybh in self.ds_them:
+            for mabh, macthd, thoigian, dieukien, ngaybh in self.ds_them:
                 ngaybh_str = ngaybh.strftime('%Y-%m-%d')
                 self.cursor.execute(
                     """
-                    INSERT INTO BaoHanh (MaBH, MaTivi, MaHD, ThoiGianBaoHanh, DieuKien, NgayBaoHanh)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                """,
-                    (mabh, mativi, mahd, thoigian, dieukien, ngaybh_str),
+                    INSERT INTO BaoHanh (MaBH, MaCTHD, ThoiGianBaoHanh, DieuKien, NgayBaoHanh)
+                    VALUES (?, ?, ?, ?, ?)
+                    """,
+                    (mabh, macthd, thoigian, dieukien, ngaybh_str),
                 )
 
-            for mabh, mativi, mahd, thoigian, dieukien, ngaybh, old_mabh in self.ds_sua:
+            for mabh, macthd, thoigian, dieukien, ngaybh, old_mabh in self.ds_sua:
                 ngaybh_str = ngaybh.strftime('%Y-%m-%d')
                 self.cursor.execute(
                     """
-                    UPDATE BaoHanh SET MaBH=?, MaTivi=?, MaHD=?, ThoiGianBaoHanh=?, DieuKien=?, NgayBaoHanh=?
+                    UPDATE BaoHanh SET MaBH=?, MaCTHD=?, ThoiGianBaoHanh=?, DieuKien=?, NgayBaoHanh=?
                     WHERE MaBH=?
-                """,
-                    (mabh, mativi, mahd, thoigian, dieukien, ngaybh_str, old_mabh),
+                    """,
+                    (mabh, macthd, thoigian, dieukien, ngaybh_str, old_mabh),
                 )
 
             self.conn.commit()
@@ -583,26 +546,37 @@ class tabBaoHanh(tk.Frame):
             for item in self.trHienThi.get_children():
                 self.trHienThi.delete(item)
 
-            option = self.search_option.get()
+            lua_chon = self.search_option.get()
             sql = ""
             param = f"%{keyword}%"
 
-            if option == "mabh":
-                sql = "SELECT * FROM BaoHanh WHERE MaBH LIKE ?"
-            elif option == "mativi":
-                sql = "SELECT * FROM BaoHanh WHERE MaTivi LIKE ?"
-            elif option == "mahd":
-                sql = "SELECT * FROM BaoHanh WHERE MaHD LIKE ?"
+            if lua_chon == "mabh":
+                sql = """
+                    SELECT bh.MaBH, bh.MaCTHD, cthd.MaHD, bh.ThoiGianBaoHanh, bh.DieuKien, bh.NgayBaoHanh
+                    FROM BaoHanh bh
+                    JOIN ChiTietHoaDon cthd ON bh.MaCTHD = cthd.MaCTHD
+                    WHERE bh.MaBH LIKE ?
+                """
+            elif lua_chon == "macthd":
+                sql = """
+                    SELECT bh.MaBH, bh.MaCTHD, cthd.MaHD, bh.ThoiGianBaoHanh, bh.DieuKien, bh.NgayBaoHanh
+                    FROM BaoHanh bh
+                    JOIN ChiTietHoaDon cthd ON bh.MaCTHD = cthd.MaCTHD
+                    WHERE bh.MaCTHD LIKE ?
+                """
+            elif lua_chon == "mahd":
+                sql = """
+                    SELECT bh.MaBH, bh.MaCTHD, cthd.MaHD, bh.ThoiGianBaoHanh, bh.DieuKien, bh.NgayBaoHanh
+                    FROM BaoHanh bh
+                    JOIN ChiTietHoaDon cthd ON bh.MaCTHD = cthd.MaCTHD
+                    WHERE cthd.MaHD LIKE ?
+                """
 
             self.cursor.execute(sql, (param,))
             rows = self.cursor.fetchall()
 
             for row in rows:
-                ngay_bh = (
-                    row.NgayBaoHanh
-                    if isinstance(row.NgayBaoHanh, date)
-                    else date.fromisoformat(str(row.NgayBaoHanh).split()[0])
-                )
+                ngay_bh = row.NgayBaoHanh.date() if hasattr(row.NgayBaoHanh, 'date') else date.fromisoformat(str(row.NgayBaoHanh).split()[0])
                 ngay_het = ngay_bh + timedelta(days=row.ThoiGianBaoHanh * 30)
                 tt = "CÒN HẠN" if ngay_het >= date.today() else "HẾT HẠN"
 
@@ -611,11 +585,11 @@ class tabBaoHanh(tk.Frame):
                     "end",
                     values=(
                         row.MaBH,
-                        row.MaTivi,
+                        row.MaCTHD,
                         row.MaHD,
                         row.ThoiGianBaoHanh,
                         row.DieuKien or "",
-                        ngay_bh,
+                        self.chuyen_yyyy_sang_dd(row.NgayBaoHanh),
                         tt,
                     ),
                 )
@@ -628,7 +602,7 @@ class tabBaoHanh(tk.Frame):
 
     def xoa_form(self):
         self.txt_mabh.delete(0, tk.END)
-        self.cb_mativi.set("")
+        self.cb_macthd.set("")
         self.cb_mahd.set("")
         self.txt_thoigian.delete(0, tk.END)
         self.txt_dieukien.delete(0, tk.END)

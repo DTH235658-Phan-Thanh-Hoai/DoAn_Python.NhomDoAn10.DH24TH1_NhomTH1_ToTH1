@@ -23,11 +23,10 @@ class tabHoaDon(tk.Frame):
         frame_search = tk.Frame(self, bg="#E3F2FD", padx=10, pady=10)
         frame_search.pack(fill="x", padx=20, pady=5)
 
-        tk.Label(frame_search, text="🔍 Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD").pack(side="left", padx=5)
+        tk.Label(frame_search, text="Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD").pack(side="left", padx=5)
         self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=20)
         self.txt_timkiem.pack(side="left", padx=5)
 
-        self.search_option = tk.StringVar(value="ma")
         self.search_option = tk.StringVar(value="mahd")
         tk.Radiobutton(frame_search, text="Theo mã hóa đơn", variable=self.search_option, value="mahd", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left", padx=10)
         tk.Radiobutton(frame_search, text="Theo mã khách hàng", variable=self.search_option, value="makh", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left" , padx=10)
@@ -78,11 +77,11 @@ class tabHoaDon(tk.Frame):
         frame_btn = tk.Frame(self, bg="white")
         frame_btn.pack(pady=10)
 
-        tk.Button(frame_btn, text="🧐 Xem chi tiết", bg="#EC9428", fg="white", font=("Segoe UI", 10, "bold"),command=self.XemChiTiet, padx=15, pady=5, bd=0).pack(side="left", padx=5)
-        tk.Button(frame_btn, text="✅ Thanh toán hóa đơn", bg="#43A047", fg="white",  font=("Segoe UI", 10, "bold"), command=self.ThanhToanHoaDonBan, padx=15, pady=5, bd=0).pack(side="left", padx=5)
-        tk.Button(frame_btn, text="🗑 Hủy hóa đơn", bg="#E53935", fg="white",  font=("Segoe UI", 10, "bold"), padx=15, command=self.HuyHoaDonBan, pady=5, bd=0).pack(side="left", padx=5)
-        tk.Button(frame_btn, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.load_hoa_don, pady=5, bd=0).pack(side="left", padx=5)
-        tk.Button(frame_btn, text="🖨 In hóa đơn", bg="#E51E9C", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.InHoaDon, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="Xem chi tiết", bg="#EC9428", fg="white", font=("Segoe UI", 10, "bold"),command=self.XemChiTiet, padx=15, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="Thanh toán hóa đơn", bg="#43A047", fg="white",  font=("Segoe UI", 10, "bold"), command=self.ThanhToanHoaDonBan, padx=15, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="Hủy hóa đơn", bg="#E53935", fg="white",  font=("Segoe UI", 10, "bold"), padx=15, command=self.HuyHoaDonBan, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.load_hoa_don, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="In hóa đơn", bg="#E51E9C", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.InHoaDon, pady=5, bd=0).pack(side="left", padx=5)
 
         # === TẢI DỮ LIỆU HÓA ĐƠN ===
         self.load_hoa_don()
@@ -117,7 +116,7 @@ class tabHoaDon(tk.Frame):
         try:
             chitiethoadon= tk.Toplevel(self)
             chitiethoadon.title("Chi tiết hóa đơn: " + ma_hd)
-            chitiethoadon.geometry("700x800")
+            chitiethoadon.geometry("800x800")
             chitiethoadon.resizable(False, False)
             chitiethoadon.configure(bg="white")
             
@@ -125,7 +124,7 @@ class tabHoaDon(tk.Frame):
             tk.Label(chitiethoadon, text="Chi tiết hóa đơn bán " + ma_hd, font=("Segoe UI", 12, "bold"), bg="white", fg="#0D47A1").pack(pady=10)
             
             cursor = self.conn.cursor()
-            cursor.execute("""SELECT nv.MaNV, nv.TenNV, kh.MaKH, kh.TenKH, hdb.NgayBan, hdb.TongTien, hdb.TrangThai
+            cursor.execute("""SELECT nv.MaNV, nv.TenNV, kh.MaKH, kh.TenKH, hdb.NgayBan, hba.TongTien, hdb.TrangThai
                               FROM HOADONBAN hdb JOIN NHANVIEN nv ON hdb.MaNV = nv.MaNV
                               JOIN KHACHHANG kh ON hdb.MaKH = kh.MaKH
                               WHERE hdb.MaHD = ?""", (ma_hd,))
@@ -153,16 +152,18 @@ class tabHoaDon(tk.Frame):
             tk.Label(Frame_thongtin, text="Trạng thái:", font=("Segoe UI", 10), bg="white").grid(row=2, column=2, padx=10, sticky="w")
             tk.Label(Frame_thongtin, text=thong_tin.TrangThai, font=("Segoe UI", 10, "bold"), bg="white", fg="#43A047").grid(row=2, column=3, padx=10, sticky="w")
             
-            columns = ("MaTivi", "TenTivi", "SoLuong", "DonGia", "ThanhTien")
+            columns = ("MaCTHD", "MaTivi", "TenTivi", "SoLuong", "DonGia", "ThanhTien")
             tree = ttk.Treeview(chitiethoadon, columns=columns, show="headings", height=10)
             tree.pack(fill="both", expand=True, padx=15, pady=10)
 
+            tree.heading("MaCTHD", text="Mã CTHD")
             tree.heading("MaTivi", text="Mã Tivi")
             tree.heading("TenTivi", text="Tên Tivi")
             tree.heading("SoLuong", text="Số Lượng")
             tree.heading("DonGia", text="Đơn Giá")
             tree.heading("ThanhTien", text="Thành Tiền")
 
+            tree.column("MaCTHD", width=100)
             tree.column("MaTivi", width=100)
             tree.column("TenTivi", width=200)
             tree.column("SoLuong", width=100, anchor="center")
@@ -173,7 +174,7 @@ class tabHoaDon(tk.Frame):
             tk.Label(chitiethoadon, text=f"{float(thong_tin.TongTien):,.0f} đ", font=("Segoe UI", 10, "bold"), bg="white", fg="red").pack(side="right", padx=20)
             
             cursor.execute("""
-                SELECT cthd.MaTivi, tv.TenTivi, cthd.SoLuong, cthd.DonGia, cthd.ThanhTien
+                SELECT cthd.MaCTHD, cthd.MaTivi, tv.TenTivi, cthd.SoLuong, cthd.DonGia, (cthd.SoLuong * cthd.DonGia) AS ThanhTien
                 FROM CHITIETHOADON cthd
                 JOIN TIVI tv ON cthd.MaTivi = tv.MaTivi
                 WHERE cthd.MaHD = ?
@@ -187,6 +188,7 @@ class tabHoaDon(tk.Frame):
 
             for r in rows:
                 tree.insert("", tk.END, values=(
+                    r.MaCTHD,
                     r.MaTivi,
                     r.TenTivi,
                     r.SoLuong,
@@ -399,7 +401,7 @@ class tabHoaDon(tk.Frame):
 
             # 2. Lấy chi tiết các mặt hàng
             cursor.execute("""
-                SELECT cthd.MaTivi, tv.TenTivi, cthd.SoLuong, cthd.DonGia, cthd.ThanhTien
+                SELECT cthd.MaCTHD, cthd.MaTivi, tv.TenTivi, cthd.SoLuong, cthd.DonGia, (cthd.SoLuong * cthd.DonGia) AS ThanhTien
                 FROM CHITIETHOADON cthd
                 JOIN TIVI tv ON cthd.MaTivi = tv.MaTivi
                 WHERE cthd.MaHD = ?
@@ -484,11 +486,11 @@ class tabHoaDon(tk.Frame):
             document.add_paragraph() # Dòng trống
 
             # --- Bảng chi tiết hàng hóa ---
-            table = document.add_table(rows=1, cols=5)
+            table = document.add_table(rows=1, cols=6)
             table.style = 'Table Grid'
             
             hdr_cells = table.rows[0].cells
-            headers = ["Mã Tivi", "Tên Tivi", "Số Lượng", "Đơn Giá", "Thành Tiền"]
+            headers = ["Mã CTHD", "Mã Tivi", "Tên Tivi", "Số Lượng", "Đơn Giá", "Thành Tiền"]
             for i, header in enumerate(headers):
                 hdr_cells[i].text = header
                 hdr_cells[i].paragraphs[0].runs[0].bold = True
@@ -497,14 +499,15 @@ class tabHoaDon(tk.Frame):
             # Ghi dữ liệu chi tiết
             for item in chi_tiet_hang:
                 row_cells = table.add_row().cells
-                row_cells[0].text = item.MaTivi
-                row_cells[1].text = item.TenTivi
-                row_cells[2].text = str(item.SoLuong)
-                row_cells[3].text = f"{float(item.DonGia):,.0f} đ"
-                row_cells[4].text = f"{float(item.ThanhTien):,.0f} đ"
+                row_cells[0].text = item.MaCTHD
+                row_cells[1].text = item.MaTivi
+                row_cells[2].text = item.TenTivi
+                row_cells[3].text = str(item.SoLuong)
+                row_cells[4].text = f"{float(item.DonGia):,.0f} đ"
+                row_cells[5].text = f"{float(item.ThanhTien):,.0f} đ"
                 
                 # Căn giữa Số Lượng, Đơn Giá, Thành Tiền
-                for i in [2, 3, 4]:
+                for i in [3, 4, 5]:
                     row_cells[i].paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
 
             # --- Tổng tiền (Căn phải) ---
@@ -564,4 +567,3 @@ class tabHoaDon(tk.Frame):
 
         except Exception as e:
             messagebox.showerror("Lỗi File Word", "Không thể tạo hoặc lưu file Word:\n" + str(e))
-

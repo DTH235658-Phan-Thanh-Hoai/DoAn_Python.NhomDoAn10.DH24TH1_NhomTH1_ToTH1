@@ -44,26 +44,30 @@ class tabBanHang(tk.Frame):
         frame_sanpham = tk.LabelFrame(self, text="Sản phẩm trong Hóa đơn", bg="white", font=("Segoe UI", 12, "bold"), fg="#0D47A1", padx=10, pady=10)
         frame_sanpham.pack(fill="x", padx=20, pady=10)
 
-        tk.Label(frame_sanpham, text="Mã Tivi:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=0, sticky="w", padx=5, pady=5)
-        self.cb_mativi = ttk.Combobox(frame_sanpham, width=33, state="readonly")
-        self.cb_mativi.grid(row=0, column=1, padx=5, pady=5)
+        tk.Label(frame_sanpham, text="Mã CTHD:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=0, sticky="w", padx=5, pady=5)
+        self.txt_macthd = ttk.Entry(frame_sanpham, width=20)
+        self.txt_macthd.grid(row=0, column=1, padx=5, pady=5, sticky="w")
 
-        tk.Label(frame_sanpham, text="Số lượng:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=2, sticky="w", padx=5, pady=5)
-        self.txt_soluong = ttk.Entry(frame_sanpham, width=33)
-        self.txt_soluong.grid(row=0, column=3, padx=5, pady=5)
+        tk.Label(frame_sanpham, text="Mã Tivi:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=2, sticky="w", padx=5, pady=5)
+        self.cb_mativi = ttk.Combobox(frame_sanpham, width=20, state="readonly")
+        self.cb_mativi.grid(row=0, column=3, padx=5, pady=5)
 
-        tk.Label(frame_sanpham, text="Giá bán:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=4, sticky="w", padx=5, pady=5)
-        self.txt_giaban = ttk.Entry(frame_sanpham, width=33, state="disabled")
-        self.txt_giaban.grid(row=0, column=5, padx=5, pady=5)
+        tk.Label(frame_sanpham, text="Số lượng:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=4, sticky="w", padx=5, pady=5)
+        self.txt_soluong = ttk.Entry(frame_sanpham, width=20)
+        self.txt_soluong.grid(row=0, column=5, padx=5, pady=5)
+
+        tk.Label(frame_sanpham, text="Giá bán:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=6, sticky="w", padx=5, pady=5)
+        self.txt_giaban = ttk.Entry(frame_sanpham, width=25, state="disabled")
+        self.txt_giaban.grid(row=0, column=7, padx=5, pady=5)
 
         # === NÚT CHỨC NĂNG ===
         frame_buttons = tk.Frame(self, bg="white")
         frame_buttons.pack(pady=10)
 
-        tk.Button(frame_buttons, text="➕ Thêm hóa đơn", bg="#EBDA42", fg="white", font=("Segoe UI", 11, "bold"), command=self.ThemHoaDonChiTiet, padx=20, pady=5, bd=0).grid(row=0, column=0, padx=10)
-        tk.Button(frame_buttons, text="✏️ Sửa", bg="#FB8C00", fg="white", font=("Segoe UI", 11, "bold"), command=self.SuaHoaDonChiTiet, padx=20, pady=5, bd=0).grid(row=0, column=1, padx=10)
-        tk.Button(frame_buttons, text="🗑️ Xóa", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), command=self.XoaHoaDonChiTiet, padx=20, pady=5, bd=0).grid(row=0, column=2, padx=10)
-        tk.Button(frame_buttons, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), command=self.LamMoi, padx=20, pady=5, bd=0).grid(row=0, column=3, padx=10)
+        tk.Button(frame_buttons, text="Thêm hóa đơn", bg="#EBDA42", fg="white", font=("Segoe UI", 11, "bold"), command=self.ThemHoaDonChiTiet, padx=20, pady=5, bd=0).grid(row=0, column=0, padx=10)
+        tk.Button(frame_buttons, text="Sửa", bg="#FB8C00", fg="white", font=("Segoe UI", 11, "bold"), command=self.SuaHoaDonChiTiet, padx=20, pady=5, bd=0).grid(row=0, column=1, padx=10)
+        tk.Button(frame_buttons, text="Xóa", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), command=self.XoaHoaDonChiTiet, padx=20, pady=5, bd=0).grid(row=0, column=2, padx=10)
+        tk.Button(frame_buttons, text="Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), command=self.LamMoi, padx=20, pady=5, bd=0).grid(row=0, column=3, padx=10)
 
         # === BẢNG DANH SÁCH SẢN PHẨM ===
         frame_table = tk.Frame(self, bg="white")
@@ -118,7 +122,7 @@ class tabBanHang(tk.Frame):
         self.lbl_tongtien = tk.Label(frame_bottom, text="0 VNĐ", bg="white", font=("Segoe UI", 11, "bold"), fg="#E53935")
         self.lbl_tongtien.pack(side="left", padx=5)
 
-        tk.Button(frame_bottom, text="💳 Tạo đơn hàng", bg="#43A047", fg="white",font=("Segoe UI", 11, "bold"), command=self.TaoHoaDon, padx=15, pady=5, bd=0).pack(side="right", padx=5)
+        tk.Button(frame_bottom, text="Tạo đơn hàng", bg="#43A047", fg="white",font=("Segoe UI", 11, "bold"), command=self.TaoHoaDon, padx=15, pady=5, bd=0).pack(side="right", padx=5)
 
         self.load_Combobox()
 
@@ -184,20 +188,29 @@ class tabBanHang(tk.Frame):
         except Exception as e:
             messagebox.showerror("Cảnh báo", "Có lỗi xảy ra khi kiểm tra mã hóa đơn vừa nhập đã có tồn tại không:\n" + str(e))
 
-    def ThemHoaDonChiTiet(self):
+    def KiemTraMaCTHD(self, ma_cthd):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT COUNT(*) FROM ChiTietHoaDon WHERE MaCTHD = ?", (ma_cthd,))
+            count = cursor.fetchone()[0]
+            cursor.close()
+            return count > 0
+        except Exception as e:
+            messagebox.showerror("Lỗi", f"Lỗi kiểm tra MaCTHD:\n{str(e)}")
+            return False
 
+    def ThemHoaDonChiTiet(self):
         # Lấy dữ liệu
-        ma_hd = self.txt_mahoadonban.get()
+        ma_hd = self.txt_mahoadonban.get().strip()
         ma_nv = self.cb_manhanvien.get()
         ten_nv = self.dict_nv.get(ma_nv,"")
         ma_kh = self.cb_makhachhang.get()
         ten_kh = self.dict_kh.get(ma_kh, "")
         ngay_ban = self.dt_ngayban.get_date()
+        ma_cthd = self.txt_macthd.get().strip()
         ma_tivi = self.cb_mativi.get()
         ten_tivi = self.dict_tivi[ma_tivi]["TenTivi"]
-        so_luong = int(self.txt_soluong.get())
-        gia_ban = float(self.txt_giaban.get())
-        thanh_tien = so_luong * gia_ban
+        so_luong_str = self.txt_soluong.get().strip()
 
         # Kiểm tra dữ liệu nhập
         if(ma_hd == ""):
@@ -212,28 +225,39 @@ class tabBanHang(tk.Frame):
             messagebox.showwarning("Cảnh báo", "Mã khách hàng không được trống!")
             return
         
-        elif(ngay_ban == ""):
-            messagebox.showwarning("Cảnh báo", "Ngày ban không được trống!")
+        elif(ma_cthd == ""):
+            messagebox.showwarning("Cảnh báo", "Mã CTHD không được để trống!")
             return
         
         elif(ma_tivi == ""):
             messagebox.showwarning("Cảnh báo", "Mã tivi không được trống!")
             return
         
-        elif(so_luong == ""):
+        elif(so_luong_str == ""):
             messagebox.showwarning("Cảnh báo", "Số lượng không được trống!")
             return
         
-        elif(self.KiemTraMaHoaDonBan(ma_hd)):
+        if not so_luong_str.isdigit():
+            messagebox.showwarning("Cảnh báo", "Số lượng phải là số nguyên dương!")
+            return
+        
+        if(self.KiemTraMaHoaDonBan(ma_hd)):
             messagebox.showwarning("Cảnh báo", "Mã hóa đơn đã tồn tại!")
             self.txt_mahoadonban.delete(0, tk.END)
             self.txt_mahoadonban.focus()
             return
         
+        so_luong = int(so_luong_str)
+        gia_ban = float(self.txt_giaban.get().replace(",", ""))
+        thanh_tien = so_luong * gia_ban
+        
+        if self.KiemTraMaCTHD(ma_cthd):
+            messagebox.showwarning("Cảnh báo", f"Mã CTHD '{ma_cthd}' đã tồn tại trong hệ thống!")
+            return
+        
         else:
             try:
-
-                #Kiểm tra trùng mã Tivi trong cùng phiếu
+                # Kiểm tra trùng mã Tivi trong cùng phiếu
                 for item in self.trHienThi.get_children():
                     values = self.trHienThi.item(item, "values")
                     if values[6] == ma_tivi:
@@ -245,6 +269,7 @@ class tabBanHang(tk.Frame):
                             thanhtienmoi = soluongmoi * gia_ban
                             self.trHienThi.item(item, values=(ma_hd, ngay_ban.strftime("%d/%m/%Y"), ma_nv, ten_nv, ma_kh, ten_kh, ma_tivi, ten_tivi, soluongmoi, f"{gia_ban:,.0f}", f"{thanhtienmoi:,.0f}"))
                         return
+
                 # Thêm hóa đơn vào trHienThi
                 self.trHienThi.insert("", tk.END, values=(ma_hd, ngay_ban.strftime("%d/%m/%Y"), ma_nv, ten_nv, ma_kh, ten_kh, ma_tivi, ten_tivi, so_luong, f"{gia_ban:,.0f}", f"{thanh_tien:,.0f}"))
 
@@ -255,6 +280,7 @@ class tabBanHang(tk.Frame):
                 self.cb_manhanvien.config(state="disabled")
 
                 # Xóa dữ liệu chi tiết hóa đơn sau khi thêm
+                self.txt_macthd.delete(0, tk.END)
                 self.cb_mativi.set("")
                 self.txt_soluong.delete(0, tk.END)
                 
@@ -276,8 +302,10 @@ class tabBanHang(tk.Frame):
             return
 
         # Gán giá trị lên form
+        self.txt_mahoadonban.config(state="normal")
         self.txt_mahoadonban.delete(0, tk.END)
         self.txt_mahoadonban.insert(0, item[0])
+        self.txt_mahoadonban.config(state="disabled")
 
         self.dt_ngayban.set_date(item[1])
         self.cb_manhanvien.set(item[2])
@@ -293,6 +321,11 @@ class tabBanHang(tk.Frame):
         self.txt_giaban.insert(0, gia_ban)
         self.txt_giaban.config(state="disabled")
 
+        # Hiển thị MaCTHD từ dòng được chọn (lấy từ Treeview)
+        ma_cthd = self.trHienThi.item(selected[0], "text")
+        self.txt_macthd.delete(0, tk.END)
+        self.txt_macthd.insert(0, ma_cthd)
+
     def SuaHoaDonChiTiet(self):
         selected = self.trHienThi.selection()
         if not selected:
@@ -305,18 +338,35 @@ class tabBanHang(tk.Frame):
         ma_kh = self.cb_makhachhang.get()
         ten_kh = self.dict_kh.get(ma_kh, "")
         ngay_ban = self.dt_ngayban.get_date()
+        ma_cthd = self.txt_macthd.get().strip()
         ma_tivi = self.cb_mativi.get()
         ten_tivi = self.dict_tivi[ma_tivi]["TenTivi"]
-        so_luong = int(self.txt_soluong.get())
-        gia_ban = float(self.txt_giaban.get())
-        thanh_tien = so_luong * gia_ban
+        so_luong_str = self.txt_soluong.get().strip()
 
+        if(ma_cthd == ""):
+            messagebox.showwarning("Cảnh báo", "Mã CTHD không được trống!")
+            return
+        
         if(ma_tivi == ""):
             messagebox.showwarning("Cảnh báo", "Mã tivi không được trống!")
             return
         
-        elif(so_luong == ""):
+        if(so_luong_str == ""):
             messagebox.showwarning("Cảnh báo", "Số lượng không được trống!")
+            return
+        
+        if not so_luong_str.isdigit():
+            messagebox.showwarning("Cảnh báo", "Số lượng phải là số nguyên dương!")
+            return
+        
+        so_luong = int(so_luong_str)
+        gia_ban = float(self.txt_giaban.get().replace(",", ""))
+        thanh_tien = so_luong * gia_ban
+
+        # Kiểm tra MaCTHD trùng (trừ dòng hiện tại)
+        old_ma_cthd = self.trHienThi.item(selected[0], "text")
+        if ma_cthd != old_ma_cthd and self.KiemTraMaCTHD(ma_cthd):
+            messagebox.showwarning("Cảnh báo", f"Mã CTHD '{ma_cthd}' đã tồn tại!")
             return
 
         try:
@@ -335,6 +385,7 @@ class tabBanHang(tk.Frame):
                         soluongmoi = soluongcu + so_luong
                         thanhtienmoi = soluongmoi * gia_ban
                         self.trHienThi.item(item, values=(ma_hd, ngay_ban.strftime("%d/%m/%Y"), ma_nv, ten_nv, ma_kh, ten_kh, ma_tivi, ten_tivi, int(soluongmoi), f"{gia_ban:,.0f}", f"{thanhtienmoi:,.0f}"))
+                        self.trHienThi.item(item, text=ma_cthd)
 
                         # Xóa dòng đang sửa(vì đã gộp vào dòng kia)
                         self.trHienThi.delete(selected[0])
@@ -345,8 +396,10 @@ class tabBanHang(tk.Frame):
                     
             # Cập nhật lại hóa đơn trong trHienThi
             self.trHienThi.item(selected[0], values=(ma_hd, ngay_ban.strftime("%d/%m/%Y"), ma_nv, ten_nv, ma_kh, ten_kh, ma_tivi, ten_tivi, int(so_luong), f"{gia_ban:,.0f}", f"{thanh_tien:,.0f}"))
+            self.trHienThi.item(selected[0], text=ma_cthd)
 
             # Xóa dữ liệu chi tiết hóa đơn sau khi thêm
+            self.txt_macthd.delete(0, tk.END)
             self.cb_mativi.set("")
             self.txt_soluong.delete(0, tk.END)
 
@@ -369,8 +422,16 @@ class tabBanHang(tk.Frame):
         if traloi:
             self.trHienThi.delete(selected[0])
 
-            #Cập nhật lại tổng tiền
-            self.TinhTongTien
+            # Cập nhật lại tổng tiền
+            self.TinhTongTien()
+
+            # Xóa input chi tiết
+            self.txt_macthd.delete(0, tk.END)
+            self.cb_mativi.set("")
+            self.txt_soluong.delete(0, tk.END)
+            self.txt_giaban.config(state="normal")
+            self.txt_giaban.delete(0, tk.END)
+            self.txt_giaban.config(state="disabled")
 
     def LamMoi(self):
         self.txt_mahoadonban.config(state="normal")
@@ -383,6 +444,7 @@ class tabBanHang(tk.Frame):
         self.cb_manhanvien.set("")
         self.cb_makhachhang.set("")
 
+        self.txt_macthd.delete(0, tk.END)
         self.cb_mativi.set("")
         self.txt_soluong.delete(0, tk.END)
         self.txt_soluong.insert(0, "")
@@ -407,7 +469,7 @@ class tabBanHang(tk.Frame):
             ma_nv = self.cb_manhanvien.get()
             ma_kh = self.cb_makhachhang.get()
 
-            #Thêm hóa đơn - vì 1 hóa đơn sẽ có nhiều chi tiết hóa đơn
+            # Thêm hóa đơn - vì 1 hóa đơn sẽ có nhiều chi tiết hóa đơn
             cursor.execute("""
                 INSERT INTO HOADONBAN (MaHD, NgayBan, MaNV, MaKH)
                 VALUES (?, ?, ?, ?)
@@ -415,15 +477,16 @@ class tabBanHang(tk.Frame):
             
             for item in self.trHienThi.get_children():
                 values = self.trHienThi.item(item, "values")
+                ma_cthd = self.trHienThi.item(item, "text")
                 ma_tivi = values[6]
                 so_luong = int(values[8])
                 gia_ban = float(values[9].replace(",", ""))
                 
-                #Thêm chi tiết hóa đơn
+                # Thêm chi tiết hóa đơn
                 cursor.execute("""
-                    INSERT INTO CHITIETHOADON (MaHD, MaTivi, SoLuong, DonGia)
-                    VALUES(?, ?, ?, ?)
-                    """, (ma_hd, ma_tivi, so_luong, gia_ban))
+                    INSERT INTO CHITIETHOADON (MaCTHD, MaHD, MaTivi, SoLuong, DonGia)
+                    VALUES(?, ?, ?, ?, ?)
+                    """, (ma_cthd, ma_hd, ma_tivi, so_luong, gia_ban))
                 
             self.conn.commit()
             cursor.close()
@@ -434,4 +497,5 @@ class tabBanHang(tk.Frame):
                 self.tab_hoadon.load_hoa_don()
 
         except Exception as e:
+            self.conn.rollback()
             messagebox.showerror("Lỗi", "Đã xảy ra lỗi khi tạo đơn hàng:\n" + str(e))
