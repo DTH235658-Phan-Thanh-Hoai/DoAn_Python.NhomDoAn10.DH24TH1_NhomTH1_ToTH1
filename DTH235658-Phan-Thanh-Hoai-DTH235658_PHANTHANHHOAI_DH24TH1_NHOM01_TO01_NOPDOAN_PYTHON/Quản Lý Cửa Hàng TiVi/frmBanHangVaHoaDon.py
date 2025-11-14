@@ -23,12 +23,12 @@ class BanHangVaHoaDon(tk.Frame):
         tab_control = ttk.Notebook(self)
         tab_control.pack(fill="both", expand=True, padx=20, pady=10)
 
-        self.tab_hoadon = hd.tabHoaDon(tab_control, conn, controller = self.controller)
-        self.tab_banhang = bh.tabBanHang(tab_control, conn, self.tab_hoadon)
-        
-
-        tab_control.add(self.tab_banhang, text="🛒 Bán hàng")
+        self.tab_hoadon = hd.tabHoaDon(tab_control, conn, self.controller)
         tab_control.add(self.tab_hoadon, text="🧾 Danh sách Hóa đơn")
+
+        self.tab_banhang = bh.tabBanHang(tab_control, conn, self.tab_hoadon)
+        tab_control.add(self.tab_banhang, text="🛒 Bán hàng")
+        
 
     # Hàm làm mới tab khi click vào
     def load_data(self):

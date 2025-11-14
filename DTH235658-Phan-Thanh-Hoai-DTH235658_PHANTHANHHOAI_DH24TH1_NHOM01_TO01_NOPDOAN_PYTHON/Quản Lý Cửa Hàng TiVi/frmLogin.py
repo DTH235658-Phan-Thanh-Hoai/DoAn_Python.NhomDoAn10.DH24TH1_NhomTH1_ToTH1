@@ -31,7 +31,7 @@ class Login(tk.Tk):
         # ==== CHUỖI KẾT NỐI SQL ====
         self.conn = pyodbc.connect(
             "DRIVER={ODBC Driver 17 for SQL Server};"
-            "SERVER=DESKTOP-LJVV0KQ;"
+            "SERVER=LAPTOP-IFECMD9V;"
             "DATABASE=QLTV;"
             "Trusted_Connection=yes;")
 
@@ -133,7 +133,6 @@ class Login(tk.Tk):
     def mo_form(self, user):
         self.destroy()
         App.App(user)
-        # main_app.wait_window()
 
 if __name__ == "__main__":
     app = Login()

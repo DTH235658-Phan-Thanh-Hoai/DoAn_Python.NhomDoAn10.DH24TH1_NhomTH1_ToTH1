@@ -139,8 +139,8 @@ class tabNhaCungCap(tk.Frame):
         if isinstance(chuoi, str) and chuoi[0] == "0":
             return chuoi.lstrip("0") or "0"
         return str(chuoi)
-
-    def them(self):
+    
+    def kiem_tra_du_lieu(self):
         ma = str(self.txt_ma.get()).strip()
         ten = str(self.txt_ten.get()).strip()
         diachi = str(self.txt_diachi.get()).strip()
@@ -149,9 +149,34 @@ class tabNhaCungCap(tk.Frame):
 
         if not ma:
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập Mã nhà cung cấp!")
-            return
+            return False
         if not ten:
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập Tên nhà cung cấp!")
+            return False
+        
+        if diachi:
+            messagebox.showwarning("Cảnh báo", "Vui long nhập Địa chi!")
+            return False
+        
+        if not sdt or len(sdt) != 10 or not sdt.isdigit():
+            messagebox.showwarning("Cảnh báo", "Số điện thoại phải có 10 chữ số!")
+            return False
+        
+        if email:
+            messagebox.showwarning("Cảnh báo", "Vui long nhập Email!")
+            return False
+        
+        return True
+
+    def them(self):
+        ma = str(self.txt_ma.get()).strip()
+        ten = str(self.txt_ten.get()).strip()
+        diachi = str(self.txt_diachi.get()).strip()
+        sdt = str(self.txt_sodienthoai.get()).strip()
+        email = str(self.txt_email.get()).strip()
+
+        if self.kiem_tra_du_lieu() == False:
+            messagebox.showwarning("Cảnh báo", "Vui long nhập dữ liệu!")
             return
 
         trung = self.kiemtra_trung(ma=ma, ten=ten, sdt=sdt, email=email)
@@ -177,11 +202,8 @@ class tabNhaCungCap(tk.Frame):
         sdt = self.txt_sodienthoai.get().strip()
         email = self.txt_email.get().strip()
 
-        if not ma:
-            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Mã nhà cung cấp!")
-            return
-        if not ten:
-            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Tên nhà cung cấp!")
+        if self.kiem_tra_du_lieu() == False:
+            messagebox.showwarning("Cảnh báo", "Vui long nhập dữ liệu!")
             return
 
         ma_cu = self.trHienThi.item(sel[0])["values"][0]

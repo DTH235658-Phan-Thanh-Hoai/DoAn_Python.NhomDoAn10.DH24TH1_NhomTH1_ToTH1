@@ -169,6 +169,45 @@ class QuanLyKhachHang(tk.Frame):
             if email and v[3].strip().lower() == str(email).strip().lower():
                 return "Email"
         return None
+    
+    def kiem_tra_thong_tin(self):
+        ma = self.txt_ma.get().strip()
+        ten = self.txt_ten.get().strip()
+        sdt = str(self.txt_sdt.get()).strip()
+        email = self.txt_email.get().strip()
+        diachi = self.txt_diachi.get().strip()
+
+        if not ma:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Mã khách hàng!")
+            self.txt_ma.focus()
+            return False
+
+        if not ten:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Tên khách hàng!")
+            self.txt_ten.focus()
+            return False
+        
+        if not sdt:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Số Điện Thoại!")
+            self.txt_sdt.focus()
+            return False
+
+        if not email:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Email!")
+            self.txt_email.focus()
+            return False
+        
+        if len(sdt) != 10:
+            messagebox.showwarning("Cảnh báo", "Số Điện Thoại phải có 10 số!")
+            self.txt_sdt.focus()
+            return False
+        
+        if not diachi:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Địa Chị!")
+            self.txt_diachi.focus()
+            return False
+        
+        return True
 
     def them(self):
         ma = self.txt_ma.get().strip()
@@ -177,14 +216,7 @@ class QuanLyKhachHang(tk.Frame):
         email = self.txt_email.get().strip()
         diachi = self.txt_diachi.get().strip()
 
-        if not ma:
-            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Mã khách hàng!")
-            self.txt_ma.focus()
-            return
-
-        if not ten:
-            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Tên khách hàng!")
-            self.txt_ten.focus()
+        if self.kiem_tra_thong_tin() == False:
             return
 
         trung = self.kiemtra_trung(ma=ma, sdt=sdt, email=email)
@@ -202,7 +234,6 @@ class QuanLyKhachHang(tk.Frame):
     def sua(self):
         selected = self.trHienThi.selection()
         if not selected:
-            messagebox.showwarning("Cảnh báo", "Vui lòng chọn dòng cần sửa!")
             return
 
         ma = self.txt_ma.get().strip()
@@ -211,15 +242,12 @@ class QuanLyKhachHang(tk.Frame):
         email = self.txt_email.get().strip()
         diachi = self.txt_diachi.get().strip()
 
-        if not ma:
-            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Mã khách hàng!")
-            return
-
-        if not ten:
-            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Tên khách hàng!")
+        if self.kiem_tra_thong_tin() == False:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập thông tin!")
             return
 
         item = self.trHienThi.item(selected[0])
+        
         ma_cu = item["values"][0]
 
         trung = self.kiemtra_trung(ma=ma, sdt=sdt, email=email, ma_hien_tai=ma_cu)

@@ -82,29 +82,29 @@ class QuanLyNhanVien(tk.Frame):
         self.txt_cccd = ttk.Entry(frame_form, font=("Segoe UI", 10), width=42)
         self.txt_cccd.grid(row=2, column=4, pady=5, padx=5)
 
-        frame_buttons = tk.Frame(self, bg="white")
-        frame_buttons.pack(pady=10)
+        self.frame_buttons = tk.Frame(self, bg="white")
+        self.frame_buttons.pack(pady=10)
 
-        self.btn_them = tk.Button(frame_buttons, text="➕ Thêm", bg="#EBDA42", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.them)
+        self.btn_them = tk.Button(self.frame_buttons, text="➕ Thêm", bg="#EBDA42", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.them)
         self.btn_them.grid(row=0, column=0, padx=10)
 
-        self.btn_sua = tk.Button(frame_buttons, text="✏️ Sửa", bg="#FB8C00", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.sua)
+        self.btn_sua = tk.Button(self.frame_buttons, text="✏️ Sửa", bg="#FB8C00", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.sua)
         self.btn_sua.grid(row=0, column=1, padx=10)
 
-        self.btn_xoa = tk.Button(frame_buttons, text="🗑️ Xóa", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.xoa)
+        self.btn_xoa = tk.Button(self.frame_buttons, text="🗑️ Xóa", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.xoa)
         self.btn_xoa.grid(row=0, column=2, padx=10)
 
-        self.btn_lammoi = tk.Button(frame_buttons, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.lammoi)
+        self.btn_lammoi = tk.Button(self.frame_buttons, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.lammoi)
         self.btn_lammoi.grid(row=0, column=3, padx=10)
 
-        self.btn_luu = tk.Button(frame_buttons, text="💾 Lưu", bg="#43A047", fg="white", font=("Segoe UI", 10, "bold"), padx=20, pady=5, bd=0, command=self.luu)
+        self.btn_luu = tk.Button(self.frame_buttons, text="💾 Lưu", bg="#43A047", fg="white", font=("Segoe UI", 10, "bold"), padx=20, pady=5, bd=0, command=self.luu)
         self.btn_luu.grid(row=0, column=4, padx=10)
 
-        frame_table = tk.Frame(self, bg="white")
-        frame_table.pack(fill="both", expand=True, padx=20, pady=10)
+        self.frame_table = tk.Frame(self, bg="white")
+        self.frame_table.pack(fill="both", expand=True, padx=20, pady=10)
 
         columns = ("MaNV", "TenNV", "GioiTinh", "NgaySinh", "SoDienThoai", "CCCD")
-        self.trHienThi = ttk.Treeview(frame_table, show="headings", height=12, columns=columns)
+        self.trHienThi = ttk.Treeview(self.frame_table, show="headings", height=12, columns=columns)
 
         style = ttk.Style()
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
@@ -137,8 +137,8 @@ class QuanLyNhanVien(tk.Frame):
 
             if self.user != "admin":
                 self.cursor.execute(
-                    "SELECT MaNV, HinhAnh, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD FROM NhanVien WHERE MaNV = ?",
-                    (self.user,),
+                    "SELECT MaNV, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD FROM NhanVien WHERE MaNV = ?",
+                    (self.user)
                 )
                 row = self.cursor.fetchone()
 
@@ -149,22 +149,19 @@ class QuanLyNhanVien(tk.Frame):
                     self.hienthi_anh(row[0])
 
                     self.txt_tennv.delete(0, tk.END)
-                    self.txt_tennv.insert(0, row[2])
+                    self.txt_tennv.insert(0, row[1])
 
-                    self.cbo_gioitinh.set(row[3])
+                    self.cbo_gioitinh.set(row[2])
 
-                    if row[4]:
-                        self.date_ngaysinh.set_date(self.chuyen_dd_sang_datetime(row[4]))
-                    else:
-                        self.date_ngaysinh.set_date(date.today())
+                    self.date_ngaysinh.set_date(self.chuyen_dd_sang_datetime(row[3]))
 
-                    sdt = str(row[5]) or ""
+                    sdt = str(row[4])
                     if sdt and not sdt[0] == "0":
                         sdt = "0" + sdt
                     self.txt_sodienthoai.delete(0, tk.END)
                     self.txt_sodienthoai.insert(0, sdt)
 
-                    cccd = str(row[6]) or ""
+                    cccd = str(row[5])
                     if cccd and not cccd[0] == "0":
                         cccd = "0" + cccd
                     self.txt_cccd.delete(0, tk.END)
@@ -177,16 +174,10 @@ class QuanLyNhanVien(tk.Frame):
                     self.txt_tennv.configure(state="disabled")
                     self.txt_cccd.configure(state="disabled")
                     self.btn_chonanh.configure(state="disabled")
-                    for btn in [
-                        self.btn_them,
-                        self.btn_xoa,
-                        self.btn_sua,
-                        self.btn_lammoi,
-                        self.btn_luu,
-                    ]:
-                        btn.destroy()
-                    self.trHienThi.destroy()
-                    self.frame_search.destroy()
+
+                    self.frame_buttons.pack_forget()
+                    self.frame_search.pack_forget()
+                    self.frame_table.pack_forget()
 
             else:
                 self.cursor.execute("SELECT MaNV, HinhAnh, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD FROM NhanVien")
@@ -328,8 +319,38 @@ class QuanLyNhanVien(tk.Frame):
             except Exception as e:
                 messagebox.showerror("Lỗi chọn ảnh", str(e))
 
+    def kiem_tra_du_lieu(self):
+        ma = self.txt_manv.get().strip()
+        ten = self.txt_tennv.get().strip()
+        gioitinh = self.cbo_gioitinh.get()
+        ngaysinh = str(self.date_ngaysinh.get_date())
+        sdt = self.txt_sodienthoai.get().strip()
+        cccd = self.txt_cccd.get().strip()
+
+        if not ma:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập mã nhân viên!")
+            return False
+        if not ten:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập tên nhân viên!")
+            return False
+        if not gioitinh:
+            messagebox.showwarning("Cảnh báo", "Vui lòng chọn giới tính!")
+            return False
+        if not ngaysinh:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập ngày sinh!")
+            return False
+        if not sdt or len(sdt) != 10 or not sdt.isdigit():
+            messagebox.showwarning("Cảnh báo", "Số điện thoại phải có 10 chữ số!")
+            return False
+        if not cccd or len(cccd) not in (9, 12) or not cccd.isdigit():
+            messagebox.showwarning("Cảnh báo", "CCCD phải là 9 hoặc 12 chữ số!")
+            return False
+
+        return True
+
+
     def them(self):
-        if not self.xac_nhan_du_lieu():
+        if not self.kiem_tra_du_lieu():
             return
 
         ma = self.txt_manv.get().strip()
@@ -375,7 +396,7 @@ class QuanLyNhanVien(tk.Frame):
             messagebox.showwarning("Cảnh báo", "Vui lòng chọn dòng cần sửa!")
             return
 
-        if not self.xac_nhan_du_lieu():
+        if not self.kiem_tra_du_lieu():
             return
 
         ma = self.txt_manv.get().strip()
@@ -558,37 +579,6 @@ class QuanLyNhanVien(tk.Frame):
 
         except Exception as e:
             messagebox.showerror("Lỗi", f"Không thể tìm kiếm: {str(e)}")
-
-    def xac_nhan_du_lieu(self):
-        ma = self.txt_manv.get().strip()
-        if not ma:
-            messagebox.showwarning("Cảnh báo", "Vui lòng nhập mã nhân viên!")
-            self.txt_manv.focus()
-            return False
-
-        ten = self.txt_tennv.get().strip()
-        if not ten:
-            messagebox.showwarning("Cảnh báo", "Vui lòng nhập tên nhân viên!")
-            self.txt_tennv.focus()
-            return False
-
-        if not self.cbo_gioitinh.get():
-            messagebox.showwarning("Cảnh báo", "Vui lòng chọn giới tính!")
-            return False
-
-        sdt = self.txt_sodienthoai.get().strip()
-        if not sdt or len(sdt) != 10 or not sdt.isdigit():
-            messagebox.showwarning("Cảnh báo", "Số điện thoại phải có 10 chữ số!")
-            self.txt_sodienthoai.focus()
-            return False
-
-        cccd = self.txt_cccd.get().strip()
-        if not cccd or len(cccd) not in (9, 12) or not cccd.isdigit():
-            messagebox.showwarning("Cảnh báo", "CCCD phải là 9 hoặc 12 chữ số!")
-            self.txt_cccd.focus()
-            return False
-
-        return True
 
     def xoa_form(self):
         self.txt_manv.delete(0, tk.END)

@@ -42,7 +42,7 @@ class App(tk.Tk):
         try:
             self.conn = pyodbc.connect(
                 'DRIVER={ODBC Driver 17 for SQL Server};'
-                'SERVER=DESKTOP-LJVV0KQ;'
+                'SERVER=LAPTOP-IFECMD9V;'
                 'DATABASE=QLTV;'
                 'Trusted_Connection=yes;'
             )
@@ -147,13 +147,13 @@ class App(tk.Tk):
         btn_quanlynhanvien = tk.Button(pnlGiaoDien, text="🧑‍💼 Quản lý Nhân viên", command=lambda: self.HienThiFrame("QuanLyNhanVien"), **self.DinhDangNut())
         btn_quanlynhanvien.pack(fill="x")
 
+        btn_banhangvahoadon = tk.Button(pnlGiaoDien, text="💰 Bán hàng & Hóa đơn", command=lambda: self.HienThiFrame("BanHangVaHoaDon"), **self.DinhDangNut())
+        btn_banhangvahoadon.pack(fill="x")
+        
         if self.user == "admin":
-            btn_banhangvahoadon = tk.Button(pnlGiaoDien, text="💰 Bán hàng & Hóa đơn", command=lambda: self.HienThiFrame("BanHangVaHoaDon"), **self.DinhDangNut())
-            btn_banhangvahoadon.pack(fill="x")
 
             btn_nhaphangvaphieunhap = tk.Button(pnlGiaoDien, text="📦 Nhập hàng & Phiếu nhập", command=lambda: self.HienThiFrame("NhapHangVaPhieuNhap"), **self.DinhDangNut())
             btn_nhaphangvaphieunhap.pack(fill="x")
-
 
             btn_thongkevabaocao = tk.Button(pnlGiaoDien, text="🧾 Thống kê & Báo cáo", command=lambda: self.HienThiFrame("ThongKeVaBaoCao"), **self.DinhDangNut())
             btn_thongkevabaocao.pack(fill="x")
