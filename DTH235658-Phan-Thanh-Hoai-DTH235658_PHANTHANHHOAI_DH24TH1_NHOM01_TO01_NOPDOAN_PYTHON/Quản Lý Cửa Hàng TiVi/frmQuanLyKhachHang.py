@@ -8,6 +8,7 @@ class QuanLyKhachHang(tk.Frame):
     def __init__(self, parent, controller, conn, user):
         super().__init__(parent, bg="white")
 
+        self.controller = controller
         self.conn = conn
         self.cursor = conn.cursor()
 
@@ -22,96 +23,40 @@ class QuanLyKhachHang(tk.Frame):
         frame_search = tk.Frame(self, bg="#E3F2FD", padx=10, pady=10)
         frame_search.pack(fill="x", padx=20, pady=5)
 
-        tk.Label(
-            frame_search, text="🔍 Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
-        ).pack(side="left", padx=5)
-        self.txt_timkiem = tk.Entry(
-            frame_search, font=("Segoe UI", 10), width=50, bg="white"
-        )
+        tk.Label(frame_search, text="🔍 Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD").pack(side="left", padx=5)
+        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=50, bg="white")
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", lambda e: self.timkiem())
 
         self.search_option = tk.StringVar(value="ma")
-        tk.Radiobutton(
-            frame_search,
-            text="Theo mã khách hàng",
-            variable=self.search_option,
-            value="ma",
-            bg="#E3F2FD",
-            font=("Segoe UI", 10),
-        ).pack(side="left", padx=10)
-        tk.Radiobutton(
-            frame_search,
-            text="Theo tên khách hàng",
-            variable=self.search_option,
-            value="ten",
-            bg="#E3F2FD",
-            font=("Segoe UI", 10),
-        ).pack(side="left")
-        tk.Button(
-            frame_search,
-            text="Tìm",
-            font=("Segoe UI", 10, "bold"),
-            bg="#1565C0",
-            fg="white",
-            bd=0,
-            padx=10,
-            pady=5,
-            command=self.timkiem,
-        ).pack(side="left", padx=10)
-        tk.Button(
-            frame_search,
-            text="Hủy",
-            font=("Segoe UI", 10, "bold"),
-            bg="#E53935",
-            fg="white",
-            bd=0,
-            padx=10,
-            pady=5,
-            command=self.huy,
-        ).pack(side="left", padx=10)
+        tk.Radiobutton(frame_search, text="Theo mã khách hàng", variable=self.search_option, value="ma", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left", padx=10)
+        tk.Radiobutton(frame_search, text="Theo tên khách hàng", variable=self.search_option, value="ten", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left")
+        tk.Button(frame_search, text="Tìm", font=("Segoe UI", 10, "bold"), bg="#1565C0", fg="white", bd=0, padx=10, pady=5, command=self.timkiem).pack(side="left", padx=10)
+        tk.Button(frame_search, text="Hủy", font=("Segoe UI", 10, "bold"), bg="#E53935", fg="white", bd=0, padx=10, pady=5, command=self.huy).pack(side="left", padx=10)
 
         # === KHUNG THÔNG TIN ===
-        frame_form = tk.LabelFrame(
-            self,
-            text="Thông tin Khách hàng",
-            bg="white",
-            font=("Segoe UI", 12, "bold"),
-            fg="#0D47A1",
-            padx=10,
-            pady=10,
-        )
+        frame_form = tk.LabelFrame(self, text="Thông tin Khách hàng", bg="white", font=("Segoe UI", 12, "bold"), fg="#0D47A1", padx=10, pady=10)
         frame_form.pack(fill="x", padx=20, pady=10)
 
         # Dòng 1
-        tk.Label(
-            frame_form, text="Mã khách hàng:", bg="white", font=("Segoe UI", 10)
-        ).grid(row=0, column=0, sticky="w", padx=5, pady=5)
+        tk.Label(frame_form, text="Mã khách hàng:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=0, sticky="w", padx=5, pady=5)
         self.txt_ma = ttk.Entry(frame_form, width=28)
         self.txt_ma.grid(row=0, column=1, padx=5, pady=5)
 
-        tk.Label(
-            frame_form, text="Tên khách hàng:", bg="white", font=("Segoe UI", 10)
-        ).grid(row=0, column=2, sticky="w", padx=5, pady=5)
+        tk.Label(frame_form, text="Tên khách hàng:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=2, sticky="w", padx=5, pady=5)
         self.txt_ten = ttk.Entry(frame_form, width=28)
         self.txt_ten.grid(row=0, column=3, padx=5, pady=5)
 
-        tk.Label(
-            frame_form, text="Số điện thoại:", bg="white", font=("Segoe UI", 10)
-        ).grid(row=0, column=4, sticky="w", padx=5, pady=5)
+        tk.Label(frame_form, text="Số điện thoại:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=4, sticky="w", padx=5, pady=5)
         self.txt_sdt = ttk.Entry(frame_form, width=28)
         self.txt_sdt.grid(row=0, column=5, padx=5, pady=5)
 
         # Dòng 2
-        tk.Label(frame_form, text="Email:", bg="white", font=("Segoe UI", 10)).grid(
-            row=1, column=0, sticky="w", padx=5, pady=5
-        )
+        tk.Label(frame_form, text="Email:", bg="white", font=("Segoe UI", 10)).grid(row=1, column=0, sticky="w", padx=5, pady=5)
         self.txt_email = ttk.Entry(frame_form, width=28)
         self.txt_email.grid(row=1, column=1, padx=5, pady=5)
 
-        tk.Label(frame_form, text="Địa chỉ:", bg="white", font=("Segoe UI", 10)).grid(
-            row=1, column=2, sticky="w", padx=5, pady=5
-        )
+        tk.Label(frame_form, text="Địa chỉ:", bg="white", font=("Segoe UI", 10)).grid(row=1, column=2, sticky="w", padx=5, pady=5)
         self.txt_diachi = ttk.Entry(frame_form, width=64)
         self.txt_diachi.grid(row=1, column=3, columnspan=3, padx=5, pady=5, sticky="we")
 
@@ -119,69 +64,19 @@ class QuanLyKhachHang(tk.Frame):
         frame_buttons = tk.Frame(self, bg="white")
         frame_buttons.pack(pady=10)
 
-        btn_them = tk.Button(
-            frame_buttons,
-            text="➕ Thêm",
-            bg="#EBDA42",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.them,
-        )
+        btn_them = tk.Button(frame_buttons, text="➕ Thêm", bg="#EBDA42", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.them)
         btn_them.grid(row=0, column=0, padx=10)
 
-        btn_sua = tk.Button(
-            frame_buttons,
-            text="✏️ Sửa",
-            bg="#FB8C00",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.sua,
-        )
+        btn_sua = tk.Button(frame_buttons, text="✏️ Sửa", bg="#FB8C00", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.sua)
         btn_sua.grid(row=0, column=1, padx=10)
 
-        btn_xoa = tk.Button(
-            frame_buttons,
-            text="🗑️ Xóa",
-            bg="#E53935",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.xoa,
-        )
+        btn_xoa = tk.Button(frame_buttons, text="🗑️ Xóa", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.xoa)
         btn_xoa.grid(row=0, column=2, padx=10)
 
-        btn_lammoi = tk.Button(
-            frame_buttons,
-            text="🔄 Làm mới",
-            bg="#1E88E5",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.lammoi,
-        )
+        btn_lammoi = tk.Button(frame_buttons, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.lammoi)
         btn_lammoi.grid(row=0, column=3, padx=10)
 
-        btn_luu = tk.Button(
-            frame_buttons,
-            text="💾 Lưu",
-            bg="#43A047",
-            fg="white",
-            font=("Segoe UI", 10, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.luu,
-        )
+        btn_luu = tk.Button(frame_buttons, text="💾 Lưu", bg="#43A047", fg="white", font=("Segoe UI", 10, "bold"), padx=20, pady=5, bd=0, command=self.luu)
         btn_luu.grid(row=0, column=4, padx=10)
 
         # === BẢNG KHÁCH HÀNG ===
@@ -205,7 +100,6 @@ class QuanLyKhachHang(tk.Frame):
         scroll_x.pack(side="bottom", fill="x")
         self.trHienThi.pack(fill="both", expand=True)
 
-
         self.trHienThi.heading("MaKH", text="Mã Khách Hàng")
         self.trHienThi.heading("TenKH", text="Tên Khách Hàng")
         self.trHienThi.heading("SoDienThoai", text="Số Điện Thoại")
@@ -224,33 +118,21 @@ class QuanLyKhachHang(tk.Frame):
 
         self.trHienThi.bind("<<TreeviewSelect>>", self.chon_dong)
 
-        self.hienthi_dulieu()
+        self.load_data()
 
-    def hienthi_dulieu(self):
+    def load_data(self):
         try:
             for item in self.trHienThi.get_children():
                 self.trHienThi.delete(item)
 
-            self.cursor.execute(
-                "SELECT MaKH, TenKH, SoDienThoai, Email, DiaChi FROM KhachHang"
-            )
+            self.cursor.execute("SELECT MaKH, TenKH, SoDienThoai, Email, DiaChi FROM KhachHang")
             rows = self.cursor.fetchall()
 
             for row in rows:
-                self.trHienThi.insert(
-                    "",
-                    "end",
-                    values=(
-                        row.MaKH,
-                        row.TenKH,
-                        row.SoDienThoai if row.SoDienThoai else "",
-                        row.Email if row.Email else "",
-                        row.DiaChi if row.DiaChi else "",
-                    ),
-                )
+                self.trHienThi.insert("", "end", values=(row.MaKH, row.TenKH, row.SoDienThoai if row.SoDienThoai else "", row.Email if row.Email else "", row.DiaChi if row.DiaChi else ""))
 
         except Exception as e:
-            messagebox.showerror("Lỗi", f"Không thể tải dữ liệu: {str(e)}")
+            messagebox.showerror("Lỗi", "Không thể tải dữ liệu: " + str(e))
 
     def chon_dong(self, event):
         selected = self.trHienThi.selection()
@@ -312,13 +194,10 @@ class QuanLyKhachHang(tk.Frame):
             return
 
         self.trHienThi.insert("", "end", values=(ma, ten, sdt, email, diachi))
-
         self.ds_them.append((ma, ten, sdt, email, diachi))
 
         self.xoa_form()
-        messagebox.showinfo(
-            "Thành công", "Đã thêm dòng mới! Nhấn 'Lưu' để lưu vào CSDL."
-        )
+        messagebox.showinfo("Thành công", "Đã thêm dòng mới! Nhấn 'Lưu' để lưu vào CSDL.")
 
     def sua(self):
         selected = self.trHienThi.selection()
@@ -358,14 +237,11 @@ class QuanLyKhachHang(tk.Frame):
         else:
             self.ds_them = [
                 (ma, ten, sdt, email, diachi) if x[0] == ma_cu else x
-                for x in self.ds_them
-            ]
+                for x in self.ds_them]
 
         self.xoa_form()
 
-        messagebox.showinfo(
-            "Thành công", "Đã cập nhật dòng! Nhấn 'Lưu' để lưu vào CSDL."
-        )
+        messagebox.showinfo("Thành công", "Đã cập nhật dòng! Nhấn 'Lưu' để lưu vào CSDL.")
 
     def xoa(self):
         selected = self.trHienThi.selection()
@@ -398,9 +274,7 @@ class QuanLyKhachHang(tk.Frame):
                 messagebox.showinfo("Thông báo", "Không có thay đổi để lưu!")
                 return
 
-            confirm = messagebox.askyesno(
-                "Xác nhận", "Bạn có chắc muốn lưu các thay đổi?"
-            )
+            confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn lưu các thay đổi?")
             if not confirm:
                 return
 
@@ -408,16 +282,10 @@ class QuanLyKhachHang(tk.Frame):
                 self.cursor.execute("DELETE FROM KhachHang WHERE MaKH = ?", (ma,))
 
             for ma, ten, sdt, email, diachi in self.ds_them:
-                self.cursor.execute(
-                    "INSERT INTO KhachHang (MaKH, TenKH, SoDienThoai, Email, DiaChi) VALUES (?, ?, ?, ?, ?)",
-                    (ma, ten, sdt, email, diachi),
-                )
+               self.cursor.execute("INSERT INTO KhachHang (MaKH, TenKH, SoDienThoai, Email, DiaChi) VALUES (?, ?, ?, ?, ?)", (ma, ten, sdt, email, diachi))
 
             for ma, ten, sdt, email, diachi, ma_cu in self.ds_sua:
-                self.cursor.execute(
-                    "UPDATE KhachHang SET MaKH = ?, TenKH = ?, SoDienThoai = ?, Email = ?, DiaChi = ? WHERE MaKH = ?",
-                    (ma, ten, sdt, email, diachi, ma_cu),
-                )
+                self.cursor.execute("UPDATE KhachHang SET MaKH = ?, TenKH = ?, SoDienThoai = ?, Email = ?, DiaChi = ? WHERE MaKH = ?", (ma, ten, sdt, email, diachi, ma_cu))
 
             self.conn.commit()
 
@@ -430,7 +298,7 @@ class QuanLyKhachHang(tk.Frame):
             self.conn.rollback()
             messagebox.showerror("Lỗi", f"Không thể lưu dữ liệu: {str(e)}")
 
-        self.hienthi_dulieu()
+        self.load_data()
         self.xoa_form()
         self.ds_them.clear()
         self.ds_sua.clear()
@@ -445,7 +313,7 @@ class QuanLyKhachHang(tk.Frame):
         self.ds_sua.clear()
         self.ds_xoa.clear()
 
-        self.hienthi_dulieu()
+        self.load_data()
         self.xoa_form()
         self.txt_timkiem.delete(0, tk.END)
         messagebox.showinfo("Thông báo", "Đã làm mới dữ liệu!")
@@ -454,7 +322,7 @@ class QuanLyKhachHang(tk.Frame):
         tu_khoa_tim = self.txt_timkiem.get().strip()
         if not tu_khoa_tim:
             messagebox.showinfo("Thông báo", "Vui lòng nhập từ khóa tìm kiếm.")
-            self.hienthi_dulieu()
+            self.load_data()
             return
 
         try:
@@ -464,28 +332,16 @@ class QuanLyKhachHang(tk.Frame):
             if self.search_option.get() == "ma":
                 self.cursor.execute(
                     "SELECT MaKH, TenKH, SoDienThoai, Email, DiaChi FROM KhachHang WHERE MaKH LIKE ? ORDER BY MaKH",
-                    (f"%{tu_khoa_tim}%",),
-                )
+                    (f"%{tu_khoa_tim}%",),)
             else:
                 self.cursor.execute(
                     "SELECT MaKH, TenKH, SoDienThoai, Email, DiaChi FROM KhachHang WHERE TenKH LIKE ? ORDER BY MaKH",
-                    (f"%{tu_khoa_tim}%",),
-                )
+                    (f"%{tu_khoa_tim}%",),)
 
             rows = self.cursor.fetchall()
 
             for row in rows:
-                self.trHienThi.insert(
-                    "",
-                    "end",
-                    values=(
-                        row.MaKH,
-                        row.TenKH,
-                        row.SoDienThoai if row.SoDienThoai else "",
-                        row.Email if row.Email else "",
-                        row.DiaChi if row.DiaChi else "",
-                    ),
-                )
+                self.trHienThi.insert("", "end", values=(row.MaKH, row.TenKH, row.SoDienThoai if row.SoDienThoai else "", row.Email if row.Email else "", row.DiaChi if row.DiaChi else ""))
 
             if not rows:
                 messagebox.showinfo("Thông báo", "Không tìm thấy kết quả!")
@@ -502,4 +358,6 @@ class QuanLyKhachHang(tk.Frame):
 
     def huy(self):
         self.txt_timkiem.delete(0, tk.END)
-        self.hienthi_dulieu()
+        self.load_data()
+
+    

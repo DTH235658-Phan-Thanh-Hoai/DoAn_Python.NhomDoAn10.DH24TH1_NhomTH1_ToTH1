@@ -4,13 +4,6 @@ import tabBanHang as bh
 import tabHoaDon as hd
 import pyodbc
 
-# === BẢNG MÀU ===
-PRIMARY_COLOR = "#0D47A1"    
-SECONDARY_COLOR = "#1565C0" 
-ACCENT_COLOR = "#42A5F5"     
-HIGHLIGHT_COLOR = "#BBDEFB" 
-TEXT_COLOR = "white" 
-
 #=== Tạo class Bán Hàng và Hóa Đơn
 class BanHangVaHoaDon(tk.Frame):
     def __init__(self, parent, controller, conn, user):
@@ -30,9 +23,17 @@ class BanHangVaHoaDon(tk.Frame):
         tab_control = ttk.Notebook(self)
         tab_control.pack(fill="both", expand=True, padx=20, pady=10)
 
-        tab_hoadon = hd.tabHoaDon(tab_control, conn, controller = self.controller)
-        tab_banhang = bh.tabBanHang(tab_control, conn, tab_hoadon)
+        self.tab_hoadon = hd.tabHoaDon(tab_control, conn, controller = self.controller)
+        self.tab_banhang = bh.tabBanHang(tab_control, conn, self.tab_hoadon)
         
 
-        tab_control.add(tab_banhang, text="🛒 Bán hàng")
-        tab_control.add(tab_hoadon, text="🧾 Danh sách Hóa đơn")
+        tab_control.add(self.tab_banhang, text="🛒 Bán hàng")
+        tab_control.add(self.tab_hoadon, text="🧾 Danh sách Hóa đơn")
+
+    # Hàm làm mới tab khi click vào
+    def load_data(self):
+        try:
+            self.tab_hoadon.load_hoa_don()
+            
+        except Exception as e:
+            messagebox.showerror("Lỗi khi làm mới dữ liệu: " + str(e))

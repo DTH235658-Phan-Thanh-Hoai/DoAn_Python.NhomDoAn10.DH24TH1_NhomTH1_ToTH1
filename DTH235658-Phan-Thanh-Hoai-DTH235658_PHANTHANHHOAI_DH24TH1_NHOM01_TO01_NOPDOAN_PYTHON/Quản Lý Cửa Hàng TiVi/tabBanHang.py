@@ -64,10 +64,10 @@ class tabBanHang(tk.Frame):
         frame_buttons = tk.Frame(self, bg="white")
         frame_buttons.pack(pady=10)
 
-        tk.Button(frame_buttons, text="Thêm hóa đơn", bg="#EBDA42", fg="white", font=("Segoe UI", 11, "bold"), command=self.ThemHoaDonChiTiet, padx=20, pady=5, bd=0).grid(row=0, column=0, padx=10)
-        tk.Button(frame_buttons, text="Sửa", bg="#FB8C00", fg="white", font=("Segoe UI", 11, "bold"), command=self.SuaHoaDonChiTiet, padx=20, pady=5, bd=0).grid(row=0, column=1, padx=10)
-        tk.Button(frame_buttons, text="Xóa", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), command=self.XoaHoaDonChiTiet, padx=20, pady=5, bd=0).grid(row=0, column=2, padx=10)
-        tk.Button(frame_buttons, text="Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), command=self.LamMoi, padx=20, pady=5, bd=0).grid(row=0, column=3, padx=10)
+        tk.Button(frame_buttons, text="➕ Thêm hóa đơn", bg="#EBDA42", fg="white", font=("Segoe UI", 11, "bold"), command=self.ThemHoaDonChiTiet, padx=20, pady=5, bd=0).grid(row=0, column=0, padx=10)
+        tk.Button(frame_buttons, text="✏️ Sửa", bg="#FB8C00", fg="white", font=("Segoe UI", 11, "bold"), command=self.SuaHoaDonChiTiet, padx=20, pady=5, bd=0).grid(row=0, column=1, padx=10)
+        tk.Button(frame_buttons, text="🗑️ Xóa", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), command=self.XoaHoaDonChiTiet, padx=20, pady=5, bd=0).grid(row=0, column=2, padx=10)
+        tk.Button(frame_buttons, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), command=self.LamMoi, padx=20, pady=5, bd=0).grid(row=0, column=3, padx=10)
 
         # === BẢNG DANH SÁCH SẢN PHẨM ===
         frame_table = tk.Frame(self, bg="white")
@@ -79,14 +79,7 @@ class tabBanHang(tk.Frame):
         scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
         scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
 
-        self.trHienThi = ttk.Treeview(
-            frame_table,
-            show="headings",
-            columns=columns,
-            height=12,
-            yscrollcommand=scroll_y.set,
-            xscrollcommand=scroll_x.set
-        )
+        self.trHienThi = ttk.Treeview(frame_table, show="headings", columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
 
         # --- Gắn Scrollbar ---
         scroll_y.config(command=self.trHienThi.yview)
@@ -122,7 +115,7 @@ class tabBanHang(tk.Frame):
         self.lbl_tongtien = tk.Label(frame_bottom, text="0 VNĐ", bg="white", font=("Segoe UI", 11, "bold"), fg="#E53935")
         self.lbl_tongtien.pack(side="left", padx=5)
 
-        tk.Button(frame_bottom, text="Tạo đơn hàng", bg="#43A047", fg="white",font=("Segoe UI", 11, "bold"), command=self.TaoHoaDon, padx=15, pady=5, bd=0).pack(side="right", padx=5)
+        tk.Button(frame_bottom, text="📝 Tạo đơn hàng", bg="#43A047", fg="white",font=("Segoe UI", 11, "bold"), command=self.TaoHoaDon, padx=15, pady=5, bd=0).pack(side="right", padx=5)
 
         self.load_Combobox()
 
@@ -147,8 +140,8 @@ class tabBanHang(tk.Frame):
             self.dict_kh[ma] = ten
         self.cb_makhachhang["values"] = list(self.dict_kh.keys())
 
-        # Load tivi + đơn gía
-        cursor.execute("SELECT MaTivi, TenTivi, GiaBan FROM TIVI    ")
+        # Load tivi + đơn giá
+        cursor.execute("SELECT MaTivi, TenTivi, GiaBan FROM TIVI WHERE SoLuongTon > 0 ")
         for ma, ten, gia in cursor.fetchall():
             self.dict_tivi[ma] = {"TenTivi": ten, "GiaBan": gia}
         self.cb_mativi["values"] = list(self.dict_tivi.keys())
@@ -271,7 +264,7 @@ class tabBanHang(tk.Frame):
                         return
 
                 # Thêm hóa đơn vào trHienThi
-                self.trHienThi.insert("", tk.END, values=(ma_hd, ngay_ban.strftime("%d/%m/%Y"), ma_nv, ten_nv, ma_kh, ten_kh, ma_tivi, ten_tivi, so_luong, f"{gia_ban:,.0f}", f"{thanh_tien:,.0f}"))
+                self.trHienThi.insert("", tk.END, text=ma_cthd, values=(ma_hd, ngay_ban.strftime("%d/%m/%Y"), ma_nv, ten_nv, ma_kh, ten_kh, ma_tivi, ten_tivi, so_luong, f"{gia_ban:,.0f}", f"{thanh_tien:,.0f}"))
 
                 # Khóa hóa đơn bán sau khi thêm
                 self.txt_mahoadonban.config(state="disabled")

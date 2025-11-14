@@ -11,7 +11,7 @@ import frmQuanLyNhanVien as nv
 import frmThongKeVaBaoCao as tkvbc
 import frmQuanLySanPham as sp
 import frmNhapHangVaPhieuNhap as nhvpn
-
+import frmLogin 
 
 # Hien: LAPTOP-IFECMD9V
 # Hoai: DESKTOP-LJVV0KQ
@@ -42,7 +42,7 @@ class App(tk.Tk):
         try:
             self.conn = pyodbc.connect(
                 'DRIVER={ODBC Driver 17 for SQL Server};'
-                'SERVER=LAPTOP-IFECMD9V;'
+                'SERVER=DESKTOP-LJVV0KQ;'
                 'DATABASE=QLTV;'
                 'Trusted_Connection=yes;'
             )
@@ -135,69 +135,33 @@ class App(tk.Tk):
 
         if self.user == "admin":
             # Danh mục bên trái
-            btn_tongquan = tk.Button(
-                pnlGiaoDien,
-                text="🏠 Tổng quan",
-                command=lambda: self.HienThiFrame("TongQuan"),
-                **self.DinhDangNut(),
-            )
+            btn_tongquan = tk.Button(pnlGiaoDien, text="🏠 Tổng quan", command=lambda: self.HienThiFrame("TongQuan"), **self.DinhDangNut())
             btn_tongquan.pack(fill="x")
 
-            btn_quanlysanpham = tk.Button(
-                pnlGiaoDien,
-                text="📦 Quản lý Sản phẩm",
-                command=lambda: self.HienThiFrame("QuanLySanPham"),
-                **self.DinhDangNut(),
-            )
+            btn_quanlysanpham = tk.Button(pnlGiaoDien, text="📦 Quản lý Sản phẩm", command=lambda: self.HienThiFrame("QuanLySanPham"),**self.DinhDangNut())
             btn_quanlysanpham.pack(fill="x")
 
-            btn_quanlykhachhang = tk.Button(
-                pnlGiaoDien,
-                text="👥 Quản lý Khách hàng",
-                command=lambda: self.HienThiFrame("QuanLyKhachHang"),
-                **self.DinhDangNut(),
-            )
+            btn_quanlykhachhang = tk.Button(pnlGiaoDien, text="👥 Quản lý Khách hàng", command=lambda: self.HienThiFrame("QuanLyKhachHang"), **self.DinhDangNut())
             btn_quanlykhachhang.pack(fill="x")
 
-        btn_quanlynhanvien = tk.Button(
-            pnlGiaoDien,
-            text="🧑‍💼 Quản lý Nhân viên",
-            command=lambda: self.HienThiFrame("QuanLyNhanVien"),
-            **self.DinhDangNut(),
-        )
+        btn_quanlynhanvien = tk.Button(pnlGiaoDien, text="🧑‍💼 Quản lý Nhân viên", command=lambda: self.HienThiFrame("QuanLyNhanVien"), **self.DinhDangNut())
         btn_quanlynhanvien.pack(fill="x")
 
         if self.user == "admin":
-            btn_banhangvahoadon = tk.Button(
-                pnlGiaoDien,
-                text="💰 Bán hàng & Hóa đơn",
-                command=lambda: self.HienThiFrame("BanHangVaHoaDon"),
-                **self.DinhDangNut(),
-            )
+            btn_banhangvahoadon = tk.Button(pnlGiaoDien, text="💰 Bán hàng & Hóa đơn", command=lambda: self.HienThiFrame("BanHangVaHoaDon"), **self.DinhDangNut())
             btn_banhangvahoadon.pack(fill="x")
+
             btn_nhaphangvaphieunhap = tk.Button(pnlGiaoDien, text="📦 Nhập hàng & Phiếu nhập", command=lambda: self.HienThiFrame("NhapHangVaPhieuNhap"), **self.DinhDangNut())
             btn_nhaphangvaphieunhap.pack(fill="x")
 
 
-            btn_thongkevabaocao = tk.Button(
-                pnlGiaoDien,
-                text="🧾 Thống kê & Báo cáo",
-                command=lambda: self.HienThiFrame("ThongKeVaBaoCao"),
-                **self.DinhDangNut(),
-            )
+            btn_thongkevabaocao = tk.Button(pnlGiaoDien, text="🧾 Thống kê & Báo cáo", command=lambda: self.HienThiFrame("ThongKeVaBaoCao"), **self.DinhDangNut())
             btn_thongkevabaocao.pack(fill="x")
 
-        btn_hethong = tk.Button(
-            pnlGiaoDien,
-            text="⚙️ Hệ thống",
-            command=lambda: self.HienThiFrame("HeThong"),
-            **self.DinhDangNut(),
-        )
+        btn_hethong = tk.Button(pnlGiaoDien, text="⚙️ Hệ thống", command=lambda: self.HienThiFrame("HeThong"), **self.DinhDangNut())
         btn_hethong.pack(fill="x")
 
-        btn_dangxuat = tk.Button(
-            pnlGiaoDien, text="🚪Đăng xuất", command=self.quit, **self.DinhDangNut()
-        )
+        btn_dangxuat = tk.Button(pnlGiaoDien, text="🚪Đăng xuất", command=self.dang_xuat, **self.DinhDangNut())
         btn_dangxuat.pack(fill="x")
 
 
@@ -206,15 +170,36 @@ class App(tk.Tk):
                 "bd": 0, "relief": "flat", "anchor": "w", "padx": 20, "pady": 15}
 
     def HienThiFrame(self, page_name):
-        # Nếu frame chưa được tạo thì khởi tạo nó
+        # # Nếu frame chưa được tạo thì khởi tạo nó
+        # if page_name not in self.frames:
+        #     FrameClass = self.frame_classes[page_name]
+        #     frame = FrameClass(parent=self.container, controller=self, conn=self.conn, user=self.user)
+        #     self.frames[page_name] = frame
+        #     frame.grid(row=0, column=0, sticky="nsew")
+
+        # # Sau đó hiển thị frame
+        # self.frames[page_name].tkraise()
+        # 1. Tạo frame nếu nó chưa tồn tại
         if page_name not in self.frames:
             FrameClass = self.frame_classes[page_name]
             frame = FrameClass(parent=self.container, controller=self, conn=self.conn, user=self.user)
             self.frames[page_name] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        # Sau đó hiển thị frame
-        self.frames[page_name].tkraise()
+        # 2. Lấy frame đã được tạo/lưu trữ
+        frame_to_show = self.frames[page_name]
+
+        try:
+            frame_to_show.load_data()
+        except AttributeError:
+            # Bỏ qua nếu frame không có hàm refresh_data
+            pass
+        except Exception as e:
+            # Báo lỗi nếu hàm load_data chạy bị lỗi
+            print(f"Lỗi khi làm mới {page_name}: {e}")
+
+        #  Hiển thị frame lên trên cùng
+        frame_to_show.tkraise()
 
     # ====== Đóng kết nối khi thoát ======
     def on_close(self):
@@ -226,3 +211,17 @@ class App(tk.Tk):
             print("Lỗi khi đóng kết nối:", e)
         finally:
             self.destroy()
+
+    def dang_xuat(self):
+        if messagebox.askyesno("Xác nhận đăng xuất", "Bạn có chắc chắn muốn đăng xuất?"):
+            # Đóng kết nối SQL
+            try:
+                if hasattr(self, "conn") and self.conn:
+                    self.conn.close()
+                    print("Kết nối SQL đã được đóng (do đăng xuất).")
+            except Exception as e:
+                print("Lỗi khi đóng kết nối:", e)
+            
+            self.destroy() 
+            login_window = frmLogin.Login()
+            login_window.mainloop()

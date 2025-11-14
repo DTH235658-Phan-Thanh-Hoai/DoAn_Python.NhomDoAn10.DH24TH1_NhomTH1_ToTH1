@@ -5,13 +5,6 @@ import pyodbc
 import tabThongKeDoanhThu as tkdt
 import tabBaoCaoSanPham as bcsp
 
-# === BẢNG MÀU ===
-PRIMARY_COLOR = "#0D47A1"    
-SECONDARY_COLOR = "#1565C0" 
-ACCENT_COLOR = "#42A5F5"     
-HIGHLIGHT_COLOR = "#BBDEFB" 
-TEXT_COLOR = "white" 
-
 #=== Tạo class Thống Kê và Báo Cáo
 class ThongKeVaBaoCao(tk.Frame):
     def __init__(self, parent, controller, conn, user):
@@ -30,13 +23,18 @@ class ThongKeVaBaoCao(tk.Frame):
         tab_control = ttk.Notebook(self)
         tab_control.pack(fill="both", expand=True, padx=20, pady=10)
 
-        # 2. KHỞI TẠO VÀ LƯU THAM CHIẾU VÀO self.tab_doanhthu_ref
+        #  KHỞI TẠO VÀ LƯU THAM CHIẾU VÀO self.tab_doanhthu_ref
         self.tab_doanhthu = tkdt.tabThongKeDoanhThu(tab_control, conn)
         self.tab_baocao  = bcsp.tabBaoCaoSanPham(tab_control, conn)
 
-        """
-        tab_doanhthu = tkdt.tabThongKeDoanhThu(tab_control, conn)
-        tab_sanpham = bcsp.tabBaoCaoSanPham(tab_control, conn) """
-
         tab_control.add(self.tab_doanhthu, text="💹 Thống kê Doanh thu")
         tab_control.add(self.tab_baocao , text="📊 Báo cáo Sản phẩm")
+
+    # Hàm làm mới tab khi click vào
+    def load_data(self):
+        try:
+            self.tab_doanhthu.thongke_doanhthu_tatca()
+            self.tab_baocao.load_baocao_all()
+            
+        except Exception as e:
+            messagebox.showerror("Lỗi khi làm mới tab con: " + str(e))

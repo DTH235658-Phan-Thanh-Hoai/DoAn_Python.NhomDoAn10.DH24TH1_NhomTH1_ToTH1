@@ -396,7 +396,7 @@ class tabNhapHang(tk.Frame):
 
                 # Thêm chi tiết phiếu nhập hàng
                 cursor.execute("""
-                    INSERT INTO CHITIETPHIEUNHAPHANG (MaPhieuNhap, MaTiVi, SoLuong, GiaNhap)
+                    INSERT INTO CHITIETPHIEUNHAP (MaPhieuNhap, MaTiVi, SoLuong, GiaNhap)
                     VALUES (?, ?, ?, ?)
                 """, (ma_phieu, ma_tivi, so_luong, gia_nhap))
 

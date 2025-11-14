@@ -77,11 +77,11 @@ class tabHoaDon(tk.Frame):
         frame_btn = tk.Frame(self, bg="white")
         frame_btn.pack(pady=10)
 
-        tk.Button(frame_btn, text="Xem chi tiết", bg="#EC9428", fg="white", font=("Segoe UI", 10, "bold"),command=self.XemChiTiet, padx=15, pady=5, bd=0).pack(side="left", padx=5)
-        tk.Button(frame_btn, text="Thanh toán hóa đơn", bg="#43A047", fg="white",  font=("Segoe UI", 10, "bold"), command=self.ThanhToanHoaDonBan, padx=15, pady=5, bd=0).pack(side="left", padx=5)
-        tk.Button(frame_btn, text="Hủy hóa đơn", bg="#E53935", fg="white",  font=("Segoe UI", 10, "bold"), padx=15, command=self.HuyHoaDonBan, pady=5, bd=0).pack(side="left", padx=5)
-        tk.Button(frame_btn, text="Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.load_hoa_don, pady=5, bd=0).pack(side="left", padx=5)
-        tk.Button(frame_btn, text="In hóa đơn", bg="#E51E9C", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.InHoaDon, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="🧐 Xem chi tiết", bg="#EC9428", fg="white", font=("Segoe UI", 10, "bold"),command=self.XemChiTiet, padx=15, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="💳 Thanh toán hóa đơn", bg="#43A047", fg="white",  font=("Segoe UI", 10, "bold"), command=self.ThanhToanHoaDonBan, padx=15, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="❌ Hủy hóa đơn", bg="#E53935", fg="white",  font=("Segoe UI", 10, "bold"), padx=15, command=self.HuyHoaDonBan, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.load_hoa_don, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="🖨️ In hóa đơn", bg="#E51E9C", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.InHoaDon, pady=5, bd=0).pack(side="left", padx=5)
 
         # === TẢI DỮ LIỆU HÓA ĐƠN ===
         self.load_hoa_don()
@@ -90,14 +90,14 @@ class tabHoaDon(tk.Frame):
         try:
             self.trHienThi.delete(*self.trHienThi.get_children())
             cursor = self.conn.cursor()
-            cursor.execute("SELECT MaHD, NgayBan, MaNV, MaKH, ThanhTien, TrangThai FROM HOADONBAN")
+            cursor.execute("SELECT MaHD, NgayBan, MaNV, MaKH, TongTien, TrangThai FROM HOADONBAN")
 
             for row in cursor.fetchall():
                 ngay_ban = datetime.strptime(str(row.NgayBan).split(" ")[0], "%Y-%m-%d")
 
                 formatted_row = (
                     row.MaHD, ngay_ban.strftime("%d/%m/%Y"), row.MaNV, row.MaKH,
-                    f"{float(row.ThanhTien):,.0f}" if row.ThanhTien else "0", row.TrangThai
+                    f"{float(row.TongTien):,.0f}" if row.TongTien else "0", row.TrangThai
                 )
                 self.trHienThi.insert("", tk.END, values=formatted_row)
 
@@ -124,7 +124,7 @@ class tabHoaDon(tk.Frame):
             tk.Label(chitiethoadon, text="Chi tiết hóa đơn bán " + ma_hd, font=("Segoe UI", 12, "bold"), bg="white", fg="#0D47A1").pack(pady=10)
             
             cursor = self.conn.cursor()
-            cursor.execute("""SELECT nv.MaNV, nv.TenNV, kh.MaKH, kh.TenKH, hdb.NgayBan, hba.ThanhTien, hdb.TrangThai
+            cursor.execute("""SELECT nv.MaNV, nv.TenNV, kh.MaKH, kh.TenKH, hdb.NgayBan, hdb.TongTien, hdb.TrangThai
                               FROM HOADONBAN hdb JOIN NHANVIEN nv ON hdb.MaNV = nv.MaNV
                               JOIN KHACHHANG kh ON hdb.MaKH = kh.MaKH
                               WHERE hdb.MaHD = ?""", (ma_hd,))
@@ -171,7 +171,7 @@ class tabHoaDon(tk.Frame):
             tree.column("ThanhTien", width=100, anchor="center")
 
             tk.Label(chitiethoadon, text="Tổng tiền:", font=("Segoe UI", 10, "bold"), bg="white").pack(side="left", padx=20)
-            tk.Label(chitiethoadon, text=f"{float(thong_tin.ThanhTien):,.0f} đ", font=("Segoe UI", 10, "bold"), bg="white", fg="red").pack(side="right", padx=20)
+            tk.Label(chitiethoadon, text=f"{float(thong_tin.TongTien):,.0f} đ", font=("Segoe UI", 10, "bold"), bg="white", fg="red").pack(side="right", padx=20)
             
             cursor.execute("""
                 SELECT cthd.MaCTHD, cthd.MaTivi, tv.TenTivi, cthd.SoLuong, cthd.DonGia, (cthd.SoLuong * cthd.DonGia) AS ThanhTien
@@ -250,45 +250,38 @@ class tabHoaDon(tk.Frame):
                 # Làm mới lại danh sách hóa đơn
                 self.load_hoa_don()
 
-                # === GỌI HÀM LÀM MỚI TRANG TỔNG QUAN QUA CONTROLLER ===
-                if self.controller and "TongQuan" in self.controller.frames:
-                    tong_quan_frame = self.controller.frames["TongQuan"]
-                    tong_quan_frame.load_data()
-                    tong_quan_frame.load_chart()
-                    
-                # === GỌI HÀM LÀM MỚI TRANG BÁO CÁO QUA CONTROLLER ===
-                if self.controller and "TongQuan" in self.controller.frames:
-                    tong_quan_frame = self.controller.frames["TongQuan"]
-                    tong_quan_frame.load_data()
-                    tong_quan_frame.load_chart()
-
+                # # === GỌI HÀM LÀM MỚI TRANG TỔNG QUAN QUA CONTROLLER ===
+                # if self.controller and "TongQuan" in self.controller.frames:
+                #     tong_quan_frame = self.controller.frames["TongQuan"]
+                #     tong_quan_frame.load_data()
+                #     tong_quan_frame.ve_bieu_do()
                 
-                # === GỌI HÀM LÀM MỚI TRANG THỐNG KÊ ===
-                if self.controller and "ThongKeVaBaoCao" in self.controller.frames:
-                    thong_ke_container = self.controller.frames["ThongKeVaBaoCao"]
+                # # === GỌI HÀM LÀM MỚI TRANG THỐNG KÊ ===
+                # if self.controller and "ThongKeVaBaoCao" in self.controller.frames:
+                #     thong_ke_container = self.controller.frames["ThongKeVaBaoCao"]
                     
-                    # Lấy danh sách các widget con (ví dụ: Notebook)
-                    children1 = thong_ke_container.winfo_children()
-                    if children1 and isinstance(children1[1], ttk.Notebook):
-                        thong_ke_container = self.controller.frames["ThongKeVaBaoCao"]
+                #     # Lấy danh sách các widget con (ví dụ: Notebook)
+                #     children1 = thong_ke_container.winfo_children()
+                #     if children1 and isinstance(children1[1], ttk.Notebook):
+                #         thong_ke_container = self.controller.frames["ThongKeVaBaoCao"]
             
-                        if hasattr(thong_ke_container, 'tab_doanhthu'):
-                            tab_doanh_thu = thong_ke_container.tab_doanhthu
+                #         if hasattr(thong_ke_container, 'tab_doanhthu'):
+                #             tab_doanh_thu = thong_ke_container.tab_doanhthu
 
-                            if hasattr(tab_doanh_thu, 'lay_tatca_hoadon'):
-                                tab_doanh_thu.lay_tatca_hoadon()
+                #             if hasattr(tab_doanh_thu, 'thongke_doanhthu_tatca'):
+                #                 tab_doanh_thu.thongke_doanhthu_tatca()
                 
-                # === GỌI HÀM LÀM MỚI TRANG BÁO CÁO ===
-                if self.controller and "ThongKeVaBaoCao" in self.controller.frames:
-                    thong_ke_frame = self.controller.frames["ThongKeVaBaoCao"]
+                # # === GỌI HÀM LÀM MỚI TRANG BÁO CÁO ===
+                # if self.controller and "ThongKeVaBaoCao" in self.controller.frames:
+                #     thong_ke_frame = self.controller.frames["ThongKeVaBaoCao"]
 
-                    # Nếu frame có thuộc tính tab_baocao
-                    if hasattr(thong_ke_frame, 'tab_baocao'):
-                        tab_bao_cao = thong_ke_frame.tab_baocao
+                #     # Nếu frame có thuộc tính tab_baocao
+                #     if hasattr(thong_ke_frame, 'tab_baocao'):
+                #         tab_bao_cao = thong_ke_frame.tab_baocao
 
-                        # Gọi hàm cập nhật dữ liệu nếu có
-                        if hasattr(tab_bao_cao, 'load_baocao_all'):
-                            tab_bao_cao.load_baocao_all()
+                #         # Gọi hàm cập nhật dữ liệu nếu có
+                #         if hasattr(tab_bao_cao, 'load_baocao_all'):
+                #             tab_bao_cao.load_baocao_all()
                             
             except Exception as e:
                 messagebox.showerror("Lỗi", "Đã xảy ra lỗi khi thanh toán hóa đơn:\n" + str(e))

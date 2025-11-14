@@ -17,6 +17,8 @@ class QuanLyNhanVien(tk.Frame):
     def __init__(self, parent, controller, conn, user):
         super().__init__(parent, bg="white")
 
+        self.controller = controller
+
         self.conn = conn
         self.cursor = conn.cursor()
         self.user = user
@@ -29,228 +31,80 @@ class QuanLyNhanVien(tk.Frame):
         self.ds_sua = []
         self.ds_xoa = []
 
-        lbl_title = tk.Label(
-            self,
-            text="QUẢN LÝ NHÂN VIÊN",
-            font=("Segoe UI", 16, "bold"),
-            bg="white",
-            fg="#0D47A1",
-        )
+        lbl_title = tk.Label(self, text="QUẢN LÝ NHÂN VIÊN", font=("Segoe UI", 16, "bold"), bg="white", fg="#0D47A1",)
         lbl_title.pack()
 
         self.frame_search = tk.Frame(self, bg="#E3F2FD", padx=10, pady=10)
         self.frame_search.pack(fill="x", padx=20, pady=5)
 
-        tk.Label(
-            self.frame_search, text="Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
-        ).pack(side="left", padx=5)
+        tk.Label(self.frame_search, text="Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD").pack(side="left", padx=5)
         self.txt_timkiem = tk.Entry(self.frame_search, font=("Segoe UI", 10), width=65)
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", lambda e: self.timkiem())
 
         self.search_option = tk.StringVar(value="ma")
-        tk.Radiobutton(
-            self.frame_search,
-            text="Theo mã nhân viên",
-            variable=self.search_option,
-            value="ma",
-            bg="#E3F2FD",
-            font=("Segoe UI", 10),
-        ).pack(side="left", padx=10)
-        tk.Radiobutton(
-            self.frame_search,
-            text="Theo tên nhân viên",
-            variable=self.search_option,
-            value="ten",
-            bg="#E3F2FD",
-            font=("Segoe UI", 10),
-        ).pack(side="left")
-        tk.Button(
-            self.frame_search,
-            text="Tìm",
-            font=("Segoe UI", 10, "bold"),
-            bg="#1565C0",
-            fg="white",
-            bd=0,
-            padx=10,
-            pady=5,
-            command=self.timkiem,
-        ).pack(side="left", padx=10)
-        tk.Button(
-            self.frame_search,
-            text="Hủy",
-            font=("Segoe UI", 10, "bold"),
-            bg="#E53935",
-            fg="white",
-            bd=0,
-            padx=10,
-            pady=5,
-            command=self.huy,
-        ).pack(side="left", padx=10)
+        tk.Radiobutton(self.frame_search, text="Theo mã nhân viên", variable=self.search_option, value="ma", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left", padx=10)
+        tk.Radiobutton(self.frame_search, text="Theo tên nhân viên", variable=self.search_option, value="ten", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left")
+        tk.Button(self.frame_search, text="Tìm", font=("Segoe UI", 10, "bold"), bg="#1565C0", fg="white", bd=0, padx=10, pady=5, command=self.timkiem).pack(side="left", padx=10)
+        tk.Button(self.frame_search, text="Hủy", font=("Segoe UI", 10, "bold"), bg="#E53935", fg="white", bd=0, padx=10, pady=5, command=self.huy).pack(side="left", padx=10)
 
-        frame_form = tk.LabelFrame(
-            self,
-            text="Thông tin nhân viên",
-            bg="white",
-            font=("Segoe UI", 12, "bold"),
-            fg="#0D47A1",
-            padx=10,
-            pady=10,
-        )
+        frame_form = tk.LabelFrame(self, text="Thông tin nhân viên", bg="white", font=("Segoe UI", 12, "bold"), fg="#0D47A1", padx=10, pady=10)
         frame_form.pack(fill="x", padx=30, pady=10)
 
-        self.pic_anhnhanvien = tk.Canvas(
-            frame_form,
-            width=60,
-            height=80,
-            bg="#f0f0f0",
-            highlightthickness=1,
-            highlightbackground="#ccc",
-        )
+        self.pic_anhnhanvien = tk.Canvas(frame_form, width=60, height=80, bg="#f0f0f0", highlightthickness=1, highlightbackground="#ccc")
         self.pic_anhnhanvien.grid(row=0, column=0, rowspan=3, padx=5, pady=5)
-        self.pic_anhnhanvien.create_text(
-            30,
-            40,
-            text="Ảnh\nnhân viên",
-            font=("Segoe UI", 10),
-            fill="#888",
-            tags="placeholder",
-        )
+        self.pic_anhnhanvien.create_text(30, 40, text="Ảnh\nnhân\nviên", font=("Segoe UI", 8), fill="#888", tags="placeholder")
 
-        self.btn_chonanh = tk.Button(
-            frame_form,
-            text="Chọn ảnh",
-            bg="#42A5F5",
-            fg="white",
-            font=("Segoe UI", 7, "bold"),
-            height=1,
-            width=7,
-            bd=0,
-            padx=10,
-            pady=10,
-            command=self.chon_anh,
-        )
+        self.btn_chonanh = tk.Button(frame_form, text="Chọn ảnh", bg="#42A5F5", fg="white", font=("Segoe UI", 7, "bold"), height=1, width=7, bd=0, padx=10, pady=10, command=self.chon_anh)
         self.btn_chonanh.grid(row=3, column=0, pady=5)
 
-        tk.Label(
-            frame_form, text="Mã nhân viên:", font=("Segoe UI", 10), bg="white"
-        ).grid(row=0, column=1, sticky="w", pady=5, padx=5)
-        self.txt_manv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=44)
+        tk.Label(frame_form, text="Mã nhân viên:", font=("Segoe UI", 10), bg="white").grid(row=0, column=1, sticky="w", pady=5, padx=5)
+        self.txt_manv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=42)
         self.txt_manv.grid(row=0, column=2, pady=5, padx=5)
 
-        tk.Label(
-            frame_form, text="Tên nhân viên:", font=("Segoe UI", 10), bg="white"
-        ).grid(row=0, column=3, sticky="w", pady=5, padx=5)
-        self.txt_tennv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=44)
+        tk.Label(frame_form, text="Tên nhân viên:", font=("Segoe UI", 10), bg="white").grid(row=0, column=3, sticky="w", pady=5, padx=5)
+        self.txt_tennv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=42)
         self.txt_tennv.grid(row=0, column=4, pady=5, padx=5)
 
-        tk.Label(frame_form, text="Giới tính:", font=("Segoe UI", 10), bg="white").grid(
-            row=1, column=1, sticky="w", pady=5, padx=5
-        )
-        self.cbo_gioitinh = ttk.Combobox(
-            frame_form,
-            font=("Segoe UI", 10),
-            values=["Nam", "Nữ"],
-            width=40,
-            state="readonly",
-        )
+        tk.Label(frame_form, text="Giới tính:", font=("Segoe UI", 10), bg="white").grid(row=1, column=1, sticky="w", pady=5, padx=5)
+        self.cbo_gioitinh = ttk.Combobox(frame_form, font=("Segoe UI", 10), values=["Nam", "Nữ"], width=40, state="readonly")
         self.cbo_gioitinh.grid(row=1, column=2, pady=5, padx=5)
 
-        tk.Label(frame_form, text="Ngày sinh:", font=("Segoe UI", 10), bg="white").grid(
-            row=1, column=3, sticky="w", pady=5, padx=5
-        )
-        self.date_ngaysinh = DateEntry(
-            frame_form, font=("Segoe UI", 10), width=42, date_pattern="dd/mm/yyyy"
-        )
+        tk.Label(frame_form, text="Ngày sinh:", font=("Segoe UI", 10), bg="white").grid(row=1, column=3, sticky="w", pady=5, padx=5)
+        self.date_ngaysinh = DateEntry(frame_form, font=("Segoe UI", 10), width=40, date_pattern="dd/mm/yyyy")
         self.date_ngaysinh.grid(row=1, column=4, pady=5, padx=5)
 
-        tk.Label(
-            frame_form, text="Số điện thoại:", font=("Segoe UI", 10), bg="white"
-        ).grid(row=2, column=1, sticky="w", pady=5, padx=5)
-        self.txt_sodienthoai = ttk.Entry(frame_form, font=("Segoe UI", 10), width=44)
+        tk.Label(frame_form, text="Số điện thoại:", font=("Segoe UI", 10), bg="white").grid(row=2, column=1, sticky="w", pady=5, padx=5)
+        self.txt_sodienthoai = ttk.Entry(frame_form, font=("Segoe UI", 10), width=42)
         self.txt_sodienthoai.grid(row=2, column=2, pady=5, padx=5)
 
-        tk.Label(frame_form, text="CCCD:", font=("Segoe UI", 10), bg="white").grid(
-            row=2, column=3, sticky="w", pady=5, padx=5
-        )
-        self.txt_cccd = ttk.Entry(frame_form, font=("Segoe UI", 10), width=44)
+        tk.Label(frame_form, text="CCCD:", font=("Segoe UI", 10), bg="white").grid(row=2, column=3, sticky="w", pady=5, padx=5)
+        self.txt_cccd = ttk.Entry(frame_form, font=("Segoe UI", 10), width=42)
         self.txt_cccd.grid(row=2, column=4, pady=5, padx=5)
 
         frame_buttons = tk.Frame(self, bg="white")
         frame_buttons.pack(pady=10)
 
-        self.btn_them = tk.Button(
-            frame_buttons,
-            text="Thêm",
-            bg="#EBDA42",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.them,
-        )
+        self.btn_them = tk.Button(frame_buttons, text="➕ Thêm", bg="#EBDA42", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.them)
         self.btn_them.grid(row=0, column=0, padx=10)
 
-        self.btn_sua = tk.Button(
-            frame_buttons,
-            text="Sửa",
-            bg="#FB8C00",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.sua,
-        )
+        self.btn_sua = tk.Button(frame_buttons, text="✏️ Sửa", bg="#FB8C00", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.sua)
         self.btn_sua.grid(row=0, column=1, padx=10)
 
-        self.btn_xoa = tk.Button(
-            frame_buttons,
-            text="Xóa",
-            bg="#E53935",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.xoa,
-        )
+        self.btn_xoa = tk.Button(frame_buttons, text="🗑️ Xóa", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.xoa)
         self.btn_xoa.grid(row=0, column=2, padx=10)
 
-        self.btn_lammoi = tk.Button(
-            frame_buttons,
-            text="Làm mới",
-            bg="#1E88E5",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.lammoi,
-        )
+        self.btn_lammoi = tk.Button(frame_buttons, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.lammoi)
         self.btn_lammoi.grid(row=0, column=3, padx=10)
 
-        self.btn_luu = tk.Button(
-            frame_buttons,
-            text="Lưu",
-            bg="#43A047",
-            fg="white",
-            font=("Segoe UI", 10, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.luu,
-        )
+        self.btn_luu = tk.Button(frame_buttons, text="💾 Lưu", bg="#43A047", fg="white", font=("Segoe UI", 10, "bold"), padx=20, pady=5, bd=0, command=self.luu)
         self.btn_luu.grid(row=0, column=4, padx=10)
 
         frame_table = tk.Frame(self, bg="white")
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
 
         columns = ("MaNV", "TenNV", "GioiTinh", "NgaySinh", "SoDienThoai", "CCCD")
-        self.trHienThi = ttk.Treeview(
-            frame_table, show="headings", height=12, columns=columns
-        )
+        self.trHienThi = ttk.Treeview(frame_table, show="headings", height=12, columns=columns)
 
         style = ttk.Style()
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
@@ -274,9 +128,9 @@ class QuanLyNhanVien(tk.Frame):
 
         self.trHienThi.bind("<<TreeviewSelect>>", self.chon_dong)
 
-        self.hienthi_dulieu()
+        self.load_data()
 
-    def hienthi_dulieu(self):
+    def load_data(self):
         try:
             for item in self.trHienThi.get_children():
                 self.trHienThi.delete(item)
@@ -335,9 +189,7 @@ class QuanLyNhanVien(tk.Frame):
                     self.frame_search.destroy()
 
             else:
-                self.cursor.execute(
-                    "SELECT MaNV, HinhAnh, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD FROM NhanVien"
-                )
+                self.cursor.execute("SELECT MaNV, HinhAnh, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD FROM NhanVien")
                 rows = self.cursor.fetchall()
 
                 for row in rows:
@@ -356,20 +208,9 @@ class QuanLyNhanVien(tk.Frame):
                     if cccd and not cccd[0] == "0":
                         cccd = "0" + cccd
 
-                    self.trHienThi.insert(
-                        "",
-                        "end",
-                        values=(
-                            ma_nv,
-                            row[2],
-                            row[3],
-                            ngay_sinh_str,
-                            sdt,
-                            cccd,
-                        ),
-                    )
+                    self.trHienThi.insert("", "end", values=(ma_nv, row[2], row[3], ngay_sinh_str, sdt, cccd))
         except Exception as e:
-            messagebox.showerror("Lỗi", f"Không thể tải dữ liệu: {str(e)}")
+            messagebox.showerror("Lỗi", "Không thể tải dữ liệu: " + str(e))
 
     def chuyen_yyyy_sang_dd(self, ngay_db):
         if ngay_db is None:
@@ -468,10 +309,7 @@ class QuanLyNhanVien(tk.Frame):
             messagebox.showerror("Lỗi", "Vui lòng chọn nhân viên trên danh sách.")
             return
             
-        duong_dan_anh = filedialog.askopenfilename(
-            title="Chọn ảnh",
-            filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")],
-        )
+        duong_dan_anh = filedialog.askopenfilename(title="Chọn ảnh",filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")],)
 
         if duong_dan_anh:
             try:
@@ -506,15 +344,11 @@ class QuanLyNhanVien(tk.Frame):
                 messagebox.showwarning("Cảnh báo", f"Mã nhân viên '{ma}' đã tồn tại!")
                 return
 
-            if self.bo_so_0_dau(
-                self.trHienThi.item(item)["values"][4]
-            ) == self.bo_so_0_dau(sdt):
+            if self.bo_so_0_dau(self.trHienThi.item(item)["values"][4]) == self.bo_so_0_dau(sdt):
                 messagebox.showwarning("Cảnh báo", f"Số điện thoại '{sdt}' đã tồn tại!")
                 return
 
-            if self.bo_so_0_dau(
-                self.trHienThi.item(item)["values"][5]
-            ) == self.bo_so_0_dau(cccd):
+            if self.bo_so_0_dau(self.trHienThi.item(item)["values"][5]) == self.bo_so_0_dau(cccd):
                 messagebox.showwarning("Cảnh báo", f"Số CCCD '{cccd}' đã tồn tại!")
                 return
 
@@ -528,27 +362,12 @@ class QuanLyNhanVien(tk.Frame):
         else:
             cccd_hien_thi = "0" + cccd
 
-        self.trHienThi.insert(
-            "",
-            "end",
-            values=(
-                ma,
-                ten,
-                gioitinh,
-                self.chuyen_yyyy_sang_dd(ngaysinh),
-                sdt_hien_thi,
-                cccd_hien_thi,
-            ),
-        )
+        self.trHienThi.insert("", "end", values=(ma, ten, gioitinh, self.chuyen_yyyy_sang_dd(ngaysinh), sdt_hien_thi, cccd_hien_thi))
 
-        self.ds_them.append(
-            (ma, self.image_data, ten, gioitinh, ngaysinh, sdt_hien_thi, cccd_hien_thi)
-        )
+        self.ds_them.append((ma, self.image_data, ten, gioitinh, ngaysinh, sdt_hien_thi, cccd_hien_thi))
 
         self.xoa_form()
-        messagebox.showinfo(
-            "Thành công", "Đã thêm dòng mới! Nhấn 'Lưu' để lưu vào CSDL."
-        )
+        messagebox.showinfo("Thành công", "Đã thêm dòng mới! Nhấn 'Lưu' để lưu vào CSDL.")
 
     def sua(self):
         selected = self.trHienThi.selection()
@@ -574,22 +393,14 @@ class QuanLyNhanVien(tk.Frame):
                 continue
             else:
                 if self.trHienThi.item(item)["values"][0] == ma:
-                    messagebox.showwarning(
-                        "Cảnh báo", f"Mã nhân viên '{ma}' đã tồn tại!"
-                    )
+                    messagebox.showwarning("Cảnh báo", f"Mã nhân viên '{ma}' đã tồn tại!")
                     return
 
-                if self.bo_so_0_dau(
-                    self.trHienThi.item(item)["values"][4]
-                ) == self.bo_so_0_dau(sdt):
-                    messagebox.showwarning(
-                        "Cảnh báo", f"Số điện thoại '{sdt}' đã tồn tại!"
-                    )
+                if self.bo_so_0_dau(self.trHienThi.item(item)["values"][4]) == self.bo_so_0_dau(sdt):
+                    messagebox.showwarning("Cảnh báo", f"Số điện thoại '{sdt}' đã tồn tại!")
                     return
 
-                if self.bo_so_0_dau(
-                    self.trHienThi.item(item)["values"][5]
-                ) == self.bo_so_0_dau(cccd):
+                if self.bo_so_0_dau(self.trHienThi.item(item)["values"][5]) == self.bo_so_0_dau(cccd):
                     messagebox.showwarning("Cảnh báo", f"Số CCCD '{cccd}' đã tồn tại!")
                     return
 
@@ -603,34 +414,18 @@ class QuanLyNhanVien(tk.Frame):
         else:
             cccd_hien_thi = "0" + cccd
 
-        self.trHienThi.item(
-            selected[0],
-            values=(
-                ma,
-                ten,
-                gioitinh,
-                self.chuyen_yyyy_sang_dd(ngaysinh),
-                sdt_hien_thi,
-                cccd_hien_thi,
-            ),
-        )
+        self.trHienThi.item(selected[0], values=(ma, ten, gioitinh, self.chuyen_yyyy_sang_dd(ngaysinh), sdt_hien_thi, cccd_hien_thi))
 
         is_new = any(item[0] == ma_cu for item in self.ds_them)
 
         if is_new:
             self.ds_them = [item for item in self.ds_them if item[0] != ma_cu]
-            self.ds_them.append(
-                (ma, self.image_data, ten, gioitinh, ngaysinh, sdt_hien_thi, cccd_hien_thi)
-            )
+            self.ds_them.append((ma, self.image_data, ten, gioitinh, ngaysinh, sdt_hien_thi, cccd_hien_thi))
         else:
             self.ds_sua = [item for item in self.ds_sua if item[7] != ma_cu]
-            self.ds_sua.append(
-                (ma, self.image_data, ten, gioitinh, ngaysinh, sdt_hien_thi, cccd_hien_thi, ma_cu)
-            )
+            self.ds_sua.append((ma, self.image_data, ten, gioitinh, ngaysinh, sdt_hien_thi, cccd_hien_thi, ma_cu))
 
-        messagebox.showinfo(
-            "Thành công", "Đã cập nhật dòng! Nhấn 'Lưu' để lưu vào CSDL."
-        )
+        messagebox.showinfo("Thành công", "Đã cập nhật dòng! Nhấn 'Lưu' để lưu vào CSDL.")
 
     def xoa(self):
         selected = self.trHienThi.selection()
@@ -665,9 +460,7 @@ class QuanLyNhanVien(tk.Frame):
                 messagebox.showinfo("Thông báo", "Không có thay đổi để lưu!")
                 return
 
-            xacnhan = messagebox.askyesno(
-                "Xác nhận", "Bạn có chắc muốn lưu các thay đổi?"
-            )
+            xacnhan = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn lưu các thay đổi?")
             if not xacnhan:
                 return
 
@@ -699,7 +492,7 @@ class QuanLyNhanVien(tk.Frame):
             self.conn.rollback()
             messagebox.showerror("Lỗi", f"Không thể lưu dữ liệu: {str(e)}")
 
-        self.hienthi_dulieu()
+        self.load_data()
         self.xoa_form()
         self.ds_them.clear()
         self.ds_sua.clear()
@@ -714,7 +507,7 @@ class QuanLyNhanVien(tk.Frame):
         self.ds_sua.clear()
         self.ds_xoa.clear()
 
-        self.hienthi_dulieu()
+        self.load_data()
         self.xoa_form()
         self.txt_timkiem.delete(0, tk.END)
         messagebox.showinfo("Thông báo", "Đã làm mới dữ liệu!")
@@ -723,7 +516,7 @@ class QuanLyNhanVien(tk.Frame):
         tu_khoa_tim = self.txt_timkiem.get().strip()
         if not tu_khoa_tim:
             messagebox.showinfo("Thông báo", "Vui lòng nhập từ khóa tìm kiếm.")
-            self.hienthi_dulieu()
+            self.load_data()
             return
 
         try:
@@ -735,15 +528,13 @@ class QuanLyNhanVien(tk.Frame):
                     SELECT MaNV, HinhAnh, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD 
                     FROM NhanVien 
                     WHERE MaNV LIKE ?
-                    ORDER BY MaNV
-                """
+                    ORDER BY MaNV """
             else:
                 query = """
                     SELECT MaNV, HinhAnh, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD 
                     FROM NhanVien 
                     WHERE TenNV LIKE ?
-                    ORDER BY MaNV
-                """
+                    ORDER BY MaNV"""
 
             self.cursor.execute(query, (f"%{tu_khoa_tim}%",))
             rows = self.cursor.fetchall()
@@ -760,11 +551,7 @@ class QuanLyNhanVien(tk.Frame):
                 if cccd and not cccd[0] == "0":
                     cccd = "0" + cccd
 
-                self.trHienThi.insert(
-                    "",
-                    "end",
-                    values=(ma_nv, row[2], row[3], ngay_sinh_str, sdt, cccd),
-                )
+                self.trHienThi.insert("", "end", values=(ma_nv, row[2], row[3], ngay_sinh_str, sdt, cccd))
 
             if not rows:
                 messagebox.showinfo("Thông báo", "Không tìm thấy kết quả!")
@@ -814,10 +601,8 @@ class QuanLyNhanVien(tk.Frame):
         self.image_data = None
         self.anh_hien_tai = None
         self.pic_anhnhanvien.delete("all")
-        self.pic_anhnhanvien.create_text(
-            30, 40, text="Ảnh\nnhân viên", font=("Segoe UI", 10), fill="#888"
-        )
+        self.pic_anhnhanvien.create_text(30, 40, text="Ảnh\nnhân viên", font=("Segoe UI", 10), fill="#888")
 
     def huy(self):
         self.txt_timkiem.delete(0, tk.END)
-        self.hienthi_dulieu()
+        self.load_data()

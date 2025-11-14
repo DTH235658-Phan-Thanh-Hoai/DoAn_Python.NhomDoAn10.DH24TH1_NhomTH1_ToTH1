@@ -10,54 +10,21 @@ class tabBaoCaoSanPham(tk.Frame):
 
         self.conn = conn
 
-        frame_filter = tk.LabelFrame(
-            self,
-            text="Tùy chọn báo cáo",
-            bg="white",
-            font=("Segoe UI", 12, "bold"),
-            fg="#0D47A1",
-            padx=10,
-            pady=10,
-        )
+        frame_filter = tk.LabelFrame(self, text="Tùy chọn báo cáo", bg="white", font=("Segoe UI", 12, "bold"), fg="#0D47A1", padx=10, pady=10)
         frame_filter.pack(fill="x", padx=20, pady=10)
 
-        tk.Label(
-            frame_filter, text="Chọn mã tivi:", bg="white", font=("Segoe UI", 11)
-        ).grid(row=0, column=0, padx=5, pady=5)
+        tk.Label(frame_filter, text="Chọn mã tivi:", bg="white", font=("Segoe UI", 11)).grid(row=0, column=0, padx=5, pady=5)
         self.cbo_mativi = ttk.Combobox(frame_filter, width=31, state="readonly")
         self.cbo_mativi.grid(row=0, column=1, padx=5, pady=5)
         self.cbo_mativi.bind("<<ComboboxSelected>>", self.on_mativi_selected)
 
-        tk.Label(
-            frame_filter, text="Chọn tên tivi:", bg="white", font=("Segoe UI", 11)
-        ).grid(row=0, column=2, padx=5, pady=5)
+        tk.Label(frame_filter, text="Chọn tên tivi:", bg="white", font=("Segoe UI", 11)).grid(row=0, column=2, padx=5, pady=5)
         self.cbo_tentivi = ttk.Combobox(frame_filter, width=31, state="readonly")
         self.cbo_tentivi.grid(row=0, column=3, padx=5, pady=5)
         self.cbo_tentivi.bind("<<ComboboxSelected>>", self.on_tentivi_selected)
 
-        tk.Button(
-            frame_filter,
-            text="📊 Xem báo cáo",
-            bg="#1E88E5",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            bd=0,
-            padx=15,
-            pady=5,
-            command=self.xem_baocao
-        ).grid(row=0, column=4, padx=10)
-
-        tk.Button(
-            frame_filter,
-            text="Hủy",
-            bg="#E53935",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            bd=0,
-            padx=15,
-            pady=5,
-            command=self.huy_xem_bao_cao
-        ).grid(row=0, column=5, padx=10)
+        tk.Button(frame_filter, text="📊 Xem báo cáo", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), bd=0, padx=15, pady=5, command=self.xem_baocao).grid(row=0, column=4, padx=10)
+        tk.Button(frame_filter, text="Hủy", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), bd=0, padx=15, pady=5, command=self.huy_xem_bao_cao).grid(row=0, column=5, padx=10)
 
         frame_table = tk.Frame(self, bg="white")
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
@@ -169,8 +136,7 @@ class tabBaoCaoSanPham(tk.Frame):
                 ) pn 
                     ON t.MaTivi = pn.MaTivi
                 GROUP BY t.MaTivi, t.TenTivi
-                ORDER BY TongSoLuongBan DESC;
-            """
+                ORDER BY TongSoLuongBan DESC;"""
 
             cursor.execute(query)
             rows = cursor.fetchall()
@@ -181,24 +147,9 @@ class tabBaoCaoSanPham(tk.Frame):
                 mativi, tentivi, soluongban, doanhthu, gianhap = row
 
                 tile = (soluongban / tong_soluong * 100) if tong_soluong > 0 else 0
-                loinhuan = (
-                    soluongban * (doanhthu / soluongban - gianhap)
-                    if soluongban > 0
-                    else 0
-                )
+                loinhuan = (soluongban * (doanhthu / soluongban - gianhap)) if soluongban > 0 else 0
 
-                self.trHienThi.insert(
-                    "",
-                    "end",
-                    values=(
-                        mativi,
-                        tentivi,
-                        soluongban,
-                        f"{tile:.2f}%",
-                        f"{doanhthu:,.0f}",
-                        f"{loinhuan:,.0f}",
-                    ),
-                )
+                self.trHienThi.insert("", "end", values=(mativi, tentivi, soluongban, f"{tile:.2f}%", f"{doanhthu:,.0f}", f"{loinhuan:,.0f}"))
 
             cursor.close()
 
@@ -221,8 +172,8 @@ class tabBaoCaoSanPham(tk.Frame):
 
             query_tong = """
                 SELECT ISNULL(SUM(SoLuong), 0)
-                FROM ChiTietHoaDon
-            """
+                FROM ChiTietHoaDon"""
+            
             cursor.execute(query_tong)
             tong_soluong = cursor.fetchone()[0]
 
@@ -241,8 +192,7 @@ class tabBaoCaoSanPham(tk.Frame):
                     GROUP BY MaTivi
                 ) pn ON t.MaTivi = pn.MaTivi
                 WHERE t.MaTivi = ?
-                GROUP BY t.MaTivi, t.TenTivi
-            """
+                GROUP BY t.MaTivi, t.TenTivi"""
 
             cursor.execute(query, (mativi,))
             row = cursor.fetchone()
@@ -251,33 +201,16 @@ class tabBaoCaoSanPham(tk.Frame):
                 mativi, tentivi, soluongban, doanhthu, gianhap = row
 
                 tile = (soluongban / tong_soluong * 100) if tong_soluong > 0 else 0
-                loinhuan = (
-                    soluongban * (doanhthu / soluongban - gianhap)
-                    if soluongban > 0
-                    else 0
-                )
+                loinhuan = (soluongban * (doanhthu / soluongban - gianhap) if soluongban > 0 else 0)
 
-                self.trHienThi.insert(
-                    "",
-                    "end",
-                    values=(
-                        mativi,
-                        tentivi,
-                        soluongban,
-                        f"{tile:.2f}%",
-                        f"{doanhthu:,.0f}",
-                        f"{loinhuan:,.0f}",
-                    ),
-                )
+                self.trHienThi.insert("", "end", values=(mativi, tentivi, soluongban, f"{tile:.2f}%", f"{doanhthu:,.0f}", f"{loinhuan:,.0f}"))
             else:
-                messagebox.showinfo(
-                    "Thông báo", "Không tìm thấy dữ liệu cho sản phẩm này!"
-                )
+                messagebox.showinfo("Thông báo", "Không tìm thấy dữ liệu cho sản phẩm này!")
 
             cursor.close()
 
         except Exception as e:
-            messagebox.showerror("Lỗi", f"Không thể xem báo cáo: {str(e)}")
+            messagebox.showerror("Lỗi", "Không thể xem báo cáo: " + str(e))
 
     def huy_xem_bao_cao(self):
         self.load_baocao_all()

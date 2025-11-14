@@ -17,85 +17,33 @@ class tabHangSanXuat(tk.Frame):
         frame_search = tk.Frame(self, bg="#E3F2FD", padx=10, pady=10)
         frame_search.pack(fill="x", padx=20, pady=5)
 
-        tk.Label(
-            frame_search, text="Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
-        ).pack(side="left", padx=5)
+        tk.Label(frame_search, text="Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD").pack(side="left", padx=5)
 
-        self.txt_timkiem = tk.Entry(
-            frame_search, font=("Segoe UI", 10), width=55, bg="white"
-        )
+        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=55, bg="white")
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", lambda event: self.timkiem())
 
         self.search_option = tk.StringVar(value="ma")
-        tk.Radiobutton(
-            frame_search,
-            text="Theo mã hãng",
-            variable=self.search_option,
-            value="ma",
-            bg="#E3F2FD",
-            font=("Segoe UI", 10),
-        ).pack(side="left", padx=10)
-        tk.Radiobutton(
-            frame_search,
-            text="Theo tên hãng",
-            variable=self.search_option,
-            value="ten",
-            bg="#E3F2FD",
-            font=("Segoe UI", 10),
-        ).pack(side="left")
+        tk.Radiobutton(frame_search, text="Theo mã hãng", variable=self.search_option, value="ma", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left", padx=10)
+        tk.Radiobutton(frame_search, text="Theo tên hãng", variable=self.search_option, value="ten", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left")
 
-        tk.Button(
-            frame_search,
-            text="Tìm",
-            font=("Segoe UI", 10, "bold"),
-            bg="#1565C0",
-            fg="white",
-            bd=0,
-            padx=10,
-            pady=5,
-            command=self.timkiem,
-        ).pack(side="left", padx=10)
+        tk.Button(frame_search, text="Tìm", font=("Segoe UI", 10, "bold"), bg="#1565C0", fg="white", bd=0, padx=10, pady=5, command=self.timkiem).pack(side="left", padx=10)
 
-        tk.Button(
-            frame_search,
-            text="Hủy",
-            font=("Segoe UI", 10, "bold"),
-            bg="#E53935",
-            fg="white",
-            bd=0,
-            padx=10,
-            pady=5,
-            command=self.huy,
-        ).pack(side="left", padx=10)
+        tk.Button(frame_search, text="Hủy", font=("Segoe UI", 10, "bold"), bg="#E53935", fg="white", bd=0, padx=10, pady=5, command=self.huy).pack(side="left", padx=10)
 
         # === KHUNG THÔNG TIN ===
-        frame_form = tk.LabelFrame(
-            self,
-            text="Thông tin Hãng sản xuất",
-            bg="white",
-            font=("Segoe UI", 12, "bold"),
-            fg="#0D47A1",
-            padx=10,
-            pady=10,
-        )
+        frame_form = tk.LabelFrame(self, text="Thông tin Hãng sản xuất", bg="white", font=("Segoe UI", 12, "bold"), fg="#0D47A1", padx=10, pady=10)
         frame_form.pack(fill="x", padx=20, pady=10)
 
-        tk.Label(frame_form, text="Mã hãng:", bg="white", font=("Segoe UI", 10)).grid(
-            row=0, column=0, sticky="w", padx=5, pady=5
-        )
+        tk.Label(frame_form, text="Mã hãng:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=0, sticky="w", padx=5, pady=5)
         self.txt_ma = ttk.Entry(frame_form, width=32)
         self.txt_ma.grid(row=0, column=1, padx=5, pady=5)
 
-        tk.Label(frame_form, text="Tên hãng:", bg="white", font=("Segoe UI", 10)).grid(
-            row=0, column=2, sticky="w", padx=5, pady=5
-        )
+        tk.Label(frame_form, text="Tên hãng:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=2, sticky="w", padx=5, pady=5)
         self.txt_ten = ttk.Entry(frame_form, width=32)
         self.txt_ten.grid(row=0, column=3, padx=5, pady=5)
 
-        tk.Label(frame_form, text="Quốc gia:", bg="white", font=("Segoe UI", 10)).grid(
-            row=0, column=5, pady=5, padx=5, sticky="w"
-        )
+        tk.Label(frame_form, text="Quốc gia:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=5, pady=5, padx=5, sticky="w")
         self.txt_quocgia = ttk.Entry(frame_form, width=32)
         self.txt_quocgia.grid(row=0, column=6, padx=5, pady=5)
 
@@ -103,69 +51,19 @@ class tabHangSanXuat(tk.Frame):
         frame_buttons = tk.Frame(self, bg="white")
         frame_buttons.pack(pady=10)
 
-        btn_them = tk.Button(
-            frame_buttons,
-            text="➕ Thêm",
-            bg="#EBDA42",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.them,
-        )
+        btn_them = tk.Button(frame_buttons, text="➕ Thêm", bg="#EBDA42", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.them)
         btn_them.grid(row=0, column=0, padx=10)
 
-        btn_sua = tk.Button(
-            frame_buttons,
-            text="✏️ Sửa",
-            bg="#FB8C00",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.sua,
-        )
+        btn_sua = tk.Button(frame_buttons, text="✏️ Sửa", bg="#FB8C00", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.sua)
         btn_sua.grid(row=0, column=1, padx=10)
 
-        btn_xoa = tk.Button(
-            frame_buttons,
-            text="Xóa",
-            bg="#E53935",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.xoa,
-        )
+        btn_xoa = tk.Button(frame_buttons, text="🗑️ Xóa", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.xoa)
         btn_xoa.grid(row=0, column=2, padx=10)
 
-        btn_lammoi = tk.Button(
-            frame_buttons,
-            text="🔄 Làm mới",
-            bg="#1E88E5",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.lammoi,
-        )
+        btn_lammoi = tk.Button(frame_buttons, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.lammoi)
         btn_lammoi.grid(row=0, column=3, padx=10)
 
-        btn_luu = tk.Button(
-            frame_buttons,
-            text="💾 Lưu",
-            bg="#43A047",
-            fg="white",
-            font=("Segoe UI", 10, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.luu,
-        )
+        btn_luu = tk.Button(frame_buttons, text="💾 Lưu", bg="#43A047", fg="white", font=("Segoe UI", 10, "bold"), padx=20, pady=5, bd=0, command=self.luu)
         btn_luu.grid(row=0, column=4, padx=10)
 
         # === BẢNG HÃNG SẢN XUẤT ===
@@ -177,14 +75,7 @@ class tabHangSanXuat(tk.Frame):
         scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
         scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
 
-        self.trHienThi = ttk.Treeview(
-            frame_table,
-            show="headings",
-            columns=columns,
-            height=12,
-            yscrollcommand=scroll_y.set,
-            xscrollcommand=scroll_x.set,
-        )
+        self.trHienThi = ttk.Treeview(frame_table, show="headings", columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
 
         scroll_y.config(command=self.trHienThi.yview)
         scroll_x.config(command=self.trHienThi.xview)
@@ -213,16 +104,12 @@ class tabHangSanXuat(tk.Frame):
         try:
             for item in self.trHienThi.get_children():
                 self.trHienThi.delete(item)
-            self.cursor.execute(
-                "SELECT MaHang, TenHang, QuocGia FROM HangSanXuat ORDER BY MaHang"
-            )
+            self.cursor.execute("SELECT MaHang, TenHang, QuocGia FROM HangSanXuat ORDER BY MaHang")
             rows = self.cursor.fetchall()
             for row in rows:
-                self.trHienThi.insert(
-                    "", "end", values=(row.MaHang, row.TenHang, row.QuocGia)
-                )
+                self.trHienThi.insert("", "end", values=(row.MaHang, row.TenHang, row.QuocGia))
         except Exception as e:
-            messagebox.showerror("Lỗi", f"Không thể tải dữ liệu: {str(e)}")
+            messagebox.showerror("Lỗi", "Không thể tải dữ liệu: "+ str(e))
 
     def chon_dong(self, event):
         selected = self.trHienThi.selection()
@@ -273,9 +160,7 @@ class tabHangSanXuat(tk.Frame):
         self.trHienThi.insert("", "end", values=(ma, ten, quocgia))
         self.ds_them.append((ma, ten, quocgia))
         self.xoa_form()
-        messagebox.showinfo(
-            "Thành công", "Đã thêm dòng mới! Nhấn 'Lưu' để lưu vào CSDL."
-        )
+        messagebox.showinfo("Thành công", "Đã thêm dòng mới! Nhấn 'Lưu' để lưu vào CSDL.")
 
     def sua(self):
         selected = self.trHienThi.selection()
@@ -348,9 +233,7 @@ class tabHangSanXuat(tk.Frame):
                 messagebox.showinfo("Thông báo", "Không có thay đổi để lưu!")
                 return
 
-            confirm = messagebox.askyesno(
-                "Xác nhận", "Bạn có chắc muốn lưu các thay đổi?"
-            )
+            confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn lưu các thay đổi?")
             if not confirm:
                 return
 
@@ -358,16 +241,10 @@ class tabHangSanXuat(tk.Frame):
                 self.cursor.execute("DELETE FROM HangSanXuat WHERE MaHang = ?", (ma,))
 
             for ma, ten, quocgia in self.ds_them:
-                self.cursor.execute(
-                    "INSERT INTO HangSanXuat (MaHang, TenHang, QuocGia) VALUES (?, ?, ?)",
-                    (ma, ten, quocgia),
-                )
+                self.cursor.execute("INSERT INTO HangSanXuat (MaHang, TenHang, QuocGia) VALUES (?, ?, ?)", (ma, ten, quocgia))
 
             for ma, ten, quocgia, ma_cu in self.ds_sua:
-                self.cursor.execute(
-                    "UPDATE HangSanXuat SET MaHang = ?, TenHang = ?, QuocGia = ? WHERE MaHang = ?",
-                    (ma, ten, quocgia, ma_cu),
-                )
+                self.cursor.execute("UPDATE HangSanXuat SET MaHang = ?, TenHang = ?, QuocGia = ? WHERE MaHang = ?", (ma, ten, quocgia, ma_cu))
 
             self.conn.commit()
             messagebox.showinfo("Thành công", "Đã lưu thay đổi vào CSDL!")
@@ -410,27 +287,19 @@ class tabHangSanXuat(tk.Frame):
                 self.trHienThi.delete(item)
 
             if self.search_option.get() == "ma":
-                self.cursor.execute(
-                    "SELECT MaHang, TenHang, QuocGia FROM HangSanXuat WHERE MaHang LIKE ? ORDER BY MaHang",
-                    (f"%{tu_khoa_tim}%",),
-                )
+                self.cursor.execute("SELECT MaHang, TenHang, QuocGia FROM HangSanXuat WHERE MaHang LIKE ? ORDER BY MaHang", (f"%{tu_khoa_tim}%",))
             else:
-                self.cursor.execute(
-                    "SELECT MaHang, TenHang, QuocGia FROM HangSanXuat WHERE TenHang LIKE ? ORDER BY MaHang",
-                    (f"%{tu_khoa_tim}%",),
-                )
+                self.cursor.execute("SELECT MaHang, TenHang, QuocGia FROM HangSanXuat WHERE TenHang LIKE ? ORDER BY MaHang", (f"%{tu_khoa_tim}%",))
 
             rows = self.cursor.fetchall()
             for row in rows:
-                self.trHienThi.insert(
-                    "", "end", values=(row.MaHang, row.TenHang, row.QuocGia)
-                )
+                self.trHienThi.insert("", "end", values=(row.MaHang, row.TenHang, row.QuocGia))
 
             if not rows:
                 messagebox.showinfo("Thông báo", "Không tìm thấy kết quả!")
 
         except Exception as e:
-            messagebox.showerror("Lỗi", f"Không thể tìm kiếm: {str(e)}")
+            messagebox.showerror("Lỗi", "Không thể tìm kiếm: " + str(e))
 
     def xoa_form(self):
         self.txt_ma.delete(0, tk.END)

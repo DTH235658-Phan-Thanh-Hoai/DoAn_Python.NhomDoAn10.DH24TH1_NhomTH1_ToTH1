@@ -7,14 +7,6 @@ import tabHangSanXuat as hsx
 import tabNhaCungCap as ncc
 import tabBaoHanh as bh
 
-# === BẢNG MÀU ===
-PRIMARY_COLOR = "#0D47A1"
-SECONDARY_COLOR = "#1565C0"
-ACCENT_COLOR = "#42A5F5"
-HIGHLIGHT_COLOR = "#BBDEFB"
-TEXT_COLOR = "white"
-
-
 # === Tạo class Quản Lý Sản Phẩm ===
 class QuanLySanPham(tk.Frame):
     def __init__(self, parent, controller, conn, user):
@@ -23,14 +15,10 @@ class QuanLySanPham(tk.Frame):
         # === CHUỖI KẾT NỐI  ====
         self.conn = conn
 
+        self.controller = controller
+
         # === TITLE ===
-        lbl_title = tk.Label(
-            self,
-            text="QUẢN LÝ SẢN PHẨM",
-            font=("Segoe UI", 16, "bold"),
-            bg="white",
-            fg="#0D47A1",
-        )
+        lbl_title = tk.Label(self, text="QUẢN LÝ SẢN PHẨM", font=("Segoe UI", 16, "bold"), bg="white", fg="#0D47A1")
         lbl_title.pack()
 
         # === Tạo Tab Control ===
@@ -38,13 +26,24 @@ class QuanLySanPham(tk.Frame):
         tab_control.pack(fill="both", expand=True, padx=20, pady=10)
 
         # === Các tab con ===
-        tab_tivi = tv.tabTivi(tab_control, conn)
-        tab_hang = hsx.tabHangSanXuat(tab_control, conn)
-        tab_nhacungcap = ncc.tabNhaCungCap(tab_control, conn)
-        tab_bh = bh.tabBaoHanh(tab_control, conn)
+        self.tab_tivi = tv.tabTivi(tab_control, conn)
+        self.tab_hang = hsx.tabHangSanXuat(tab_control, conn)
+        self.tab_nhacungcap = ncc.tabNhaCungCap(tab_control, conn)
+        self.tab_bh = bh.tabBaoHanh(tab_control, conn)
 
         # Thêm vào notebook
-        tab_control.add(tab_tivi, text="📺 Tivi")
-        tab_control.add(tab_hang, text="🏭 Hãng sản xuất")
-        tab_control.add(tab_nhacungcap, text="🤝 Nhà cung cấp")
-        tab_control.add(tab_bh, text="🧾 Bảo hành")
+        tab_control.add(self.tab_tivi, text="📺 Tivi")
+        tab_control.add(self.tab_hang, text="🏭 Hãng sản xuất")
+        tab_control.add(self.tab_nhacungcap, text="🤝 Nhà cung cấp")
+        tab_control.add(self.tab_bh, text="🧾 Bảo hành")
+
+    # Hàm làm mới tab khi click vào
+    def load_data(self):
+        try:
+            self.tab_tivi.hienthi_dulieu()
+            self.tab_hang.hienthi_dulieu()
+            self.tab_nhacungcap.hienthi_dulieu()
+            self.tab_bh.hienthi_dulieu()
+            
+        except Exception as e:
+            messagebox.showerror("Lỗi khi load tab con: " + str(e))

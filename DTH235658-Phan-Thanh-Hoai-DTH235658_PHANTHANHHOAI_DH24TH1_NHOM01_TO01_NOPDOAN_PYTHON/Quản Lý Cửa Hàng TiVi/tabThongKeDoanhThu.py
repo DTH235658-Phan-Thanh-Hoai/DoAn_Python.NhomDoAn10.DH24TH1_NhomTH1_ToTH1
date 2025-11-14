@@ -4,113 +4,42 @@ import pyodbc
 from tkcalendar import DateEntry
 from datetime import date, datetime
 
-
 class tabThongKeDoanhThu(tk.Frame):
     def __init__(self, parent, conn):
         super().__init__(parent, bg="white")
         self.conn = conn
 
         # === Bộ lọc thống kê ===
-        frame_filter = tk.LabelFrame(
-            self,
-            text="Bộ lọc thống kê",
-            bg="white",
-            font=("Segoe UI", 12, "bold"),
-            fg="#0D47A1",
-            padx=10,
-            pady=10,
-        )
+        frame_filter = tk.LabelFrame(self, text="Bộ lọc thống kê", bg="white", font=("Segoe UI", 12, "bold"), fg="#0D47A1", padx=10, pady=10,)
         frame_filter.pack(fill="x", padx=20, pady=10)
 
-        tk.Label(frame_filter, text="Từ ngày:", bg="white", font=("Segoe UI", 10)).grid(
-            row=0, column=0, padx=5, pady=5
-        )
-        self.date_tungay = DateEntry(
-            frame_filter,
-            width=36,
-            date_pattern="dd/mm/yyyy",
-            background="#1565C0",
-            foreground="white",
-            borderwidth=2,
-        )
+        tk.Label(frame_filter, text="Từ ngày:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=0, padx=5, pady=5)
+        self.date_tungay = DateEntry(frame_filter, width=36, date_pattern="dd/mm/yyyy", background="#1565C0", foreground="white", borderwidth=2,)
         self.date_tungay.grid(row=0, column=1, padx=5, pady=5)
 
-        tk.Label(
-            frame_filter, text="Đến ngày:", bg="white", font=("Segoe UI", 10)
-        ).grid(row=0, column=2, padx=5, pady=5)
-        self.date_denngay = DateEntry(
-            frame_filter,
-            width=36,
-            date_pattern="dd/mm/yyyy",
-            background="#1565C0",
-            foreground="white",
-            borderwidth=2,
-        )
+        tk.Label(frame_filter, text="Đến ngày:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=2, padx=5, pady=5)
+        self.date_denngay = DateEntry(frame_filter, width=36, date_pattern="dd/mm/yyyy", background="#1565C0", foreground="white", borderwidth=2,)
         self.date_denngay.grid(row=0, column=3, padx=5, pady=5)
 
-        btn_thongke = tk.Button(
-            frame_filter,
-            text="Thống kê",
-            bg="#1E88E5",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            bd=0,
-            padx=15,
-            pady=5,
-            command=self.thongke_doanhthu_loc,
-        )
+        btn_thongke = tk.Button(frame_filter, text="📈 Thống kê", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), bd=0, padx=15, pady=5, command=self.thongke_doanhthu_loc,)
         btn_thongke.grid(row=0, column=4, padx=10)
 
-        tk.Button(
-            frame_filter,
-            text="Hủy",
-            font=("Segoe UI", 10, "bold"),
-            bg="#E53935",
-            fg="white",
-            bd=0,
-            padx=10,
-            pady=5,
-            command=self.huy,
-        ).grid(row=0, column=5, padx=10)
+        tk.Button(frame_filter, text="Hủy", font=("Segoe UI", 10, "bold"), bg="#E53935", fg="white", bd=0, padx=10, pady=5, command=self.huy,).grid(row=0, column=5, padx=10)
 
         # === Kết quả tổng hợp ===
         frame_result = tk.Frame(self, bg="white")
         frame_result.pack(fill="x", padx=20, pady=10)
 
-        tk.Label(
-            frame_result, text="Tổng hóa đơn:", bg="white", font=("Segoe UI", 12)
-        ).grid(row=0, column=0, padx=5, pady=5)
-        self.lbl_tonghd = tk.Label(
-            frame_result,
-            text="0",
-            bg="white",
-            font=("Segoe UI", 12, "bold"),
-            fg="#1565C0",
-        )
+        tk.Label(frame_result, text="Tổng hóa đơn:", bg="white", font=("Segoe UI", 12)).grid(row=0, column=0, padx=5, pady=5)
+        self.lbl_tonghd = tk.Label(frame_result, text="0", bg="white", font=("Segoe UI", 12, "bold"), fg="#1565C0",)
         self.lbl_tonghd.grid(row=0, column=1, padx=5, pady=5)
 
-        tk.Label(
-            frame_result, text="Tổng doanh thu:", bg="white", font=("Segoe UI", 12)
-        ).grid(row=0, column=2, padx=5, pady=5)
-        self.lbl_doanhthu = tk.Label(
-            frame_result,
-            text="0 VNĐ",
-            bg="white",
-            font=("Segoe UI", 12, "bold"),
-            fg="#E53935",
-        )
+        tk.Label(frame_result, text="Tổng doanh thu:", bg="white", font=("Segoe UI", 12)).grid(row=0, column=2, padx=5, pady=5)
+        self.lbl_doanhthu = tk.Label(frame_result, text="0 VNĐ", bg="white", font=("Segoe UI", 12, "bold"), fg="#E53935",)
         self.lbl_doanhthu.grid(row=0, column=3, padx=5, pady=5)
 
-        tk.Label(
-            frame_result, text="Lợi nhuận:", bg="white", font=("Segoe UI", 12)
-        ).grid(row=0, column=4, padx=5, pady=5)
-        self.lbl_loinhuan = tk.Label(
-            frame_result,
-            text="0 VNĐ",
-            bg="white",
-            font=("Segoe UI", 12, "bold"),
-            fg="#43A047",
-        )
+        tk.Label(frame_result, text="Lợi nhuận:", bg="white", font=("Segoe UI", 12)).grid(row=0, column=4, padx=5, pady=5)
+        self.lbl_loinhuan = tk.Label(frame_result, text="0 VNĐ", bg="white", font=("Segoe UI", 12, "bold"), fg="#43A047",)
         self.lbl_loinhuan.grid(row=0, column=5, padx=5, pady=5)
 
         # === Treeview hiển thị hóa đơn ===
@@ -122,14 +51,7 @@ class tabThongKeDoanhThu(tk.Frame):
         scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
         scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
 
-        self.trHienThi = ttk.Treeview(
-            frame_table,
-            show="headings",
-            columns=columns,
-            height=12,
-            yscrollcommand=scroll_y.set,
-            xscrollcommand=scroll_x.set,
-        )
+        self.trHienThi = ttk.Treeview(frame_table, show="headings", columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set,)
 
         scroll_y.config(command=self.trHienThi.yview)
         scroll_x.config(command=self.trHienThi.xview)
@@ -155,18 +77,7 @@ class tabThongKeDoanhThu(tk.Frame):
         style = ttk.Style()
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
         style.configure("Treeview", font=("Segoe UI", 10), rowheight=28)
-        style.map("Treeview", background=[("selected", "#BBDEFB")])
-
-        # === Khu vực biểu đồ (chưa triển khai) ===
-        chart_frame = tk.Frame(self, bg="white")
-        chart_frame.pack(fill="x", padx=20, pady=10)
-        tk.Label(
-            chart_frame,
-            text="(Khu vực biểu đồ doanh thu theo tháng)",
-            font=("Segoe UI", 11, "italic"),
-            bg="white",
-            fg="gray",
-        ).pack()
+        style.map("Treeview", background=[("selected", "#1565C0")])
 
         self.thongke_doanhthu_tatca()
 
@@ -177,14 +88,13 @@ class tabThongKeDoanhThu(tk.Frame):
             for item in self.trHienThi.get_children():
                 self.trHienThi.delete(item)
 
-            cursor.execute(
-                """
+            cursor.execute("""
                 SELECT hdb.MaHD, hdb.MaKH, kh.TenKH, hdb.NgayBan, hdb.TongTien
                 FROM HoaDonBan hdb
                 JOIN KhachHang kh ON kh.MaKH = hdb.MaKH
+                WHERE hdb.TrangThai = N'Đã thanh toán'
                 ORDER BY hdb.NgayBan DESC
-                """
-            )
+                """)
             rows = cursor.fetchall()
 
             tong_hoadon = 0
@@ -192,29 +102,21 @@ class tabThongKeDoanhThu(tk.Frame):
                 ngayban_str = self.chuyen_yyyy_sang_dd(ngayban)
                 tongtien_str = f"{tongtien:,.0f}" if tongtien else "0"
 
-                self.trHienThi.insert(
-                    "",
-                    "end",
-                    values=(mahd, makh, tenkh or "", ngayban_str, tongtien_str),
-                )
+                self.trHienThi.insert("", "end", values=(mahd, makh, tenkh or "", ngayban_str, tongtien_str))
                 tong_hoadon += 1
 
-            cursor.execute(
-                """
+            cursor.execute("""
                 SELECT SUM(TongTien)
                 FROM HoaDonBan
                 WHERE TrangThai = N'Đã thanh toán'
-                """
-            )
+                """)
             tong_doanhthu = cursor.fetchone()[0] or 0
 
-            cursor.execute(
-                """
+            cursor.execute("""
                 SELECT SUM(TongTien)
                 FROM PhieuNhapHang
                 WHERE TrangThai = N'Đã duyệt'
-                """
-            )
+                """)
             tong_nhap = cursor.fetchone()[0] or 0
 
             loinhuan = tong_doanhthu - tong_nhap
@@ -239,21 +141,16 @@ class tabThongKeDoanhThu(tk.Frame):
             denngay = str(self.date_denngay.get_date())
 
             if tungay > denngay:
-                messagebox.showwarning(
-                    "Cảnh báo", "Từ ngày phải nhỏ hơn hoặc bằng đến ngày!"
-                )
+                messagebox.showwarning("Cảnh báo", "Từ ngày phải nhỏ hơn hoặc bằng đến ngày!")
                 return
 
-            cursor.execute(
-                """
+            cursor.execute("""
                 SELECT hdb.MaHD, hdb.MaKH, kh.TenKH, hdb.NgayBan, hdb.TongTien
                 FROM HoaDonBan hdb
                 JOIN KhachHang kh ON kh.MaKH = hdb.MaKH
                 WHERE hdb.NgayBan BETWEEN ? AND ?
                 ORDER BY hdb.NgayBan DESC
-                """,
-                (tungay, denngay),
-            )
+                """,(tungay, denngay),)
             rows = cursor.fetchall()
 
             tong_hoadon = 0
@@ -261,33 +158,23 @@ class tabThongKeDoanhThu(tk.Frame):
                 ngayban_str = self.chuyen_yyyy_sang_dd(ngayban)
                 tongtien_str = f"{tongtien:,.0f}" if tongtien else "0"
 
-                self.trHienThi.insert(
-                    "",
-                    "end",
-                    values=(mahd, makh, tenkh or "", ngayban_str, tongtien_str),
-                )
+                self.trHienThi.insert("", "end", values=(mahd, makh, tenkh or "", ngayban_str, tongtien_str),)
                 tong_hoadon += 1
 
-            cursor.execute(
-                """
+            cursor.execute("""
                 SELECT SUM(TongTien)
                 FROM HoaDonBan
                 WHERE TrangThai = N'Đã thanh toán'
                 AND NgayBan BETWEEN ? AND ?
-                """,
-                (tungay, denngay),
-            )
+                """,(tungay, denngay),)
             tong_doanhthu = cursor.fetchone()[0] or 0
 
-            cursor.execute(
-                """
+            cursor.execute("""
                 SELECT SUM(TongTien)
                 FROM PhieuNhapHang
                 WHERE TrangThai = N'Đã duyệt'
                 AND NgayNhap BETWEEN ? AND ?
-                """,
-                (tungay, denngay),
-            )
+                """,(tungay, denngay),)
             tong_nhap = cursor.fetchone()[0] or 0
 
             loinhuan = tong_doanhthu - tong_nhap
@@ -299,12 +186,10 @@ class tabThongKeDoanhThu(tk.Frame):
             cursor.close()
 
             if tong_hoadon == 0:
-                messagebox.showinfo(
-                    "Thông báo", "Không có hóa đơn nào trong khoảng thời gian này!"
-                )
+                messagebox.showinfo("Thông báo", "Không có hóa đơn nào trong khoảng thời gian này!")
 
         except Exception as e:
-            messagebox.showerror("Lỗi", f"Không thể thống kê: {str(e)}")
+            messagebox.showerror("Lỗi", "Không thể thống kê: " + str(e))
 
     def huy(self):
         self.date_tungay.set_date(date.today())

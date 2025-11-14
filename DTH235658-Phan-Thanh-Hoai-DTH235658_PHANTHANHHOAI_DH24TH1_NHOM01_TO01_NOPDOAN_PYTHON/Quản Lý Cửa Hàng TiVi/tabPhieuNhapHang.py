@@ -77,7 +77,7 @@ class tabPhieuNhapHang(tk.Frame):
         tk.Button(frame_btn, text="✅ Duyệt phiếu nhập hàng", bg="#43A047", fg="white",  font=("Segoe UI", 10, "bold"), command=self.DuyetPhieuNhapHang, padx=15, pady=5, bd=0).pack(side="left", padx=5)
         tk.Button(frame_btn, text="🗑 Hủy phiếu nhập hàng", bg="#E53935", fg="white",  font=("Segoe UI", 10, "bold"), command=self.HuyPhieuNhapHang, padx=15, pady=5, bd=0).pack(side="left", padx=5)
         tk.Button(frame_btn, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 10, "bold"), command=self.load_phieu_nhap, padx=15, pady=5, bd=0).pack(side="left", padx=5)
-        tk.Button(frame_btn, text="🖨 In phiếu nhập hàng", bg="#E51E9C", fg="white", font=("Segoe UI", 10, "bold"), command=self.InPhieuNhapHang, padx=15, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="🖨️  In phiếu nhập hàng", bg="#E51E9C", fg="white", font=("Segoe UI", 10, "bold"), command=self.InPhieuNhapHang, padx=15, pady=5, bd=0).pack(side="left", padx=5)
 
         # === TẢI DỮ LIỆU pHIẾU NHẬP ===
         self.load_phieu_nhap()
@@ -93,8 +93,8 @@ class tabPhieuNhapHang(tk.Frame):
 
                 formatted_row = (
                     row.MaPhieuNhap, ngay_nhap.strftime("%d/%m/%y"), row.MaNV, row.MaNCC,
-                    f"{float(row.TongTien):,.0f}" if row.TongTien else "0", row.TrangThai
-                )
+                    f"{float(row.TongTien):,.0f}" if row.TongTien else "0", row.TrangThai)
+                
                 self.trHienThi.insert("", tk.END, values=formatted_row)
                     
         except Exception as e:
@@ -115,7 +115,6 @@ class tabPhieuNhapHang(tk.Frame):
             chitietphieunhap.geometry("700x800")
             chitietphieunhap.resizable(False, False)
             chitietphieunhap.configure(bg="white")
-            
 
             tk.Label(chitietphieunhap, text="Chi tiết phiếu nhập hàng: " + ma_phieu, font=("Segoe UI", 12, "bold"), bg="white", fg="#0D47A1").pack(pady=10)
             
@@ -181,13 +180,7 @@ class tabPhieuNhapHang(tk.Frame):
                 return
 
             for r in rows:
-                tree.insert("", tk.END, values=(
-                    r.MaTivi,
-                    r.TenTivi,
-                    r.SoLuong,
-                    f"{float(r.GiaNhap):,.0f} đ",
-                    f"{float(r.ThanhTien):,.0f} đ"
-                ))
+                tree.insert("", tk.END, values=(r.MaTivi, r.TenTivi,  r.SoLuong, f"{float(r.GiaNhap):,.0f} đ", f"{float(r.ThanhTien):,.0f} đ"))
 
             cursor.close()
         except Exception as e:

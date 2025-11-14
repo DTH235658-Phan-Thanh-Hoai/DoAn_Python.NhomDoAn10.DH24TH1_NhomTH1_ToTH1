@@ -11,6 +11,7 @@ class tabNhaCungCap(tk.Frame):
         self.ds_them = []
         self.ds_sua = []
         self.ds_xoa = []
+        self.selected_item = None
 
         frame_search = tk.Frame(self, bg="#E3F2FD", padx=10, pady=10)
         frame_search.pack(fill="x", padx=20, pady=5)
@@ -20,22 +21,17 @@ class tabNhaCungCap(tk.Frame):
         self.txt_timkiem.pack(side="left", padx=5)
 
         self.search_option = tk.StringVar(value="ma")
-        tk.Radiobutton(frame_search, text="Theo mã nhà cung cấp", variable=self.search_option,
-                       value="ma", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left", padx=10)
-        tk.Radiobutton(frame_search, text="Theo tên nhà cung cấp", variable=self.search_option,
-                       value="ten", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left")
+        tk.Radiobutton(frame_search, text="Theo mã nhà cung cấp", variable=self.search_option, value="ma", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left", padx=10)
+        tk.Radiobutton(frame_search, text="Theo tên nhà cung cấp", variable=self.search_option, value="ten", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left")
 
-        tk.Button(frame_search, text="Tìm", font=("Segoe UI", 10, "bold"), bg="#1565C0",
-                  fg="white", bd=0, padx=10, pady=5, command=self.timkiem).pack(side="left", padx=10)
-        tk.Button(frame_search, text="Hủy", font=("Segoe UI", 10, "bold"), bg="#E53935",
-                  fg="white", bd=0, padx=10, pady=5, command=self.huy_tim_kiem).pack(side="left", padx=10)
+        tk.Button(frame_search, text="Tìm", font=("Segoe UI", 10, "bold"), bg="#1565C0", fg="white", bd=0, padx=10, pady=5, command=self.timkiem).pack(side="left", padx=10)
+        tk.Button(frame_search, text="Hủy", font=("Segoe UI", 10, "bold"), bg="#E53935", fg="white", bd=0, padx=10, pady=5, command=self.huy_tim_kiem).pack(side="left", padx=10)
 
-        frame_form = tk.LabelFrame(self, text="Thông tin Nhà cung cấp", bg="white",
-                                   font=("Segoe UI", 12, "bold"), fg="#0D47A1", padx=10, pady=10)
+        frame_form = tk.LabelFrame(self, text="Thông tin Nhà cung cấp", bg="white", font=("Segoe UI", 12, "bold"), fg="#0D47A1", padx=10, pady=10)
         frame_form.pack(fill="x", padx=20, pady=10)
 
         tk.Label(frame_form, text="Mã nhà cung cấp", bg="white", font=("Segoe UI", 10)).grid(row=0, column=0, sticky="w", padx=5, pady=5)
-        self.txt_ma = ttk.Entry(frame_form, width=28)
+        self.txt_ma = ttk.Entry(frame_form, width=22)
         self.txt_ma.grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(frame_form, text="Tên nhà cung cấp:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=2, sticky="w", padx=5, pady=5)
@@ -43,7 +39,7 @@ class tabNhaCungCap(tk.Frame):
         self.txt_ten.grid(row=0, column=3, columnspan=3, padx=5, pady=5)
 
         tk.Label(frame_form, text="Số điện thoại:", bg="white", font=("Segoe UI", 10)).grid(row=1, column=0, sticky="w", padx=5, pady=5)
-        self.txt_sodienthoai = ttk.Entry(frame_form, width=28)
+        self.txt_sodienthoai = ttk.Entry(frame_form, width=22)
         self.txt_sodienthoai.grid(row=1, column=1, padx=5, pady=5)
 
         tk.Label(frame_form, text="Email:", bg="white", font=("Segoe UI", 10)).grid(row=1, column=2, sticky="w", padx=5, pady=5)
@@ -57,16 +53,11 @@ class tabNhaCungCap(tk.Frame):
         frame_buttons = tk.Frame(self, bg="white")
         frame_buttons.pack(pady=10)
 
-        tk.Button(frame_buttons, text="➕ Thêm", bg="#EBDA42", fg="white",
-                  font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.them).grid(row=0, column=0, padx=10)
-        tk.Button(frame_buttons, text="✏️ Sửa", bg="#FB8C00", fg="white",
-                  font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.sua).grid(row=0, column=1, padx=10)
-        tk.Button(frame_buttons, text="🗑️ Xóa", bg="#E53935", fg="white",
-                  font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.xoa).grid(row=0, column=2, padx=10)
-        tk.Button(frame_buttons, text="🔄 Làm mới", bg="#1E88E5", fg="white",
-                  font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.lammoi).grid(row=0, column=3, padx=10)
-        tk.Button(frame_buttons, text="💾 Lưu", bg="#43A047", fg="white",
-                  font=("Segoe UI", 10, "bold"), padx=20, pady=5, bd=0, command=self.luu).grid(row=0, column=4, padx=10)
+        tk.Button(frame_buttons, text="➕ Thêm", bg="#EBDA42", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.them).grid(row=0, column=0, padx=10)
+        tk.Button(frame_buttons, text="✏️ Sửa", bg="#FB8C00", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.sua).grid(row=0, column=1, padx=10)
+        tk.Button(frame_buttons, text="🗑️ Xóa", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.xoa).grid(row=0, column=2, padx=10)
+        tk.Button(frame_buttons, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.lammoi).grid(row=0, column=3, padx=10)
+        tk.Button(frame_buttons, text="💾 Lưu", bg="#43A047", fg="white", font=("Segoe UI", 10, "bold"), padx=20, pady=5, bd=0, command=self.luu).grid(row=0, column=4, padx=10)
 
         frame_table = tk.Frame(self, bg="white")
         frame_table.pack(fill="both", expand=True, padx=20, pady=10)
@@ -74,8 +65,7 @@ class tabNhaCungCap(tk.Frame):
         columns = ("MaNCC", "TenNCC", "DiaChi", "SoDienThoai", "Email")
         scroll_y = ttk.Scrollbar(frame_table, orient="vertical")
         scroll_x = ttk.Scrollbar(frame_table, orient="horizontal")
-        self.trHienThi = ttk.Treeview(frame_table, show="headings", columns=columns, height=12,
-                                      yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+        self.trHienThi = ttk.Treeview(frame_table, show="headings", columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
         scroll_y.config(command=self.trHienThi.yview)
         scroll_x.config(command=self.trHienThi.xview)
         scroll_y.pack(side="right", fill="y")
@@ -109,19 +99,26 @@ class tabNhaCungCap(tk.Frame):
             self.trHienThi.insert("", "end", values=(row.MaNCC, row.TenNCC, row.DiaChi, row.SoDienThoai, row.Email))
 
     def chon_dong(self, event=None):
-        sel = self.trHienThi.selection()
-        if sel:
-            val = self.trHienThi.item(sel[0])["values"]
-            self.xoa_form()
-            self.txt_ma.insert(0, val[0])
-            self.txt_ten.insert(0, val[1])
-            self.txt_diachi.insert(0, val[2])
-            if str(val[3][0]) == "0":
-                sdt = str(val[3][0])
-            else:
-                sdt = "0" + str(val[3][0])
-            self.txt_sodienthoai.insert(0, sdt)
-            self.txt_email.insert(0, val[4])
+        selected = self.trHienThi.selection() 
+        if not selected:
+            return
+        
+        self.selected_item = selected[0]
+        item = self.trHienThi.item(self.selected_item)
+        values = item["values"]
+
+        self.xoa_form()
+        self.txt_ma.insert(0, values[0])
+        self.txt_ten.insert(0, values[1])
+        self.txt_diachi.insert(0, values[2])
+
+        sdt = str(values[3])
+        if sdt and not sdt[0] == "0":
+            sdt = "0" + sdt
+        self.txt_sodienthoai.insert(0, sdt)
+
+        self.txt_email.insert(0, values[4])
+        
 
     def kiemtra_trung(self, ma= "", ten= "", sdt= "", email= "", ma_hien_tai= ""):
         for iid in self.trHienThi.get_children():
@@ -229,16 +226,13 @@ class tabNhaCungCap(tk.Frame):
         try:
             for ma in self.ds_xoa:
                 self.cursor.execute("DELETE FROM NhaCungCap WHERE MaNCC = ?", (ma,))
+
             for ma, ten, diachi, sdt, email in self.ds_them:
-                self.cursor.execute(
-                    "INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, SoDienThoai, Email) VALUES (?, ?, ?, ?, ?)",
-                    (ma, ten, diachi, sdt, email)
-                )
+                self.cursor.execute("INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, SoDienThoai, Email) VALUES (?, ?, ?, ?, ?)", (ma, ten, diachi, sdt, email))
+
             for ma, ten, diachi, sdt, email, ma_cu in self.ds_sua:
-                self.cursor.execute(
-                    "UPDATE NhaCungCap SET MaNCC=?, TenNCC=?, DiaChi=?, SoDienThoai=?, Email=? WHERE MaNCC=?",
-                    (ma, ten, diachi, sdt, email, ma_cu)
-                )
+                self.cursor.execute("UPDATE NhaCungCap SET MaNCC=?, TenNCC=?, DiaChi=?, SoDienThoai=?, Email=? WHERE MaNCC=?", (ma, ten, diachi, sdt, email, ma_cu))
+                
             self.conn.commit()
             messagebox.showinfo("Thành công", "Đã lưu thay đổi vào CSDL!")
         except pyodbc.IntegrityError as e:
