@@ -10,11 +10,14 @@ import frmTongQuan
 
 # === TAB HÓA ĐƠN ===
 class tabHoaDon(tk.Frame):
-    def __init__(self, parent, conn, controller=None):
+    def __init__(self, parent, conn, user, controller=None):
         super().__init__(parent, bg="white")
 
         # === CHUỖI KẾT NỐI ===
         self.conn = conn
+
+        # === LƯU MÃ NHÂN VIÊN ===
+        self.user = user
 
         # === LƯU THAM CHIẾU CONTROLLER ===
         self.controller = controller
@@ -24,7 +27,7 @@ class tabHoaDon(tk.Frame):
         frame_search.pack(fill="x", padx=20, pady=5)
 
         tk.Label(frame_search, text="Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD").pack(side="left", padx=5)
-        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=20)
+        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=25)
         self.txt_timkiem.pack(side="left", padx=5)
 
         self.search_option = tk.StringVar(value="mahd")
@@ -81,7 +84,8 @@ class tabHoaDon(tk.Frame):
         tk.Button(frame_btn, text="💳 Thanh toán hóa đơn", bg="#43A047", fg="white",  font=("Segoe UI", 10, "bold"), command=self.ThanhToanHoaDonBan, padx=15, pady=5, bd=0).pack(side="left", padx=5)
         tk.Button(frame_btn, text="❌ Hủy hóa đơn", bg="#E53935", fg="white",  font=("Segoe UI", 10, "bold"), padx=15, command=self.HuyHoaDonBan, pady=5, bd=0).pack(side="left", padx=5)
         tk.Button(frame_btn, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.load_hoa_don, pady=5, bd=0).pack(side="left", padx=5)
-        tk.Button(frame_btn, text="🖨️ In hóa đơn", bg="#E51E9C", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.InHoaDon, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="🗑️ Xóa", bg="#B71C1C", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.XoaHoaDonVinhVien, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="🖨️ In", bg="#E51E9C", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.InHoaDon, pady=5, bd=0).pack(side="left", padx=5)
 
         # === TẢI DỮ LIỆU HÓA ĐƠN ===
         self.load_hoa_don()
@@ -90,7 +94,18 @@ class tabHoaDon(tk.Frame):
         try:
             self.trHienThi.delete(*self.trHienThi.get_children())
             cursor = self.conn.cursor()
-            cursor.execute("SELECT MaHD, NgayBan, MaNV, MaKH, TongTien, TrangThai FROM HOADONBAN")
+            # Khởi tạo câu truy vấn cơ bản
+            sql_query = "SELECT MaHD, NgayBan, MaNV, MaKH, TongTien, TrangThai FROM HOADONBAN"
+            params = []
+            
+            # KIỂM TRA QUYỀN TRUY CẬP
+            if self.user.lower() != "admin":
+                # Nếu không phải admin, chỉ lấy hóa đơn của nhân viên đó
+                sql_query = sql_query + " WHERE MaNV = ?"
+                params.append(self.user)
+            
+            # Thực thi truy vấn
+            cursor.execute(sql_query, params)
 
             for row in cursor.fetchall():
                 ngay_ban = datetime.strptime(str(row.NgayBan).split(" ")[0], "%Y-%m-%d")
@@ -187,14 +202,7 @@ class tabHoaDon(tk.Frame):
                 return
 
             for r in rows:
-                tree.insert("", tk.END, values=(
-                    r.MaCTHD,
-                    r.MaTivi,
-                    r.TenTivi,
-                    r.SoLuong,
-                    f"{float(r.DonGia):,.0f} đ",
-                    f"{float(r.ThanhTien):,.0f} đ"
-                ))
+                tree.insert("", tk.END, values=(r.MaCTHD,r.MaTivi, r.TenTivi,r.SoLuong,f"{float(r.DonGia):,.0f} đ",f"{float(r.ThanhTien):,.0f} đ"))
 
             cursor.close()
         except Exception as e:
@@ -249,39 +257,6 @@ class tabHoaDon(tk.Frame):
 
                 # Làm mới lại danh sách hóa đơn
                 self.load_hoa_don()
-
-                # # === GỌI HÀM LÀM MỚI TRANG TỔNG QUAN QUA CONTROLLER ===
-                # if self.controller and "TongQuan" in self.controller.frames:
-                #     tong_quan_frame = self.controller.frames["TongQuan"]
-                #     tong_quan_frame.load_data()
-                #     tong_quan_frame.ve_bieu_do()
-                
-                # # === GỌI HÀM LÀM MỚI TRANG THỐNG KÊ ===
-                # if self.controller and "ThongKeVaBaoCao" in self.controller.frames:
-                #     thong_ke_container = self.controller.frames["ThongKeVaBaoCao"]
-                    
-                #     # Lấy danh sách các widget con (ví dụ: Notebook)
-                #     children1 = thong_ke_container.winfo_children()
-                #     if children1 and isinstance(children1[1], ttk.Notebook):
-                #         thong_ke_container = self.controller.frames["ThongKeVaBaoCao"]
-            
-                #         if hasattr(thong_ke_container, 'tab_doanhthu'):
-                #             tab_doanh_thu = thong_ke_container.tab_doanhthu
-
-                #             if hasattr(tab_doanh_thu, 'thongke_doanhthu_tatca'):
-                #                 tab_doanh_thu.thongke_doanhthu_tatca()
-                
-                # # === GỌI HÀM LÀM MỚI TRANG BÁO CÁO ===
-                # if self.controller and "ThongKeVaBaoCao" in self.controller.frames:
-                #     thong_ke_frame = self.controller.frames["ThongKeVaBaoCao"]
-
-                #     # Nếu frame có thuộc tính tab_baocao
-                #     if hasattr(thong_ke_frame, 'tab_baocao'):
-                #         tab_bao_cao = thong_ke_frame.tab_baocao
-
-                #         # Gọi hàm cập nhật dữ liệu nếu có
-                #         if hasattr(tab_bao_cao, 'load_baocao_all'):
-                #             tab_bao_cao.load_baocao_all()
                             
             except Exception as e:
                 messagebox.showerror("Lỗi", "Đã xảy ra lỗi khi thanh toán hóa đơn:\n" + str(e))
@@ -560,3 +535,72 @@ class tabHoaDon(tk.Frame):
 
         except Exception as e:
             messagebox.showerror("Lỗi File Word", "Không thể tạo hoặc lưu file Word:\n" + str(e))
+
+    def XoaHoaDonVinhVien(self):
+        selected = self.trHienThi.selection()
+        if not selected:
+            messagebox.showwarning("Thông báo", "Vui lòng chọn 1 hóa đơn để xóa.")
+            return
+
+        ma_hd = self.trHienThi.item(selected[0], "values")[0]
+        trang_thai = self.trHienThi.item(selected[0], "values")[5]
+        
+        # LẤY NGÀY BÁN CỦA HÓA ĐƠN TỪ CSDL
+        try:
+            cursor_temp = self.conn.cursor()
+            cursor_temp.execute("SELECT NgayBan FROM HOADONBAN WHERE MaHD = ?", (ma_hd,))
+            ngay_ban_db = cursor_temp.fetchone()[0]
+            cursor_temp.close()
+            
+            # Tính toán xem hóa đơn đã tồn tại trên 5 năm chưa
+            ngay_gioi_han = datetime.now().date().replace(year=datetime.now().year - 5)
+            # Kiểm tra: NgayBan có nhỏ hơn Ngày giới hạn 5 năm KHÔNG?
+            da_hon_5_nam = ngay_ban_db < ngay_gioi_han 
+            
+        except Exception as e:
+            messagebox.showerror("Lỗi", f"Không thể kiểm tra ngày bán của hóa đơn:\n{str(e)}")
+            return
+            
+        is_allowed_to_delete = False
+        warning_message = ""
+        
+        if trang_thai == "Đã hủy":
+            is_allowed_to_delete = True
+            warning_message = f"Bạn có chắc chắn muốn xóa vĩnh viễn hóa đơn ĐÃ HỦY {ma_hd} không?"
+            
+        elif trang_thai == "Đã thanh toán" and da_hon_5_nam:
+            is_allowed_to_delete = True
+            warning_message = f"Hóa đơn ĐÃ THANH TOÁN {ma_hd} này đã được lập hơn 5 năm ({ngay_ban_db.strftime('%d/%m/%Y')}). Bạn có chắc chắn muốn XÓA VĨNH VIỄN không?"
+        
+        if not is_allowed_to_delete:
+            messagebox.showwarning("Cảnh báo", "Chỉ có thể xóa vĩnh viễn hóa đơn ĐÃ HỦY, hoặc hóa đơn ĐÃ THANH TOÁN có thời gian lưu trữ trên 5 năm.")
+            return
+
+        traloi = messagebox.askyesno("Xác nhận XÓA VĨNH VIỄN", warning_message)
+        
+        if traloi:
+            try:
+                cursor = self.conn.cursor()
+                
+                # Xóa các bản ghi liên quan (Bảo Hành)
+                cursor.execute("SELECT MaCTHD FROM ChiTietHoaDon WHERE MaHD = ?", (ma_hd,))
+                cthd_list = [row[0] for row in cursor.fetchall()]
+                if cthd_list:
+                    placeholders = ', '.join(['?'] * len(cthd_list))
+                    cursor.execute(f"DELETE FROM BaoHanh WHERE MaCTHD IN ({placeholders})", cthd_list)
+
+                # Xóa Chi Tiết Hóa Đơn
+                cursor.execute("DELETE FROM ChiTietHoaDon WHERE MaHD = ?", (ma_hd,))
+                
+                # Xóa Hóa Đơn Bán
+                cursor.execute("DELETE FROM HoaDonBan WHERE MaHD = ?", (ma_hd,))
+                
+                self.conn.commit()
+                cursor.close()
+                messagebox.showinfo("Thành công", f"Hóa đơn {ma_hd} đã được xóa vĩnh viễn khỏi hệ thống!")
+                
+                self.load_hoa_don()
+                
+            except Exception as e:
+                self.conn.rollback()
+                messagebox.showerror("Lỗi", "Đã xảy ra lỗi khi xóa hóa đơn:\n" + str(e))

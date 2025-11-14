@@ -3,9 +3,12 @@ from tkinter import ttk
 import ctypes
 import pyodbc
 import App
+import os
+import sys
+from PIL import Image, ImageTk
 
 # === BẢNG MÀU ===
-PRIMARY_COLOR = "#0D47A1"
+PRIMARY_COLOR = "#378cfc"
 SECONDARY_COLOR = "#1565C0"
 ACCENT_COLOR = "#42A5F5"
 HIGHLIGHT_COLOR = "#BBDEFB"
@@ -31,16 +34,31 @@ class Login(tk.Tk):
         # ==== CHUỖI KẾT NỐI SQL ====
         self.conn = pyodbc.connect(
             "DRIVER={ODBC Driver 17 for SQL Server};"
-            "SERVER=LAPTOP-IFECMD9V;"
+            "SERVER=DESKTOP-LJVV0KQ;"
             "DATABASE=QLTV;"
             "Trusted_Connection=yes;")
+        
+        # === LẤY ĐƯỜNG DẪN CHO ẢNH === 
+        base_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+        image_dir = os.path.join(base_dir, "images")
+
+        icon_path = os.path.join(image_dir, 'icon_tivi.ico')
+        self.iconbitmap(icon_path)
 
         # === FRAME TRÁI (WELCOME) ===
-        left_frame = tk.Frame(self, bg=PRIMARY_COLOR, width=300, height=500)
+        left_frame = tk.Frame(self, width=300, height=500)
         left_frame.pack(side="left", fill="y")
-
-        tk.Label(left_frame, text="Welcome", bg=PRIMARY_COLOR, fg="white", font=("Segoe UI", 22, "bold"),).place(relx=0.5, rely=0.35, anchor="center")
-        tk.Label(left_frame, text="Please Sign in to Continue", bg=PRIMARY_COLOR, fg="white", font=("Segoe UI", 11),).place(relx=0.5, rely=0.42, anchor="center")
+        
+        # --- XỬ LÝ VÀ ĐẶT HÌNH ẢNH NỀN ---
+        image_path = os.path.join(image_dir, "nen_python.png")
+           
+        original_image = Image.open(image_path)
+        resized_image = original_image.resize((300, 580), Image.Resampling.LANCZOS)
+        self.bg_image = ImageTk.PhotoImage(resized_image)
+            
+        background_label = tk.Label(left_frame, image=self.bg_image)
+        background_label.place(x=0, y=0, relwidth=1, relheight=1)
+            
 
         # === FRAME PHẢI (FORM ĐĂNG NHẬP) ===
         right_frame = tk.Frame(self, bg="white")
@@ -50,10 +68,15 @@ class Login(tk.Tk):
         right_frame.columnconfigure(0, weight=1)
 
         # --- Avatar ---
-        avatar_canvas = tk.Canvas(right_frame, width=140, height=140, bg="white", highlightthickness=0)
-        avatar_canvas.create_oval(10, 10, 130, 130, fill=HIGHLIGHT_COLOR, outline=PRIMARY_COLOR, width=3)
-        avatar_canvas.create_text(72, 65, text="👤", font=("Segoe UI Emoji", 50), fill=PRIMARY_COLOR)
-        avatar_canvas.grid(row=0, column=0, pady=(30, 10))
+        user_icon_path = os.path.join(image_dir, "user.png") 
+        
+        original_user_image = Image.open(user_icon_path)
+        resized_user_image = original_user_image.resize((120, 120), Image.Resampling.LANCZOS) 
+        self.user_image_tk = ImageTk.PhotoImage(resized_user_image)
+
+        user_avatar_label = tk.Label(right_frame, image=self.user_image_tk, bg="white")
+        user_avatar_label.grid(row=0, column=0, pady=(30, 10))
+
 
         # --- SIGNIN ---
         tk.Label(right_frame, text="SIGNIN", bg="white", fg=PRIMARY_COLOR, font=("Segoe UI", 18, "bold")).grid(row=1, column=0, pady=(0, 30))

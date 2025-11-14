@@ -27,7 +27,7 @@ class tabTivi(tk.Frame):
         frame_search.pack(fill="x", padx=20, pady=5)
 
         tk.Label(frame_search, text="Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD").pack(side="left", padx=5)
-        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=65)
+        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=60)
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", lambda e: self.tim_kiem())
 
@@ -42,7 +42,7 @@ class tabTivi(tk.Frame):
         frame_form = tk.LabelFrame(self, text="Thông tin Tivi", bg="white", font=("Segoe UI", 12, "bold"), fg="#0D47A1",padx=10, pady=10,)
         frame_form.pack(fill="x", padx=20, pady=10)
 
-        self.pic_anhtivi = tk.Canvas(frame_form, width=60, height=80, bg="#f0f0f0", highlightthickness=1, highlightbackground="#ccc", )
+        self.pic_anhtivi = tk.Canvas(frame_form, width=80, height=100, bg="#f0f0f0", highlightthickness=1, highlightbackground="#ccc", )
         self.pic_anhtivi.grid(row=0, column=0, rowspan=3, padx=5, pady=5)
         self.pic_anhtivi.create_text(30, 40, text="Ảnh\ntivi", font=("Segoe UI", 10), fill="#888", tags="placeholder",)
 
@@ -54,11 +54,11 @@ class tabTivi(tk.Frame):
         self.txt_matv.grid(row=0, column=2, padx=5, pady=5)
 
         tk.Label(frame_form, text="Tên Tivi:", bg="white", font=("Segoe UI", 11)).grid(row=0, column=3, sticky="w", padx=5, pady=5)
-        self.txt_tentivi = ttk.Entry(frame_form, width=24)
+        self.txt_tentivi = ttk.Entry(frame_form, width=22)
         self.txt_tentivi.grid(row=0, column=4, padx=5, pady=5)
 
         tk.Label(frame_form, text="Hãng:", bg="white", font=("Segoe UI", 11)).grid(row=0, column=5, sticky="w", padx=5, pady=5)
-        self.cbo_hang = ttk.Combobox(frame_form, width=22, state="readonly")
+        self.cbo_hang = ttk.Combobox(frame_form, width=21, state="readonly")
         self.cbo_hang.grid(row=0, column=6, padx=5, pady=5)
 
         tk.Label(frame_form, text="Kích thước:", bg="white", font=("Segoe UI", 11)).grid(row=1, column=1, sticky="w", padx=5, pady=5)
@@ -66,7 +66,7 @@ class tabTivi(tk.Frame):
         self.txt_kichthuoc.grid(row=1, column=2, padx=5, pady=5)
 
         tk.Label(frame_form, text="Độ phân giải:", bg="white", font=("Segoe UI", 11)).grid(row=1, column=3, sticky="w", padx=5, pady=5)
-        self.txt_dophangiai = ttk.Entry(frame_form, width=24)
+        self.txt_dophangiai = ttk.Entry(frame_form, width=22)
         self.txt_dophangiai.grid(row=1, column=4, padx=5, pady=5)
 
         tk.Label(frame_form, text="Năm sản xuất:", bg="white", font=("Segoe UI", 11)).grid(row=1, column=5, sticky="w", padx=5, pady=5)
@@ -78,11 +78,11 @@ class tabTivi(tk.Frame):
         self.txt_giaban.grid(row=2, column=2, padx=5, pady=5)
 
         tk.Label(frame_form, text="Số lượng:", bg="white", font=("Segoe UI", 11)).grid(row=2, column=3, sticky="w", padx=5, pady=5)
-        self.txt_soluong = ttk.Entry(frame_form, width=24, state="disabled")
+        self.txt_soluong = ttk.Entry(frame_form, width=22, state="disabled")
         self.txt_soluong.grid(row=2, column=4, padx=5, pady=5)
 
         tk.Label(frame_form, text="Mô tả:", bg="white", font=("Segoe UI", 11)).grid( row=3, column=1, sticky="w", padx=5, pady=5)
-        self.txt_mota = ttk.Entry(frame_form, width=115)
+        self.txt_mota = ttk.Entry(frame_form, width=110)
         self.txt_mota.grid(row=3, column=2, columnspan=6, padx=5, pady=5)
 
         # ==== NÚT CHỨC NĂNG ====

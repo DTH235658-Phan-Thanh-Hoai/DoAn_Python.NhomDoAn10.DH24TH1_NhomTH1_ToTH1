@@ -2,6 +2,9 @@ import tkinter as tk
 from tkinter import messagebox
 import ctypes
 import pyodbc
+import os
+import sys
+from PIL import Image, ImageTk
 
 import frmTongQuan as tq
 import frmBanHangVaHoaDon as bhvhd
@@ -42,7 +45,7 @@ class App(tk.Tk):
         try:
             self.conn = pyodbc.connect(
                 'DRIVER={ODBC Driver 17 for SQL Server};'
-                'SERVER=LAPTOP-IFECMD9V;'
+                'SERVER=DESKTOP-LJVV0KQ;'
                 'DATABASE=QLTV;'
                 'Trusted_Connection=yes;'
             )
@@ -50,6 +53,13 @@ class App(tk.Tk):
             messagebox.showerror("Lỗi kết nối", "Không thể kết nối CSDL:")
             self.destroy()
             return
+        
+        # === LẤY ĐƯỜNG DẪN CHO ẢNH === 
+        base_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+        self.image_dir = os.path.join(base_dir, "images")
+
+        icon_path = os.path.join(self.image_dir, 'icon_tivi.ico')
+        self.iconbitmap(icon_path)
         
         # Tạo dictionary lưu các frame nội dung
         self.frames = {}
@@ -96,42 +106,17 @@ class App(tk.Tk):
         # ==== SIDEBAR BÊN TRÁI====
         pnlGiaoDien = tk.Frame(self, bg=SECONDARY_COLOR, width=250)
         pnlGiaoDien.pack(side="left", fill="y")
+        
+        # # Ảnh avatar (placeholder)
+        avatar_path = os.path.join(self.image_dir, 'tivi_user.png')
+        original_avatar = Image.open(avatar_path)
+        resized_avatar = original_avatar.resize((80, 80), Image.Resampling.LANCZOS)
+        self.avatar_tk = ImageTk.PhotoImage(resized_avatar) 
 
-        # Ảnh avatar (placeholder)
-        avatar = tk.Canvas(pnlGiaoDien, width=100, height=100, bg=SECONDARY_COLOR, highlightthickness=0)
-        avatar.create_oval(10, 10, 100, 100, fill="white", outline="") 
-        avatar.create_text(50, 50, text="📺", font=("Segoe UI Emoji", 35), fill= SECONDARY_COLOR) 
-        avatar.pack(pady=20)
+        lbl_avatar = tk.Label(pnlGiaoDien, image=self.avatar_tk, bg=SECONDARY_COLOR)
+        lbl_avatar.pack(pady=(20, 5))
 
-        lbl_XinChao = tk.Label(pnlGiaoDien, text="Xin chào Admin", bg=SECONDARY_COLOR, fg="white", font=("Segoe UI", 12, "bold")).pack()
-
-        """# Danh mục bên trái
-        btn_tongquan = tk.Button(pnlGiaoDien, text="🏠 Tổng quan", command=lambda: self.HienThiFrame("TongQuan"), **self.DinhDangNut())
-        btn_tongquan.pack(fill="x")
-
-        btn_quanlysanpham = tk.Button(pnlGiaoDien, text="📦 Quản lý Sản phẩm", command=lambda: self.HienThiFrame("QuanLySanPham"), **self.DinhDangNut())
-        btn_quanlysanpham.pack(fill="x")
-
-        btn_quanlykhachhang = tk.Button(pnlGiaoDien, text="👥 Quản lý Khách hàng", command=lambda: self.HienThiFrame("QuanLyKhachHang"), **self.DinhDangNut())
-        btn_quanlykhachhang.pack(fill="x")
-
-        btn_quanlynhanvien = tk.Button(pnlGiaoDien, text="🧑‍💼 Quản lý Nhân viên", command=lambda: self.HienThiFrame("QuanLyNhanVien"), **self.DinhDangNut())
-        btn_quanlynhanvien.pack(fill="x")
-
-        btn_banhangvahoadon = tk.Button(pnlGiaoDien, text="💰 Bán hàng & Hóa đơn", command=lambda: self.HienThiFrame("BanHangVaHoaDon"), **self.DinhDangNut())
-        btn_banhangvahoadon.pack(fill="x")
-
-        btn_nhaphangvaphieunhap = tk.Button(pnlGiaoDien, text="📦 Nhập hàng & Phiếu nhập", command=lambda: self.HienThiFrame("NhapHangVaPhieuNhap"), **self.DinhDangNut())
-        btn_nhaphangvaphieunhap.pack(fill="x")
-
-        btn_thongkevabaocao = tk.Button(pnlGiaoDien, text="🧾 Thống kê & Báo cáo", command=lambda: self.HienThiFrame("ThongKeVaBaoCao"), **self.DinhDangNut())
-        btn_thongkevabaocao.pack(fill="x")
-
-        btn_hethong = tk.Button(pnlGiaoDien, text="⚙️ Hệ thống", command=lambda: self.HienThiFrame("HeThong"), **self.DinhDangNut())
-        btn_hethong.pack(fill="x")
-
-        btn_dangxuat = tk.Button(pnlGiaoDien, text="🚪Đăng xuất", command=self.quit, **self.DinhDangNut())
-        btn_dangxuat.pack(fill="x")"""
+        lbl_XinChao = tk.Label(pnlGiaoDien, text=f"Xin chào {self.user}", bg=SECONDARY_COLOR, fg="white", font=("Segoe UI", 12, "bold")).pack()
 
         if self.user == "admin":
             # Danh mục bên trái
@@ -170,23 +155,14 @@ class App(tk.Tk):
                 "bd": 0, "relief": "flat", "anchor": "w", "padx": 20, "pady": 15}
 
     def HienThiFrame(self, page_name):
-        # # Nếu frame chưa được tạo thì khởi tạo nó
-        # if page_name not in self.frames:
-        #     FrameClass = self.frame_classes[page_name]
-        #     frame = FrameClass(parent=self.container, controller=self, conn=self.conn, user=self.user)
-        #     self.frames[page_name] = frame
-        #     frame.grid(row=0, column=0, sticky="nsew")
-
-        # # Sau đó hiển thị frame
-        # self.frames[page_name].tkraise()
-        # 1. Tạo frame nếu nó chưa tồn tại
+        # Tạo frame nếu nó chưa tồn tại
         if page_name not in self.frames:
             FrameClass = self.frame_classes[page_name]
             frame = FrameClass(parent=self.container, controller=self, conn=self.conn, user=self.user)
             self.frames[page_name] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        # 2. Lấy frame đã được tạo/lưu trữ
+        #  Lấy frame đã được tạo/lưu trữ
         frame_to_show = self.frames[page_name]
 
         try:

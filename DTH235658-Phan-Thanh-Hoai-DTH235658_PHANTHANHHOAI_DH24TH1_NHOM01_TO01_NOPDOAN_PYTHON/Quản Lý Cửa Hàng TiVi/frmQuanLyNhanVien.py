@@ -51,15 +51,15 @@ class QuanLyNhanVien(tk.Frame):
         frame_form = tk.LabelFrame(self, text="Thông tin nhân viên", bg="white", font=("Segoe UI", 12, "bold"), fg="#0D47A1", padx=10, pady=10)
         frame_form.pack(fill="x", padx=30, pady=10)
 
-        self.pic_anhnhanvien = tk.Canvas(frame_form, width=60, height=80, bg="#f0f0f0", highlightthickness=1, highlightbackground="#ccc")
+        self.pic_anhnhanvien = tk.Canvas(frame_form, width=80, height=100, bg="#f0f0f0", highlightthickness=1, highlightbackground="#ccc")
         self.pic_anhnhanvien.grid(row=0, column=0, rowspan=3, padx=5, pady=5)
-        self.pic_anhnhanvien.create_text(30, 40, text="Ảnh\nnhân\nviên", font=("Segoe UI", 8), fill="#888", tags="placeholder")
+        self.pic_anhnhanvien.create_text(30, 40, text="Ảnh\nnhân\nviên", font=("Segoe UI", 10), fill="#888", tags="placeholder")
 
         self.btn_chonanh = tk.Button(frame_form, text="Chọn ảnh", bg="#42A5F5", fg="white", font=("Segoe UI", 7, "bold"), height=1, width=7, bd=0, padx=10, pady=10, command=self.chon_anh)
         self.btn_chonanh.grid(row=3, column=0, pady=5)
 
         tk.Label(frame_form, text="Mã nhân viên:", font=("Segoe UI", 10), bg="white").grid(row=0, column=1, sticky="w", pady=5, padx=5)
-        self.txt_manv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=42)
+        self.txt_manv = ttk.Entry(frame_form, font=("Segoe UI", 10), width=40)
         self.txt_manv.grid(row=0, column=2, pady=5, padx=5)
 
         tk.Label(frame_form, text="Tên nhân viên:", font=("Segoe UI", 10), bg="white").grid(row=0, column=3, sticky="w", pady=5, padx=5)
@@ -67,7 +67,7 @@ class QuanLyNhanVien(tk.Frame):
         self.txt_tennv.grid(row=0, column=4, pady=5, padx=5)
 
         tk.Label(frame_form, text="Giới tính:", font=("Segoe UI", 10), bg="white").grid(row=1, column=1, sticky="w", pady=5, padx=5)
-        self.cbo_gioitinh = ttk.Combobox(frame_form, font=("Segoe UI", 10), values=["Nam", "Nữ"], width=40, state="readonly")
+        self.cbo_gioitinh = ttk.Combobox(frame_form, font=("Segoe UI", 10), values=["Nam", "Nữ"], width=38, state="readonly")
         self.cbo_gioitinh.grid(row=1, column=2, pady=5, padx=5)
 
         tk.Label(frame_form, text="Ngày sinh:", font=("Segoe UI", 10), bg="white").grid(row=1, column=3, sticky="w", pady=5, padx=5)
@@ -75,7 +75,7 @@ class QuanLyNhanVien(tk.Frame):
         self.date_ngaysinh.grid(row=1, column=4, pady=5, padx=5)
 
         tk.Label(frame_form, text="Số điện thoại:", font=("Segoe UI", 10), bg="white").grid(row=2, column=1, sticky="w", pady=5, padx=5)
-        self.txt_sodienthoai = ttk.Entry(frame_form, font=("Segoe UI", 10), width=42)
+        self.txt_sodienthoai = ttk.Entry(frame_form, font=("Segoe UI", 10), width=40)
         self.txt_sodienthoai.grid(row=2, column=2, pady=5, padx=5)
 
         tk.Label(frame_form, text="CCCD:", font=("Segoe UI", 10), bg="white").grid(row=2, column=3, sticky="w", pady=5, padx=5)
@@ -138,8 +138,7 @@ class QuanLyNhanVien(tk.Frame):
             if self.user != "admin":
                 self.cursor.execute(
                     "SELECT MaNV, TenNV, GioiTinh, NgaySinh, SoDienThoai, CCCD FROM NhanVien WHERE MaNV = ?",
-                    (self.user)
-                )
+                    (self.user))
                 row = self.cursor.fetchone()
 
                 if row:
@@ -173,7 +172,7 @@ class QuanLyNhanVien(tk.Frame):
                     self.txt_sodienthoai.configure(state="disabled")
                     self.txt_tennv.configure(state="disabled")
                     self.txt_cccd.configure(state="disabled")
-                    self.btn_chonanh.configure(state="disabled")
+                    self.btn_chonanh.grid_forget()
 
                     self.frame_buttons.pack_forget()
                     self.frame_search.pack_forget()

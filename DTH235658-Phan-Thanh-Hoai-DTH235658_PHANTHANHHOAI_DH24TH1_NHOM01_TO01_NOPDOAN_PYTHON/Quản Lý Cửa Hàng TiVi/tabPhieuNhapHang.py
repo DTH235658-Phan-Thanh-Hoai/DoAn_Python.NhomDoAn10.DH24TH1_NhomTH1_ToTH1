@@ -77,7 +77,8 @@ class tabPhieuNhapHang(tk.Frame):
         tk.Button(frame_btn, text="✅ Duyệt phiếu nhập hàng", bg="#43A047", fg="white",  font=("Segoe UI", 10, "bold"), command=self.DuyetPhieuNhapHang, padx=15, pady=5, bd=0).pack(side="left", padx=5)
         tk.Button(frame_btn, text="🗑 Hủy phiếu nhập hàng", bg="#E53935", fg="white",  font=("Segoe UI", 10, "bold"), command=self.HuyPhieuNhapHang, padx=15, pady=5, bd=0).pack(side="left", padx=5)
         tk.Button(frame_btn, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 10, "bold"), command=self.load_phieu_nhap, padx=15, pady=5, bd=0).pack(side="left", padx=5)
-        tk.Button(frame_btn, text="🖨️  In phiếu nhập hàng", bg="#E51E9C", fg="white", font=("Segoe UI", 10, "bold"), command=self.InPhieuNhapHang, padx=15, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="🗑️ Xóa", bg="#B71C1C", fg="white", font=("Segoe UI", 10, "bold"), command=self.XoaPhieuNhapVinhVien, padx=15, pady=5, bd=0).pack(side="left", padx=5)
+        tk.Button(frame_btn, text="🖨️  In", bg="#E51E9C", fg="white", font=("Segoe UI", 10, "bold"), command=self.InPhieuNhapHang, padx=15, pady=5, bd=0).pack(side="left", padx=5)
 
         # === TẢI DỮ LIỆU pHIẾU NHẬP ===
         self.load_phieu_nhap()
@@ -318,6 +319,66 @@ class tabPhieuNhapHang(tk.Frame):
         # Xóa txt_timkiem nếu có
         self.load_phieu_nhap()
         self.txt_timkiem.delete(0, tk.END)
+
+    def XoaPhieuNhapVinhVien(self):
+        selected = self.trHienThi.selection()
+        if not selected:
+            messagebox.showwarning("Thông báo", "Vui lòng chọn 1 phiếu nhập để xóa.")
+            return
+
+        ma_phieu = self.trHienThi.item(selected[0], "values")[0]
+        trang_thai = self.trHienThi.item(selected[0], "values")[5]
+        
+        # LẤY NGÀY NHẬP CỦA PHIẾU ĐƯỢC CHỌN TỪ CSDL
+        try:
+            cursor_temp = self.conn.cursor()
+            cursor_temp.execute("SELECT NgayNhap FROM PHIEUNHAPHANG WHERE MaPhieuNhap = ?", (ma_phieu,))
+            ngay_nhap_db = cursor_temp.fetchone()[0]
+            cursor_temp.close()
+            
+            # Tính toán xem phiếu đã tồn tại trên 5 năm chưa
+            ngay_gioi_han = datetime.now().date().replace(year=datetime.now().year - 5)
+            da_hon_5_nam = ngay_nhap_db < ngay_gioi_han 
+            
+        except Exception as e:
+            messagebox.showerror("Lỗi", "Không thể kiểm tra ngày nhập của phiếu: " + str(e))
+            return
+        
+        is_allowed_to_delete = False
+        warning_message = ""
+        
+        if trang_thai == "Đã hủy":
+            is_allowed_to_delete = True
+            warning_message = f"Bạn có chắc chắn muốn xóa vĩnh viễn phiếu nhập ĐÃ HỦY {ma_phieu} không?"
+            
+        elif trang_thai == "Đã duyệt" and da_hon_5_nam:
+            is_allowed_to_delete = True
+            warning_message = f"Phiếu nhập ĐÃ DUYỆT {ma_phieu} này đã được lưu trữ hơn 5 năm ({ngay_nhap_db.strftime('%d/%m/%Y')}). Bạn có chắc chắn muốn XÓA VĨNH VIỄN không?"
+        
+        if not is_allowed_to_delete:
+            messagebox.showwarning("Cảnh báo", "Chỉ có thể xóa vĩnh viễn phiếu nhập ĐÃ HỦY, hoặc phiếu ĐÃ DUYỆT có thời gian lưu trữ trên 5 năm.")
+            return
+
+        traloi = messagebox.askyesno("Xác nhận XÓA VĨNH VIỄN", warning_message)
+        
+        if traloi:
+            try:
+                # Bắt đầu xóa CSDL
+                cursor = self.conn.cursor()
+                
+                # Xóa Chi Tiết Phiếu Nhập trước
+                cursor.execute("DELETE FROM ChiTietPhieuNhap WHERE MaPhieuNhap = ?", (ma_phieu,))
+                
+                # Xóa Phiếu Nhập Hàng
+                cursor.execute("DELETE FROM PhieuNhapHang WHERE MaPhieuNhap = ?", (ma_phieu,))
+                
+                self.conn.commit()
+                cursor.close()
+                messagebox.showinfo("Thành công", f"Phiếu nhập hàng {ma_phieu} đã được xóa vĩnh viễn khỏi hệ thống!")
+                
+                self.load_phieu_nhap()         
+            except Exception as e:
+                messagebox.showerror("Lỗi CSDL", f"Đã xảy ra lỗi khi xóa phiếu nhập: "  + str(e))
 
     # === HÀM IN PHIẾU NHẬP HÀNG RA WORD ===
     def InPhieuNhapHang(self):

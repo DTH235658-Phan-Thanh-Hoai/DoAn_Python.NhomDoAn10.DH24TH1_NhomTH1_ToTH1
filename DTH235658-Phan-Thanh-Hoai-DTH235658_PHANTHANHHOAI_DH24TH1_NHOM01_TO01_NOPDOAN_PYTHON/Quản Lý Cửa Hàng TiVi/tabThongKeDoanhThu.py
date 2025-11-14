@@ -113,10 +113,15 @@ class tabThongKeDoanhThu(tk.Frame):
             tong_doanhthu = cursor.fetchone()[0] or 0
 
             cursor.execute("""
-                SELECT SUM(TongTien)
-                FROM PhieuNhapHang
-                WHERE TrangThai = N'Đã duyệt'
-                """)
+                SELECT SUM(T1.SoLuong * T2.AvgGiaNhap)
+                FROM ChiTietHoaDon T1
+                JOIN HoaDonBan HDB ON T1.MaHD = HDB.MaHD
+                JOIN (
+                    SELECT MaTivi, AVG(GiaNhap) AS AvgGiaNhap 
+                    FROM ChiTietPhieuNhap
+                    GROUP BY MaTivi
+                ) AS T2 ON T1.MaTivi = T2.MaTivi
+                WHERE HDB.TrangThai = N'Đã thanh toán'""")
             tong_nhap = cursor.fetchone()[0] or 0
 
             loinhuan = tong_doanhthu - tong_nhap
@@ -170,13 +175,18 @@ class tabThongKeDoanhThu(tk.Frame):
             tong_doanhthu = cursor.fetchone()[0] or 0
 
             cursor.execute("""
-                SELECT SUM(TongTien)
-                FROM PhieuNhapHang
-                WHERE TrangThai = N'Đã duyệt'
-                AND NgayNhap BETWEEN ? AND ?
-                """,(tungay, denngay),)
-            tong_nhap = cursor.fetchone()[0] or 0
+                    SELECT SUM(T1.SoLuong * T2.AvgGiaNhap)
+                FROM ChiTietHoaDon T1
+                JOIN HoaDonBan HDB ON T1.MaHD = HDB.MaHD
+                JOIN (
+                    SELECT MaTivi, AVG(GiaNhap) AS AvgGiaNhap 
+                    FROM ChiTietPhieuNhap
+                    GROUP BY MaTivi
+                ) AS T2 ON T1.MaTivi = T2.MaTivi
+                WHERE HDB.TrangThai = N'Đã thanh toán'
+                AND HDB.NgayBan BETWEEN ? AND ?""", (tungay, denngay))
 
+            tong_nhap = cursor.fetchone()[0] or 0
             loinhuan = tong_doanhthu - tong_nhap
 
             self.lbl_tonghd.config(text=str(tong_hoadon))

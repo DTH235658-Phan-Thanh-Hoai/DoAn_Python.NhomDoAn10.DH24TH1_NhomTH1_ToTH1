@@ -95,6 +95,18 @@ class tabNhapHang(tk.Frame):
         self.trHienThi.heading("SoLuong", text="Số lượng")
         self.trHienThi.heading("GiaNhap", text="Giá nhập")
         self.trHienThi.heading("ThanhTien", text="Thành tiền")
+
+        self.trHienThi.column("MaPhieu", anchor="center", width=150)
+        self.trHienThi.column("NgayNhap", anchor="center", width=150) 
+        self.trHienThi.column("MaNV", anchor="center", width=150)
+        self.trHienThi.column("MaNCC", anchor="center", width=200)
+        self.trHienThi.column("MaTivi", anchor="center", width=150)
+        self.trHienThi.column("SoLuong", anchor="center", width=120)
+        self.trHienThi.column("TenNV", anchor="w", width=150)
+        self.trHienThi.column("TenNCC", anchor="w", width=240)
+        self.trHienThi.column("TenTivi", anchor="w", width=200)
+        self.trHienThi.column("GiaNhap", anchor="e", width=150)
+        self.trHienThi.column("ThanhTien", anchor="e", width=150)
         
         # Style Treeview
         style = ttk.Style()

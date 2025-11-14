@@ -43,28 +43,28 @@ class tabBaoHanh(tk.Frame):
         frame_form.pack(fill="x", padx=20, pady=10)
 
         tk.Label(frame_form, text="Mã BH:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=0, sticky="w", padx=5, pady=5)
-        self.txt_mabh = ttk.Entry(frame_form, width=26)
+        self.txt_mabh = ttk.Entry(frame_form, width=34)
         self.txt_mabh.grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(frame_form, text="Mã CTHD:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=2, sticky="w", padx=5, pady=5)
-        self.cb_macthd = ttk.Combobox(frame_form, width=18, font=("Segoe UI", 10), state="readonly")
+        self.cb_macthd = ttk.Combobox(frame_form, width=22, font=("Segoe UI", 10), state="readonly")
         self.cb_macthd.grid(row=0, column=3, padx=5, pady=5)
         self.cb_macthd.bind("<<ComboboxSelected>>", lambda e: self.capnhat_mahd_theo_cthd())
 
         tk.Label(frame_form, text="Mã HD:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=4, sticky="w", padx=5, pady=5)
-        self.cb_mahd = ttk.Combobox(frame_form, width=18, font=("Segoe UI", 10), state="readonly")
+        self.cb_mahd = ttk.Combobox(frame_form, width=22, font=("Segoe UI", 10), state="readonly")
         self.cb_mahd.grid(row=0, column=5, padx=5, pady=5)
 
         tk.Label(frame_form, text="Thời gian (tháng):", bg="white", font=("Segoe UI", 10)).grid(row=1, column=0, sticky="w", padx=5, pady=5)
-        self.txt_thoigian = ttk.Entry(frame_form, width=26)
+        self.txt_thoigian = ttk.Entry(frame_form, width=34)
         self.txt_thoigian.grid(row=1, column=1, padx=5, pady=5)
 
         tk.Label(frame_form, text="Điều kiện:", bg="white", font=("Segoe UI", 10)).grid(row=1, column=2, sticky="w", padx=5, pady=5)
-        self.txt_dieukien = ttk.Entry(frame_form, width=40)
+        self.txt_dieukien = ttk.Entry(frame_form, width=45)
         self.txt_dieukien.grid(row=1, column=3, columnspan=3, padx=5, pady=5, sticky="we")
 
         tk.Label(frame_form, text="Ngày BH:", bg="white", font=("Segoe UI", 10)).grid(row=2, column=0, sticky="w", padx=5, pady=5)
-        self.date_ngaybaohanh = DateEntry(frame_form, width=24, font=("Segoe UI", 10), date_pattern="dd/mm/yyyy")
+        self.date_ngaybaohanh = DateEntry(frame_form, width=29, font=("Segoe UI", 10), date_pattern="dd/mm/yyyy")
         self.date_ngaybaohanh.grid(row=2, column=1, padx=5, pady=5)
 
         tk.Label(frame_form, text="Trạng thái:", bg="white", font=("Segoe UI", 10)).grid(row=2, column=2, sticky="w", padx=5, pady=5)

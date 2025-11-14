@@ -31,7 +31,7 @@ class tabNhaCungCap(tk.Frame):
         frame_form.pack(fill="x", padx=20, pady=10)
 
         tk.Label(frame_form, text="Mã nhà cung cấp", bg="white", font=("Segoe UI", 10)).grid(row=0, column=0, sticky="w", padx=5, pady=5)
-        self.txt_ma = ttk.Entry(frame_form, width=22)
+        self.txt_ma = ttk.Entry(frame_form, width=24)
         self.txt_ma.grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(frame_form, text="Tên nhà cung cấp:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=2, sticky="w", padx=5, pady=5)
@@ -39,7 +39,7 @@ class tabNhaCungCap(tk.Frame):
         self.txt_ten.grid(row=0, column=3, columnspan=3, padx=5, pady=5)
 
         tk.Label(frame_form, text="Số điện thoại:", bg="white", font=("Segoe UI", 10)).grid(row=1, column=0, sticky="w", padx=5, pady=5)
-        self.txt_sodienthoai = ttk.Entry(frame_form, width=22)
+        self.txt_sodienthoai = ttk.Entry(frame_form, width=24)
         self.txt_sodienthoai.grid(row=1, column=1, padx=5, pady=5)
 
         tk.Label(frame_form, text="Email:", bg="white", font=("Segoe UI", 10)).grid(row=1, column=2, sticky="w", padx=5, pady=5)

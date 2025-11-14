@@ -6,11 +6,14 @@ from datetime import datetime
 
 # === TAB BÁN HÀNG ===
 class tabBanHang(tk.Frame):
-    def __init__(self, parent, conn, tab_hoadon=None):
+    def __init__(self, parent, conn, user, tab_hoadon=None):
         super().__init__(parent, bg="white")
 
         # === CHUỖI KẾT NỐI ===
         self.conn = conn
+
+        # === LƯU MÃ NHÂN VIÊN ===
+        self.user = user
 
         # Khai báo trống cho các dict
         self.dict_nv = {}
@@ -35,6 +38,9 @@ class tabBanHang(tk.Frame):
         tk.Label(frame_phieu, text="Mã nhân viên bán:", bg="white", font=("Segoe UI", 10)).grid(row=1, column=0, sticky="w", padx=5, pady=5)
         self.cb_manhanvien = ttk.Combobox(frame_phieu, width=44, state="readonly")
         self.cb_manhanvien.grid(row=1, column=1, padx=5, pady=5)
+
+        if self.user != "admin":
+            self.cb_manhanvien.config(state="readonly")
 
         tk.Label(frame_phieu, text="Mã khách hàng:", bg="white", font=("Segoe UI", 10)).grid(row=1, column=2, sticky="w", padx=5, pady=5)
         self.cb_makhachhang = ttk.Combobox(frame_phieu, width=44, state="readonly")
@@ -102,6 +108,18 @@ class tabBanHang(tk.Frame):
         self.trHienThi.heading("GiaBan", text="Giá bán")
         self.trHienThi.heading("ThanhTien", text="Thành tiền")
 
+        self.trHienThi.column("MaHD", anchor="center", width=150)
+        self.trHienThi.column("NgayBan", anchor="center", width=120)
+        self.trHienThi.column("MaNV", anchor="center", width=150) 
+        self.trHienThi.column("TenNV", anchor="w", width=200) 
+        self.trHienThi.column("MaKH", anchor="center", width=150) 
+        self.trHienThi.column("TenKH", anchor="w", width=200)
+        self.trHienThi.column("MaTivi", anchor="center", width=150) 
+        self.trHienThi.column("TenTivi", anchor="w", width=200)
+        self.trHienThi.column("SoLuong", anchor="center", width=150)
+        self.trHienThi.column("GiaBan", anchor="e", width=150)
+        self.trHienThi.column("ThanhTien", anchor="e", width=150)
+
         # Style Treeview
         style = ttk.Style()
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
@@ -129,10 +147,15 @@ class tabBanHang(tk.Frame):
         cursor = self.conn.cursor()
 
         # Load nhân viên
-        cursor.execute("SELECT MaNV, TenNV FROM NHANVIEN")
-        for ma, ten in cursor.fetchall():
-            self.dict_nv[ma] = ten
-        self.cb_manhanvien["values"] = list(self.dict_nv.keys())
+        if self.user == "admin":
+            cursor.execute("SELECT MaNV, TenNV FROM NHANVIEN")
+            for ma, ten in cursor.fetchall():
+                self.dict_nv[ma] = ten
+            self.cb_manhanvien["values"] = list(self.dict_nv.keys())
+        else:
+            self.cb_manhanvien.config(state="normal")
+            self.cb_manhanvien.set(self.user)
+            self.cb_manhanvien.config(state="readonly")
 
         # Load khách hàng
         cursor.execute("SELECT MaKH, TenKH FROM KHACHHANG")
@@ -434,7 +457,8 @@ class tabBanHang(tk.Frame):
 
         self.txt_mahoadonban.delete(0, tk.END)
         self.dt_ngayban.set_date(datetime.today())
-        self.cb_manhanvien.set("")
+        if self.user == "admin":
+            self.cb_manhanvien.set("")
         self.cb_makhachhang.set("")
 
         self.txt_macthd.delete(0, tk.END)

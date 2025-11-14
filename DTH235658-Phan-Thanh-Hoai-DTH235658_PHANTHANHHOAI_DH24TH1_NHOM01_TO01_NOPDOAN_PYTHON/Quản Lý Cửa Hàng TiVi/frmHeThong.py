@@ -21,137 +21,47 @@ class HeThong(tk.Frame):
         self.ds_sua = []
         self.ds_xoa = []
 
-        lbl_title = tk.Label(
-            self,
-            text="QUẢN LÝ TÀI KHOẢN HỆ THỐNG",
-            font=("Segoe UI", 16, "bold"),
-            bg="white",
-            fg="#0D47A1",
-        )
+        lbl_title = tk.Label(self, text="QUẢN LÝ TÀI KHOẢN HỆ THỐNG", font=("Segoe UI", 16, "bold"), bg="white", fg="#0D47A1")
         lbl_title.pack()
 
         self.frame_search = tk.Frame(self, bg="#E3F2FD", padx=10, pady=10)
         self.frame_search.pack(fill="x", padx=20, pady=5)
 
-        tk.Label(
-            self.frame_search, text="🔍 Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD"
-        ).pack(side="left", padx=5)
+        tk.Label(self.frame_search, text="🔍 Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD").pack(side="left", padx=5)
         self.txt_timkiem = tk.Entry(self.frame_search, font=("Segoe UI", 10), width=95)
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", self.timkiem)
 
-        tk.Button(
-            self.frame_search,
-            text="Tìm",
-            font=("Segoe UI", 10, "bold"),
-            bg="#1565C0",
-            fg="white",
-            bd=0,
-            padx=10,
-            pady=5,
-            command=self.timkiem,
-        ).pack(side="left", padx=10)
-        tk.Button(
-            self.frame_search,
-            text="Hủy",
-            font=("Segoe UI", 10, "bold"),
-            bg="#E53935",
-            fg="white",
-            bd=0,
-            padx=10,
-            pady=5,
-            command=self.huy,
-        ).pack(side="left", padx=10)
+        tk.Button(self.frame_search, text="Tìm", font=("Segoe UI", 10, "bold"), bg="#1565C0", fg="white", bd=0, padx=10, pady=5, command=self.timkiem,).pack(side="left", padx=10)
+        tk.Button(self.frame_search, text="Hủy", font=("Segoe UI", 10, "bold"), bg="#E53935", fg="white", bd=0, padx=10, pady=5, command=self.huy,).pack(side="left", padx=10)
 
-        frame_form = tk.LabelFrame(
-            self,
-            text="Thông tin tài khoản",
-            bg="white",
-            font=("Segoe UI", 12, "bold"),
-            fg="#0D47A1",
-            padx=10,
-            pady=10,
-        )
+        frame_form = tk.LabelFrame(self, text="Thông tin tài khoản", bg="white", font=("Segoe UI", 12, "bold"), fg="#0D47A1", padx=10, pady=10,)
         frame_form.pack(fill="x", padx=30, pady=10)
 
-        tk.Label(
-            frame_form, text="Tên đăng nhập:", bg="white", font=("Segoe UI", 10)
-        ).grid(row=0, column=0, sticky="w", pady=5, padx=5)
+        tk.Label(frame_form, text="Tên đăng nhập:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=0, sticky="w", pady=5, padx=5)
         self.txt_ten = ttk.Entry(frame_form, font=("Segoe UI", 10), width=48)
         self.txt_ten.grid(row=0, column=1, pady=5, padx=5)
 
-        tk.Label(frame_form, text="Mật khẩu:", bg="white", font=("Segoe UI", 10)).grid(
-            row=0, column=2, sticky="w", pady=5, padx=5
-        )
+        tk.Label(frame_form, text="Mật khẩu:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=2, sticky="w", pady=5, padx=5)
         self.txt_mk = ttk.Entry(frame_form, font=("Segoe UI", 10), width=48)
         self.txt_mk.grid(row=0, column=3, pady=5, padx=5)
 
         frame_buttons = tk.Frame(self, bg="white")
         frame_buttons.pack(pady=10)
 
-        self.btn_them = tk.Button(
-            frame_buttons,
-            text="➕ Thêm",
-            bg="#EBDA42",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.them,
-        )
+        self.btn_them = tk.Button(frame_buttons, text="➕ Thêm", bg="#EBDA42", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.them,)
         self.btn_them.grid(row=0, column=0, padx=10)
 
-        btn_sua = tk.Button(
-            frame_buttons,
-            text="✏️ Sửa",
-            bg="#FB8C00",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.sua,
-        )
+        btn_sua = tk.Button(frame_buttons, text="✏️ Sửa", bg="#FB8C00", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.sua,)
         btn_sua.grid(row=0, column=1, padx=10)
 
-        self.btn_xoa = tk.Button(
-            frame_buttons,
-            text="🗑️ Xóa",
-            bg="#E53935",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.xoa,
-        )
+        self.btn_xoa = tk.Button(frame_buttons, text="🗑️ Xóa", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.xoa,)
         self.btn_xoa.grid(row=0, column=2, padx=10)
 
-        btn_lammoi = tk.Button(
-            frame_buttons,
-            text="🔄 Làm mới",
-            bg="#1E88E5",
-            fg="white",
-            font=("Segoe UI", 11, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.lammoi,
-        )
+        btn_lammoi = tk.Button(frame_buttons, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.lammoi,)
         btn_lammoi.grid(row=0, column=3, padx=10)
 
-        btn_luu = tk.Button(
-            frame_buttons,
-            text="💾 Lưu",
-            bg="#43A047",
-            fg="white",
-            font=("Segoe UI", 10, "bold"),
-            padx=20,
-            pady=5,
-            bd=0,
-            command=self.luu,
-        )
+        btn_luu = tk.Button(frame_buttons, text="💾 Lưu", bg="#43A047", fg="white", font=("Segoe UI", 10, "bold"), padx=20, pady=5, bd=0, command=self.luu,)
         btn_luu.grid(row=0, column=4, padx=10)
 
         self.frame_table = tk.Frame(self, bg="white")
@@ -163,14 +73,7 @@ class HeThong(tk.Frame):
         scroll_y = ttk.Scrollbar(self.frame_table, orient="vertical")
         scroll_x = ttk.Scrollbar(self.frame_table, orient="horizontal")
 
-        self.trHienThi = ttk.Treeview(
-            self.frame_table,
-            show="headings",
-            columns=columns,
-            height=12,
-            yscrollcommand=scroll_y.set,
-            xscrollcommand=scroll_x.set,
-        )
+        self.trHienThi = ttk.Treeview(self.frame_table, show="headings", columns=columns, height=12, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set,)
 
         # --- Gắn Scrollbar ---
         scroll_y.config(command=self.trHienThi.yview)
@@ -214,6 +117,7 @@ class HeThong(tk.Frame):
                 if row:
                     self.txt_ten.insert(0, row[0])
                     self.txt_ten.config(state="disabled")
+                    self.txt_mk.delete(0, tk.END)
                     self.txt_mk.insert(0, row[1])
 
             else:
