@@ -148,10 +148,12 @@ class tabBanHang(tk.Frame):
 
         # Load nhân viên
         if self.user == "admin":
+            self.dict_nv.clear()
             cursor.execute("SELECT MaNV, TenNV FROM NHANVIEN")
             for ma, ten in cursor.fetchall():
                 self.dict_nv[ma] = ten
             self.cb_manhanvien["values"] = list(self.dict_nv.keys())
+            
         else:
             self.cb_manhanvien.config(state="normal")
             self.cb_manhanvien.set(self.user)
@@ -159,12 +161,14 @@ class tabBanHang(tk.Frame):
 
         # Load khách hàng
         cursor.execute("SELECT MaKH, TenKH FROM KHACHHANG")
+        self.dict_kh.clear()
         for ma, ten in cursor.fetchall():
             self.dict_kh[ma] = ten
         self.cb_makhachhang["values"] = list(self.dict_kh.keys())
 
         # Load tivi + đơn giá
         cursor.execute("SELECT MaTivi, TenTivi, GiaBan FROM TIVI WHERE SoLuongTon > 0 ")
+        self.dict_tivi.clear()
         for ma, ten, gia in cursor.fetchall():
             self.dict_tivi[ma] = {"TenTivi": ten, "GiaBan": gia}
         self.cb_mativi["values"] = list(self.dict_tivi.keys())

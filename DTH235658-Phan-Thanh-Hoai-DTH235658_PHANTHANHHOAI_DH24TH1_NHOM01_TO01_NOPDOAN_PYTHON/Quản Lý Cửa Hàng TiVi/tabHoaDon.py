@@ -276,6 +276,8 @@ class tabHoaDon(tk.Frame):
             except Exception as e:
                 self.conn.rollback() # Hoàn tác mọi thay đổi nếu có lỗi
                 messagebox.showerror("Lỗi", "Đã xảy ra lỗi khi thanh toán hóa đơn:\n" + str(e))
+            
+            self.controller.load_form("QuanLySanPham")
 
     def HuyHoaDonBan(self):
         selected = self.trHienThi.selection()
@@ -306,6 +308,8 @@ class tabHoaDon(tk.Frame):
 
             except Exception as e:
                 messagebox.showerror("Lỗi", "Đã xảy ra lỗi khi hủy hóa đơn:\n" + str(e))
+
+            self.controller.load_form("QuanLySanPham")
 
 
     def TimKiem(self):

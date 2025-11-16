@@ -27,9 +27,9 @@ class QuanLySanPham(tk.Frame):
         tab_control.pack(fill="both", expand=True, padx=20, pady=10)
 
         # === Các tab con ===
-        self.tab_tivi = tv.tabTivi(tab_control, conn, self.user)
-        self.tab_hang = hsx.tabHangSanXuat(tab_control, conn)
-        self.tab_nhacungcap = ncc.tabNhaCungCap(tab_control, conn)
+        self.tab_tivi = tv.tabTivi(tab_control, conn, self.user, self.controller)
+        self.tab_hang = hsx.tabHangSanXuat(tab_control, conn, self.load_data)
+        self.tab_nhacungcap = ncc.tabNhaCungCap(tab_control, conn, self.controller)
         self.tab_bh = bh.tabBaoHanh(tab_control, conn, self.user)
         
         tab_control.add(self.tab_tivi, text="📺 Tivi")

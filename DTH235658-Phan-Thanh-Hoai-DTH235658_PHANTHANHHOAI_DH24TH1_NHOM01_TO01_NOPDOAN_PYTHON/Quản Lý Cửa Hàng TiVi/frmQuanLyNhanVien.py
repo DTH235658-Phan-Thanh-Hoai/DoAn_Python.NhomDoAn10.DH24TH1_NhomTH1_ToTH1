@@ -549,12 +549,14 @@ class QuanLyNhanVien(tk.Frame):
         except Exception as e:
             self.conn.rollback()
             messagebox.showerror("Lỗi", f"Không thể lưu dữ liệu: {str(e)}")
-
-        self.load_data()
-        self.xoa_form()
-        self.ds_them.clear()
-        self.ds_sua.clear()
-        self.ds_xoa.clear()
+        finally:
+            self.load_data()
+            self.xoa_form()
+            self.ds_them.clear()
+            self.ds_sua.clear()
+            self.ds_xoa.clear()
+            self.controller.load_form("BanHangVaHoaDon")
+            self.controller.load_form("NhapHangVaPhieuNhap")
 
     def lammoi(self):
         confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn hủy các thay đổi?")

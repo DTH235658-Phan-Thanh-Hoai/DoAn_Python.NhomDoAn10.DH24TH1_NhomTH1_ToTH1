@@ -124,24 +124,27 @@ class tabNhapHang(tk.Frame):
 
         self.trHienThi.bind("<<TreeviewSelect>>", self.HienThi_ChiTiet)
         
-        self.Load_Comnobox()
+        self.load_combobox()
     
-    def Load_Comnobox(self):
+    def load_combobox(self):
         cursor = self.conn.cursor()
 
         # Load nhân viên
+        self.dict_nv.clear()
         cursor.execute("SELECT MaNV, TenNV FROM NHANVIEN")
         for ma, ten in cursor.fetchall():
             self.dict_nv[ma] = ten
         self.cb_manhanvien["values"] = list(self.dict_nv.keys())
 
         # Load nhà cung cấp
+        self.dict_ncc.clear()
         cursor.execute("SELECT MaNCC, TenNCC FROM NHACUNGCAP")
         for ma, ten in cursor.fetchall():
             self.dict_ncc[ma] = ten
         self.cb_manhacungcap["values"] = list(self.dict_ncc.keys())
 
         # Load tivi
+        self.dict_tivi.clear()
         cursor.execute("SELECT MaTiVi, TenTiVi FROM TIVI")
         for ma, ten in cursor.fetchall():
             self.dict_tivi[ma] = ten
@@ -407,6 +410,7 @@ class tabNhapHang(tk.Frame):
 
         self.trHienThi.delete(*self.trHienThi.get_children())
         self.lbl_tongtien.config(text="0 VNĐ")
+        self.load_combobox()
 
     def TaoPhieuNhap(self):
         if not self.trHienThi.get_children():

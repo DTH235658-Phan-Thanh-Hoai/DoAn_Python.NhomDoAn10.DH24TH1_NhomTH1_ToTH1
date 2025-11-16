@@ -7,13 +7,14 @@ import io
 
 # === TAB TIVI ===
 class tabTivi(tk.Frame):
-    def __init__(self, parent, conn, user):
+    def __init__(self, parent, conn, user, controller):
         super().__init__(parent, bg="white")
 
         # === CHUỖI KẾT NỐI ===
         self.conn = conn
         self.cursor = conn.cursor()
         self.user = user
+        self.controller = controller
 
         self.selected_item = None
         self.image_data = None 
@@ -407,6 +408,8 @@ class tabTivi(tk.Frame):
         self.ds_them.clear()
         self.ds_sua.clear()
         self.ds_xoa.clear()
+        self.controller.load_form("NhapHangVaPhieuNhap")
+        self.controller.load_form("BanHangVaHoaDon")
 
     def lam_moi(self):
         confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn hủy các thay đổi?")
@@ -418,6 +421,7 @@ class tabTivi(tk.Frame):
         self.ds_xoa.clear()
 
         self.hienthi_dulieu()
+        self.load_hang_san_xuat()
         self.xoa_form()
         self.txt_timkiem.delete(0, tk.END)
         messagebox.showinfo("Thông báo", "Đã làm mới dữ liệu!")

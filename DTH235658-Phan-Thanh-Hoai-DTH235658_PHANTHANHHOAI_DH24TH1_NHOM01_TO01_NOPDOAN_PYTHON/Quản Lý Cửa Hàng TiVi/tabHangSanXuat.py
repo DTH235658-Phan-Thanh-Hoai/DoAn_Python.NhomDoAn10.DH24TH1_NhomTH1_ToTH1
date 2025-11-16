@@ -5,9 +5,10 @@ import pyodbc
 
 # === TAB HÃNG SẢN XUẤT ===
 class tabHangSanXuat(tk.Frame):
-    def __init__(self, parent, conn):
+    def __init__(self, parent, conn, load_data):
         super().__init__(parent, bg="white")
         self.conn = conn
+        self.load_data = load_data
         self.cursor = conn.cursor()
         self.ds_them = []
         self.ds_sua = []
@@ -262,6 +263,7 @@ class tabHangSanXuat(tk.Frame):
             self.ds_them.clear()
             self.ds_sua.clear()
             self.ds_xoa.clear()
+            self.load_data()
 
     def lammoi(self):
         confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn hủy các thay đổi?")

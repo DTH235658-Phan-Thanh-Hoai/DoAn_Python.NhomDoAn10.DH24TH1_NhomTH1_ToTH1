@@ -346,6 +346,7 @@ class QuanLyKhachHang(tk.Frame):
         self.ds_them.clear()
         self.ds_sua.clear()
         self.ds_xoa.clear()
+        self.controller.load_form("BanHangVaHoaDon")
 
     def lammoi(self):
         confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn hủy các thay đổi?")

@@ -4,7 +4,7 @@ import pyodbc
 
 
 class tabNhaCungCap(tk.Frame):
-    def __init__(self, parent, conn, controller=None):
+    def __init__(self, parent, conn, controller):
         super().__init__(parent, bg="white")
         self.conn = conn
         self.cursor = conn.cursor()
@@ -12,6 +12,7 @@ class tabNhaCungCap(tk.Frame):
         self.ds_sua = []
         self.ds_xoa = []
         self.selected_item = None
+        self.controller = controller
 
         frame_search = tk.Frame(self, bg="#E3F2FD", padx=10, pady=10)
         frame_search.pack(fill="x", padx=20, pady=5)
@@ -285,6 +286,8 @@ class tabNhaCungCap(tk.Frame):
             self.ds_them.clear()
             self.ds_sua.clear()
             self.ds_xoa.clear()
+
+        self.controller.load_form("NhapHangVaPhieuNhap")
 
     def lammoi(self):
         if messagebox.askyesno("Xác nhận", "Bạn có chắc muốn hủy các thay đổi?"):

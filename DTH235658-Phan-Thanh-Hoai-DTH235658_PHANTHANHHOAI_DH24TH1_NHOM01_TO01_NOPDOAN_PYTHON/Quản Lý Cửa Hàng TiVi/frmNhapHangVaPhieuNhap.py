@@ -4,22 +4,30 @@ import tabNhapHang as nh
 import tabPhieuNhapHang as pnh
 import pyodbc
 
-#=== Tạo class Bán Hàng và Hóa Đơn
+
+# === Tạo class Bán Hàng và Hóa Đơn
 class NhapHangVaPhieuNhap(tk.Frame):
     def __init__(self, parent, controller, conn, user):
         super().__init__(parent, bg="white")
         self.conn = conn
+        self.controller = controller
 
         # === TITLE ===
-        lbl_title = tk.Label(self, text="NHẬP HÀNG & PHIẾU NHẬP", font=("Segoe UI", 16, "bold"), bg="white", fg="#0D47A1")
+        lbl_title = tk.Label(
+            self,
+            text="NHẬP HÀNG & PHIẾU NHẬP",
+            font=("Segoe UI", 16, "bold"),
+            bg="white",
+            fg="#0D47A1",
+        )
         lbl_title.pack()
 
         # === Tạo tab control ===
         tab_control = ttk.Notebook(self)
         tab_control.pack(fill="both", expand=True, padx=20, pady=10)
 
-        self.tab_phieunhap = pnh.tabPhieuNhapHang(tab_control, conn)
-        self.tab_nhaphang = nh.tabNhapHang(tab_control, conn, self.tab_phieunhap) 
+        self.tab_phieunhap = pnh.tabPhieuNhapHang(tab_control, conn, self.controller)
+        self.tab_nhaphang = nh.tabNhapHang(tab_control, conn, self.tab_phieunhap)
 
         tab_control.add(self.tab_nhaphang, text="📦 Nhập hàng")
         tab_control.add(self.tab_phieunhap, text="🧾 Danh sách Phiếu nhập")
@@ -28,7 +36,7 @@ class NhapHangVaPhieuNhap(tk.Frame):
     def load_data(self):
         try:
             self.tab_phieunhap.load_phieu_nhap()
-            self.tab_nhaphang.Load_Comnobox()
-            
+            self.tab_nhaphang.load_combobox()
+
         except Exception as e:
             messagebox.showerror("Lỗi khi làm mới dữ liệu: " + str(e))

@@ -8,11 +8,12 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT, WD_TAB_LEADER
 
 # === TAB PHIẾU NHẬP HÀNG ===
 class tabPhieuNhapHang(tk.Frame):
-    def __init__(self, parent, conn):
+    def __init__(self, parent, conn, controller):
         super().__init__(parent, bg="white")
 
         # === CHUỖI KẾT NỐI ===
         self.conn = conn
+        self.controller = controller
 
         # === KHUNG TÌM KIẾM ===
         frame_search = tk.Frame(self, bg="#E3F2FD", padx=10, pady=10)
@@ -238,6 +239,8 @@ class tabPhieuNhapHang(tk.Frame):
 
             except Exception as e:
                 messagebox.showerror("Lỗi", "Đã xảy ra lỗi khi duyệt phiếu nhập hàng:\n" + str(e))
+        
+        self.controller.load_form("NhapHangVaPhieuNhap")
 
     def HuyPhieuNhapHang(self):
         selected = self.trHienThi.selection()
@@ -268,6 +271,8 @@ class tabPhieuNhapHang(tk.Frame):
 
             except Exception as e:
                 messagebox.showerror("Lỗi", "Đã xảy ra lỗi khi hủy phiếu nhập hàng:\n" + str(e))
+
+        self.controller.load_form("NhapHangVaPhieuNhap")
 
     def TimKiem(self):
         if self.txt_timkiem.get().strip() == "":
@@ -379,6 +384,8 @@ class tabPhieuNhapHang(tk.Frame):
                 self.load_phieu_nhap()         
             except Exception as e:
                 messagebox.showerror("Lỗi CSDL", f"Đã xảy ra lỗi khi xóa phiếu nhập: "  + str(e))
+        
+        self.controller.load_form("NhapHangVaPhieuNhap")
 
     # === HÀM IN PHIẾU NHẬP HÀNG RA WORD ===
     def InPhieuNhapHang(self):
