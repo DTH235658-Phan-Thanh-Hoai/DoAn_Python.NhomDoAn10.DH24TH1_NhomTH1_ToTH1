@@ -123,6 +123,7 @@ project/
 
 ### 1.5. Biểu đồ doanh thu
 - **Khung chính**: `frame_chart` → chia 2 khung con  
+
   | Khung con 1 (`frame_ve`) | Khung con 2 (`frame_dieu_khien`) |
   |--------------------------|----------------------------------|
   | **Chứa canvas biểu đồ**  | **Nút điều khiển năm**           |
@@ -141,7 +142,6 @@ SELECT MONTH(NgayBan), SUM(TongTien)
 FROM HoaDonBan
 WHERE TrangThai = N'Đã thanh toán' AND YEAR(NgayBan) = ?
 GROUP BY MONTH(NgayBan)
-
 
 # QUẢN LÝ SẢN PHẨM TIVI – README
 
