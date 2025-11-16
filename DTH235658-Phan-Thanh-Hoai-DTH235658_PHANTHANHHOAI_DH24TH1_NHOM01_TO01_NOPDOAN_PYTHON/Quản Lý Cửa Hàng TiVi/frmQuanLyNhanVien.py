@@ -328,21 +328,59 @@ class QuanLyNhanVien(tk.Frame):
 
         if not ma:
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập mã nhân viên!")
+            self.txt_manv.focus()
             return False
         if not ten:
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập tên nhân viên!")
+            self.txt_tennv.focus()
             return False
         if not gioitinh:
             messagebox.showwarning("Cảnh báo", "Vui lòng chọn giới tính!")
+            self.cbo_gioitinh.focus()
             return False
         if not ngaysinh:
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập ngày sinh!")
+            self.date_ngaysinh.focus()
             return False
-        if not sdt or len(sdt) != 10 or not sdt.isdigit():
-            messagebox.showwarning("Cảnh báo", "Số điện thoại phải có 10 chữ số!")
+
+        if not sdt:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Số điện thoại!")
+            self.txt_sodienthoai.focus()
             return False
-        if not cccd or len(cccd) not in (9, 12) or not cccd.isdigit():
-            messagebox.showwarning("Cảnh báo", "CCCD phải là 9 hoặc 12 chữ số!")
+        
+        if not sdt.isdigit():
+            messagebox.showwarning("Cảnh báo", "Số điện thoại chỉ được phép nhập số!")
+            self.txt_sodienthoai.focus()
+            return False
+            
+        if len(sdt) != 10:
+            messagebox.showwarning("Cảnh báo", "Số điện thoại phải có đúng 10 chữ số!")
+            self.txt_sodienthoai.focus()
+            return False
+            
+        if sdt[0] != '0':
+            messagebox.showwarning("Cảnh báo", "Số điện thoại hợp lệ phải bắt đầu bằng số 0!")
+            self.txt_sodienthoai.focus()
+            return False
+
+        if not cccd:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập CCCD!")
+            self.txt_cccd.focus()
+            return False
+
+        if not cccd.isdigit():
+            messagebox.showwarning("Cảnh báo", "CCCD chỉ được phép nhập số!")
+            self.txt_cccd.focus()
+            return False
+            
+        if len(cccd) != 12:
+            messagebox.showwarning("Cảnh báo", "CCCD phải có đúng 12 chữ số!")
+            self.txt_cccd.focus()
+            return False
+
+        if cccd[0] != '0':
+            messagebox.showwarning("Cảnh báo", "CCCD hợp lệ (12 số) phải bắt đầu bằng số 0!")
+            self.txt_cccd.focus()
             return False
 
         return True

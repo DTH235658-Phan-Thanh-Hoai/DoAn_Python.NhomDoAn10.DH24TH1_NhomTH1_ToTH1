@@ -60,19 +60,18 @@ class tabThongKeDoanhThu(tk.Frame):
         scroll_x.pack(side="bottom", fill="x")
         self.trHienThi.pack(fill="both", expand=True)
 
-        # Cấu hình cột
-        self.trHienThi.column("MaHD", width=100, anchor="center")
-        self.trHienThi.column("MaKH", width=100, anchor="center")
-        self.trHienThi.column("TenKH", width=180, anchor="w")
-        self.trHienThi.column("NgayBan", width=120, anchor="center")
-        self.trHienThi.column("TongTien", width=150, anchor="e")
-
         self.trHienThi.heading("MaHD", text="Mã hóa đơn")
         self.trHienThi.heading("MaKH", text="Mã KH")
         self.trHienThi.heading("TenKH", text="Tên khách hàng")
         self.trHienThi.heading("NgayBan", text="Ngày bán")
         self.trHienThi.heading("TongTien", text="Tổng tiền (VNĐ)")
 
+        # Cấu hình cột
+        self.trHienThi.column("MaHD", width=100, anchor="center")
+        self.trHienThi.column("MaKH", width=100, anchor="center")
+        self.trHienThi.column("TenKH", width=180, anchor="w")
+        self.trHienThi.column("NgayBan", width=120, anchor="center")
+        self.trHienThi.column("TongTien", width=150, anchor="center")
         # Style
         style = ttk.Style()
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))

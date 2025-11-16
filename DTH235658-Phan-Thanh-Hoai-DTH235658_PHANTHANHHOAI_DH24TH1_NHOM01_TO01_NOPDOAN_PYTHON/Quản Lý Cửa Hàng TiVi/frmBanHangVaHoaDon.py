@@ -38,5 +38,7 @@ class BanHangVaHoaDon(tk.Frame):
         try:
             self.tab_hoadon.load_hoa_don()
             
+            self.tab_banhang.load_Combobox()
+            
         except Exception as e:
             messagebox.showerror("Lỗi khi làm mới dữ liệu: " + str(e))

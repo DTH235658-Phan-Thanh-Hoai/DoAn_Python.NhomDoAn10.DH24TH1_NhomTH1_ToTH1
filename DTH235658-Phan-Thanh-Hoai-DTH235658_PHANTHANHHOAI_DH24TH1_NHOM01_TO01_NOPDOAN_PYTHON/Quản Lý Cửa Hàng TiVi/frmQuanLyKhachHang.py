@@ -188,8 +188,23 @@ class QuanLyKhachHang(tk.Frame):
             return False
         
         if not sdt:
-            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Số Điện Thoại!")
-            self.txt_sdt.focus()
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Số điện thoại!")
+            self.txt_sodienthoai.focus()
+            return False
+        
+        if not sdt.isdigit():
+            messagebox.showwarning("Cảnh báo", "Số điện thoại chỉ được phép nhập số!")
+            self.txt_sodienthoai.focus()
+            return False
+            
+        if len(sdt) != 10:
+            messagebox.showwarning("Cảnh báo", "Số điện thoại phải có đúng 10 chữ số!")
+            self.txt_sodienthoai.focus()
+            return False
+            
+        if sdt[0] != '0':
+            messagebox.showwarning("Cảnh báo", "Số điện thoại hợp lệ phải bắt đầu bằng số 0!")
+            self.txt_sodienthoai.focus()
             return False
 
         if not email:

@@ -173,9 +173,73 @@ class tabNhapHang(tk.Frame):
         except Exception as e:
             messagebox.showerror("Cảnh báo", "Có lỗi xảy ra khi kiểm tra mã phiếu nhập hàng vừa nhập đã có tồn tại không:\n" + str(e))
 
-    def ThemPhieuNhapChiTiet(self):
+    def kiemtradulieu(self):
+        ma_phieu = self.txt_maphieunhap.get()
+        ma_nv = self.cb_manhanvien.get()
+        ma_ncc = self.cb_manhacungcap.get()
 
-        # Lấy dữ liệu
+        if not ma_phieu:
+            messagebox.showwarning("Cảnh báo", "Mã phiếu không được để trống!")
+            self.txt_maphieunhap.focus()
+            return False
+        
+        if not ma_nv:
+            messagebox.showwarning("Cảnh báo", "Mã nhân viên nhập không được để trống!")
+            self.cb_manhanvien.focus()
+            return False
+        
+        if not ma_ncc:
+            messagebox.showwarning("Cảnh báo", "Mã nhà cung cấp không được để trống!")
+            self.cb_manhacungcap.focus()
+            return False
+
+        ma_tivi = self.cb_mativi.get()
+        so_luong_str = self.txt_soluong.get().strip()
+        gia_nhap_str = self.txt_gianhap.get().strip()
+        
+        if not ma_tivi:
+            messagebox.showwarning("Cảnh báo", "Mã tivi không được trống!")
+            self.cb_mativi.focus()
+            return False
+        
+        if not so_luong_str:
+            messagebox.showwarning("Cảnh báo", "Số lượng không được trống!")
+            self.txt_soluong.focus()
+            return False
+            
+        try:
+            so_luong = int(so_luong_str)
+            if so_luong <= 0:
+                messagebox.showwarning("Cảnh báo", "Số lượng nhập phải lớn hơn 0!")
+                self.txt_soluong.focus()
+                return False
+        except ValueError:
+            messagebox.showwarning("Cảnh báo", "Số lượng phải là số nguyên dương!")
+            self.txt_soluong.focus()
+            return False
+
+        if not gia_nhap_str:
+            messagebox.showwarning("Cảnh báo", "Giá nhập không được trống!")
+            self.txt_gianhap.focus()
+            return False
+
+        try:
+            gia_nhap = float(gia_nhap_str)
+            if gia_nhap < 0:
+                messagebox.showwarning("Cảnh báo", "Giá nhập phải lớn hơn hoặc bằng 0!")
+                self.txt_gianhap.focus()
+                return False
+        except ValueError:
+            messagebox.showwarning("Cảnh báo", "Giá nhập phải là một con số!")
+            self.txt_gianhap.focus()
+            return False
+
+        return True 
+    
+    def ThemPhieuNhapChiTiet(self):
+        if not self.kiemtradulieu():
+            return 
+
         ma_phieu = self.txt_maphieunhap.get()
         ngay_nhap = self.dt_ngaynhap.get_date()
         ma_nv = self.cb_manhanvien.get()
@@ -184,40 +248,12 @@ class tabNhapHang(tk.Frame):
         ten_ncc = self.dict_ncc.get(ma_ncc, "")
         ma_tivi = self.cb_mativi.get()
         ten_tivi = self.dict_tivi.get(ma_tivi, "")
+        
         so_luong = int(self.txt_soluong.get())
         gia_nhap = float(self.txt_gianhap.get())
         thanh_tien = so_luong * gia_nhap
 
-        # Kiểm tra dữ liệu nhập
-        if(ma_phieu == ""):
-            messagebox.showwarning("Cảnh báo", "Mã phiếu không được để trống!")
-            return
-        
-        elif(ngay_nhap == ""):
-            messagebox.showwarning("Cảnh báo", "Ngày nhập không được để trống!")
-            return
-        
-        elif(ma_nv == ""):
-            messagebox.showwarning("Cảnh báo", "Mã nhân viên không được để trống!")
-            return
-        
-        elif(ma_ncc == ""):
-            messagebox.showwarning("Cảnh báo", "Mã nhà cung cấp không được để trống!")
-            return
-        
-        elif(ma_tivi == ""):
-            messagebox.showwarning("Cảnh báo", "Mã tivi không được để trống!")
-            return
-        
-        elif(so_luong == ""):
-            messagebox.showwarning("Cảnh báo", "Số lượng không được để trống!")
-            return
-        
-        elif(gia_nhap == ""):
-            messagebox.showwarning("Cảnh báo", "Giá nhập không được để trống!")
-            return
-        
-        elif(self.KiemTraMaPhieuNhapHang(ma_phieu)):
+        if(self.KiemTraMaPhieuNhapHang(ma_phieu)):
             messagebox.showwarning("Cảnh báo", "Mã phiếu nhập hàng đã tồn tại!")
             self.txt_maphieunhap.delete(0, tk.END)
             self.txt_maphieunhap.focus()
@@ -289,6 +325,9 @@ class tabNhapHang(tk.Frame):
             messagebox.showwarning("Cảnh báo", "Vui lòng chọn phiếu nhập để sửa!")
             return
         
+        if not self.kiemtradulieu():
+            return 
+            
         ma_phieu = self.txt_maphieunhap.get()
         ngay_nhap = self.dt_ngaynhap.get_date()
         ma_nv = self.cb_manhanvien.get()
@@ -300,18 +339,6 @@ class tabNhapHang(tk.Frame):
         so_luong = int(self.txt_soluong.get())
         gia_nhap = float(self.txt_gianhap.get())
         thanh_tien = so_luong * gia_nhap
-
-        if(ma_tivi == ""):
-            messagebox.showwarning("Cảnh báo", "Mã tivi không được để trống!")
-            return
-        
-        elif(so_luong == ""):
-            messagebox.showwarning("Cảnh báo", "Số lượng không được để trống!")
-            return
-        
-        elif(gia_nhap == ""):
-            messagebox.showwarning("Cảnh báo", "Giá nhập không được để trống!")
-            return
     
         try: 
 

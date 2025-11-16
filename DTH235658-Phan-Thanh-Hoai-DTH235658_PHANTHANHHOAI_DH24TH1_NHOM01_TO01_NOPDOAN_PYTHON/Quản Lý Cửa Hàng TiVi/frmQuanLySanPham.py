@@ -44,9 +44,12 @@ class QuanLySanPham(tk.Frame):
     def load_data(self):
         try:
             self.tab_tivi.hienthi_dulieu()
+            self.tab_tivi.load_hang_san_xuat()
+
             self.tab_hang.hienthi_dulieu()
             self.tab_nhacungcap.hienthi_dulieu()
             self.tab_bh.hienthi_dulieu()
+            self.tab_bh.hien_thi_du_lieu_cthd()
             
         except Exception as e:
             messagebox.showerror("Lỗi khi load tab con: " + str(e))

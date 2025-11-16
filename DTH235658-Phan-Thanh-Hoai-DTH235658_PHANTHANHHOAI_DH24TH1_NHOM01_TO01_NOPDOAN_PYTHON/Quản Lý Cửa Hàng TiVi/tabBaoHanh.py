@@ -28,14 +28,14 @@ class tabBaoHanh(tk.Frame):
         frame_search.pack(fill="x", padx=20, pady=5)
 
         tk.Label(frame_search, text="Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD").pack(side="left", padx=5)
-        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=60, bg="white")
+        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=30, bg="white")
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", lambda e: self.timkiem())
 
         self.search_option = tk.StringVar(master=self, value="mabh")
-        tk.Radiobutton(frame_search, text="Mã BH", variable=self.search_option, value="mabh", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left", padx=5)
-        tk.Radiobutton(frame_search, text="Mã CTHD", variable=self.search_option, value="macthd", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left", padx=5)
-        tk.Radiobutton(frame_search, text="Mã HD", variable=self.search_option, value="mahd", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left", padx=5)
+        tk.Radiobutton(frame_search, text="Mã bảo hành", variable=self.search_option, value="mabh", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left", padx=5)
+        tk.Radiobutton(frame_search, text="Mã chi tiết hóa đơn", variable=self.search_option, value="macthd", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left", padx=5)
+        tk.Radiobutton(frame_search, text="Mã hóa đơn", variable=self.search_option, value="mahd", bg="#E3F2FD", font=("Segoe UI", 10)).pack(side="left", padx=5)
 
         tk.Button(frame_search, text="Tìm", font=("Segoe UI", 10, "bold"), bg="#1565C0", fg="white", bd=0, padx=10, pady=5, command=self.timkiem).pack(side="left", padx=10)
         tk.Button(frame_search, text="Hủy", font=("Segoe UI", 10, "bold"), bg="#E53935", fg="white", bd=0, padx=10, pady=5, command=self.huy).pack(side="left", padx=10)

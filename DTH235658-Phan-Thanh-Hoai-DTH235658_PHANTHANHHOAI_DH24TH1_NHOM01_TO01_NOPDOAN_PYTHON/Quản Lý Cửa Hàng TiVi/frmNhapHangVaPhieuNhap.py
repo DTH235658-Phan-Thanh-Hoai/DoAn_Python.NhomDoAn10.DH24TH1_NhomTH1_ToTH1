@@ -28,6 +28,7 @@ class NhapHangVaPhieuNhap(tk.Frame):
     def load_data(self):
         try:
             self.tab_phieunhap.load_phieu_nhap()
+            self.tab_nhaphang.Load_Comnobox()
             
         except Exception as e:
             messagebox.showerror("Lỗi khi làm mới dữ liệu: " + str(e))

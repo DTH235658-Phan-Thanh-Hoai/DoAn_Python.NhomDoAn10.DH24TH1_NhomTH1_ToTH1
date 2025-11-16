@@ -154,16 +154,32 @@ class tabNhaCungCap(tk.Frame):
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập Tên nhà cung cấp!")
             return False
         
-        if diachi:
-            messagebox.showwarning("Cảnh báo", "Vui long nhập Địa chi!")
+        if not diachi:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Địa chi!")
             return False
         
-        if not sdt or len(sdt) != 10 or not sdt.isdigit():
-            messagebox.showwarning("Cảnh báo", "Số điện thoại phải có 10 chữ số!")
+        if not sdt:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Số điện thoại!")
+            self.txt_sodienthoai.focus()
             return False
         
-        if email:
-            messagebox.showwarning("Cảnh báo", "Vui long nhập Email!")
+        if not sdt.isdigit():
+            messagebox.showwarning("Cảnh báo", "Số điện thoại chỉ được phép nhập số!")
+            self.txt_sodienthoai.focus()
+            return False
+            
+        if len(sdt) != 10:
+            messagebox.showwarning("Cảnh báo", "Số điện thoại phải có đúng 10 chữ số!")
+            self.txt_sodienthoai.focus()
+            return False
+            
+        if sdt[0] != '0':
+            messagebox.showwarning("Cảnh báo", "Số điện thoại hợp lệ phải bắt đầu bằng số 0!")
+            self.txt_sodienthoai.focus()
+            return False
+        
+        if not email:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Email!")
             return False
         
         return True
@@ -176,7 +192,7 @@ class tabNhaCungCap(tk.Frame):
         email = str(self.txt_email.get()).strip()
 
         if self.kiem_tra_du_lieu() == False:
-            messagebox.showwarning("Cảnh báo", "Vui long nhập dữ liệu!")
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập dữ liệu!")
             return
 
         trung = self.kiemtra_trung(ma=ma, ten=ten, sdt=sdt, email=email)

@@ -215,47 +215,73 @@ class tabBanHang(tk.Frame):
             messagebox.showerror("Lỗi", f"Lỗi kiểm tra MaCTHD:\n{str(e)}")
             return False
 
-    def ThemHoaDonChiTiet(self):
-        # Lấy dữ liệu
+    def kiemtradulieu(self):
         ma_hd = self.txt_mahoadonban.get().strip()
         ma_nv = self.cb_manhanvien.get()
-        ten_nv = self.dict_nv.get(ma_nv,"")
         ma_kh = self.cb_makhachhang.get()
-        ten_kh = self.dict_kh.get(ma_kh, "")
+
+        if not ma_hd:
+            messagebox.showwarning("Cảnh báo", "Mã hóa đơn không được để trống!")
+            self.txt_mahoadonban.focus()
+            return False
+        
+        if not ma_nv:
+            messagebox.showwarning("Cảnh báo", "Mã nhân viên không được trống!")
+            self.cb_manhanvien.focus()
+            return False
+        
+        if not ma_kh:
+            messagebox.showwarning("Cảnh báo", "Mã khách hàng không được trống!")
+            self.cb_makhachhang.focus()
+            return False
+
+        ma_cthd = self.txt_macthd.get().strip()
+        ma_tivi = self.cb_mativi.get()
+        so_luong_str = self.txt_soluong.get().strip()
+        
+        if not ma_cthd:
+            messagebox.showwarning("Cảnh báo", "Mã CTHD không được để trống!")
+            self.txt_macthd.focus()
+            return False
+        
+        if not ma_tivi:
+            messagebox.showwarning("Cảnh báo", "Mã tivi không được trống!")
+            self.cb_mativi.focus()
+            return False
+        
+        if not so_luong_str:
+            messagebox.showwarning("Cảnh báo", "Số lượng không được trống!")
+            self.txt_soluong.focus()
+            return False
+            
+        try:
+            so_luong = int(so_luong_str)
+            if so_luong <= 0:
+                messagebox.showwarning("Cảnh báo", "Số lượng bán phải lớn hơn 0!")
+                self.txt_soluong.focus()
+                return False
+        except ValueError:
+            messagebox.showwarning("Cảnh báo", "Số lượng phải là số nguyên dương!")
+            self.txt_soluong.focus()
+            return False
+
+        return True 
+    
+    def ThemHoaDonChiTiet(self):
+        if not self.kiemtradulieu():
+            return # Dừng lại nếu dữ liệu không hợp lệ
+
+        ma_hd = self.txt_mahoadonban.get().strip()
+        ma_nv = self.cb_manhanvien.get()
+        ma_kh = self.cb_makhachhang.get()
         ngay_ban = self.dt_ngayban.get_date()
         ma_cthd = self.txt_macthd.get().strip()
         ma_tivi = self.cb_mativi.get()
-        ten_tivi = self.dict_tivi[ma_tivi]["TenTivi"]
         so_luong_str = self.txt_soluong.get().strip()
 
-        # Kiểm tra dữ liệu nhập
-        if(ma_hd == ""):
-            messagebox.showwarning("Cảnh báo", "Mã hóa đơn không được để trống!")
-            return
-        
-        elif(ma_nv == ""):
-            messagebox.showwarning("Cảnh báo", "Mã nhân viên không được trống!")
-            return
-        
-        elif(ma_kh == ""):
-            messagebox.showwarning("Cảnh báo", "Mã khách hàng không được trống!")
-            return
-        
-        elif(ma_cthd == ""):
-            messagebox.showwarning("Cảnh báo", "Mã CTHD không được để trống!")
-            return
-        
-        elif(ma_tivi == ""):
-            messagebox.showwarning("Cảnh báo", "Mã tivi không được trống!")
-            return
-        
-        elif(so_luong_str == ""):
-            messagebox.showwarning("Cảnh báo", "Số lượng không được trống!")
-            return
-        
-        if not so_luong_str.isdigit():
-            messagebox.showwarning("Cảnh báo", "Số lượng phải là số nguyên dương!")
-            return
+        ten_tivi = self.dict_tivi[ma_tivi]["TenTivi"] 
+        ten_nv = self.dict_nv.get(ma_nv,"")
+        ten_kh = self.dict_kh.get(ma_kh, "")
         
         if(self.KiemTraMaHoaDonBan(ma_hd)):
             messagebox.showwarning("Cảnh báo", "Mã hóa đơn đã tồn tại!")
@@ -365,6 +391,9 @@ class tabBanHang(tk.Frame):
             messagebox.showwarning("Cảnh báo", "Vui lòng chọn hóa đơn để sửa!")
             return
         
+        if not self.kiemtradulieu():
+            return 
+            
         ma_hd = self.txt_mahoadonban.get()
         ma_nv = self.cb_manhanvien.get()
         ten_nv = self.dict_nv.get(ma_nv,"")
@@ -373,30 +402,14 @@ class tabBanHang(tk.Frame):
         ngay_ban = self.dt_ngayban.get_date()
         ma_cthd = self.txt_macthd.get().strip()
         ma_tivi = self.cb_mativi.get()
-        ten_tivi = self.dict_tivi[ma_tivi]["TenTivi"]
         so_luong_str = self.txt_soluong.get().strip()
-
-        if(ma_cthd == ""):
-            messagebox.showwarning("Cảnh báo", "Mã CTHD không được trống!")
-            return
         
-        if(ma_tivi == ""):
-            messagebox.showwarning("Cảnh báo", "Mã tivi không được trống!")
-            return
-        
-        if(so_luong_str == ""):
-            messagebox.showwarning("Cảnh báo", "Số lượng không được trống!")
-            return
-        
-        if not so_luong_str.isdigit():
-            messagebox.showwarning("Cảnh báo", "Số lượng phải là số nguyên dương!")
-            return
+        ten_tivi = self.dict_tivi[ma_tivi]["TenTivi"]
         
         so_luong = int(so_luong_str)
         gia_ban = float(self.txt_giaban.get().replace(",", ""))
         thanh_tien = so_luong * gia_ban
 
-        # === KIỂM TRA TỒN KHO TRƯỚC KHI SỬA ===
         ton_kho_hien_tai = self.KiemTraTonKho(ma_tivi)
         
         if so_luong <= 0:
@@ -407,14 +420,12 @@ class tabBanHang(tk.Frame):
             messagebox.showwarning("Cảnh báo", f"Số lượng tồn kho của {ma_tivi} chỉ còn {ton_kho_hien_tai}! Không thể sửa với số lượng này.")
             return    
 
-        # Kiểm tra MaCTHD trùng (trừ dòng hiện tại)
         old_ma_cthd = self.trHienThi.item(selected[0], "text")
         if ma_cthd != old_ma_cthd and self.KiemTraMaCTHD(ma_cthd):
             messagebox.showwarning("Cảnh báo", f"Mã CTHD '{ma_cthd}' đã tồn tại!")
             return
 
         try:
-            # Kiểm tra trùng mã Tivi trong cùng hóa đơn(trừ dòng hiện tai)
             for item in self.trHienThi.get_children():
                 if item == selected[0]:
                     continue

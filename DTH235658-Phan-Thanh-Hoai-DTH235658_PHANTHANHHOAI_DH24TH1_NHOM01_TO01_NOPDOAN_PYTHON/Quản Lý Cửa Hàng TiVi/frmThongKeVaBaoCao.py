@@ -34,7 +34,9 @@ class ThongKeVaBaoCao(tk.Frame):
     def load_data(self):
         try:
             self.tab_doanhthu.thongke_doanhthu_tatca()
+            
             self.tab_baocao.load_baocao_all()
+            self.tab_baocao.load_combo_tivi()
             
         except Exception as e:
             messagebox.showerror("Lỗi khi làm mới tab con: " + str(e))
