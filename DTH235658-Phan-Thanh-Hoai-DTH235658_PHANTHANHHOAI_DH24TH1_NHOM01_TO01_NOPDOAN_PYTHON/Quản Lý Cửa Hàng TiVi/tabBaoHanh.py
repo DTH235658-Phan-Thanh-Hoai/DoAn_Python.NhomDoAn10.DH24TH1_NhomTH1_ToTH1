@@ -11,11 +11,13 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT, WD_TAB_LEADER
 
 
 class tabBaoHanh(tk.Frame):
-    def __init__(self, parent, conn):
+    def __init__(self, parent, conn, user):
         super().__init__(parent, bg="white")
 
         self.conn = conn
         self.cursor = conn.cursor()
+
+        self.user = user
 
         self.ds_them = []
         self.ds_sua = []
@@ -26,7 +28,7 @@ class tabBaoHanh(tk.Frame):
         frame_search.pack(fill="x", padx=20, pady=5)
 
         tk.Label(frame_search, text="Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD").pack(side="left", padx=5)
-        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=55, bg="white")
+        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=60, bg="white")
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", lambda e: self.timkiem())
 
@@ -75,12 +77,13 @@ class tabBaoHanh(tk.Frame):
         frame_buttons = tk.Frame(self, bg="white")
         frame_buttons.pack(pady=10)
 
-        tk.Button(frame_buttons, text="➕ Thêm", bg="#EBDA42", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.them).grid(row=0, column=0, padx=8)
-        tk.Button(frame_buttons, text="✏️ Sửa", bg="#FB8C00", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.sua).grid(row=0, column=1, padx=8)
-        tk.Button(frame_buttons, text="🗑️ Xóa", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.xoa).grid(row=0, column=2, padx=8)
-        tk.Button(frame_buttons, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.lammoi).grid(row=0, column=3, padx=8)
-        tk.Button(frame_buttons, text="💾 Lưu", bg="#43A047", fg="white", font=("Segoe UI", 10, "bold"), padx=20, pady=5, bd=0, command=self.luu).grid(row=0, column=4, padx=8)
-        tk.Button(frame_buttons, text="🖨️ In bảo hành", bg="#E51E9C", fg="white", font=("Segoe UI", 10, "bold"), padx=15, command=self.InBaoHanh, pady=5, bd=0).grid(row=0, column=5, padx=8)
+        if self.user == "admin":
+            tk.Button(frame_buttons, text="➕ Thêm", bg="#EBDA42", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.them).grid(row=0, column=0, padx=8)
+            tk.Button(frame_buttons, text="✏️ Sửa", bg="#FB8C00", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.sua).grid(row=0, column=1, padx=8)
+            tk.Button(frame_buttons, text="🗑️ Xóa", bg="#E53935", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.xoa).grid(row=0, column=2, padx=8)
+            tk.Button(frame_buttons, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.lammoi).grid(row=0, column=3, padx=8)
+            tk.Button(frame_buttons, text="💾 Lưu", bg="#43A047", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.luu).grid(row=0, column=4, padx=8)
+        tk.Button(frame_buttons, text="🖨️ In bảo hành", bg="#E51E9C", fg="white", font=("Segoe UI", 11, "bold"), padx=15, command=self.InBaoHanh, pady=5, bd=0).grid(row=0, column=5, padx=8)
 
         # === BẢNG HIỂN THỊ ===
         frame_table = tk.Frame(self, bg="white")
@@ -108,7 +111,7 @@ class tabBaoHanh(tk.Frame):
         self.trHienThi.column("MaBH", width=100, anchor="center")
         self.trHienThi.column("MaCTHD", width=100, anchor="center")
         self.trHienThi.column("MaHD", width=100, anchor="center")
-        self.trHienThi.column("ThoiGianBaoHanh", width=100, anchor="center")
+        self.trHienThi.column("ThoiGianBaoHanh", width=130, anchor="center")
         self.trHienThi.column("DieuKien", width=250, anchor="w")
         self.trHienThi.column("NgayBaoHanh", width=110, anchor="center")
         self.trHienThi.column("TrangThai", width=120, anchor="center")
@@ -124,18 +127,28 @@ class tabBaoHanh(tk.Frame):
 
     def hien_thi_du_lieu_cthd(self):
         try:
-            self.cursor.execute("""
+            sql_query = """
                 SELECT DISTINCT cthd.MaCTHD
                 FROM ChiTietHoaDon cthd
                 JOIN HoaDonBan hdb ON hdb.MaHD = cthd.MaHD
                 WHERE hdb.TrangThai = N'Đã thanh toán'
-                ORDER BY cthd.MaCTHD
-                """)
+            """
+            params = []
+            
+            if self.user.lower() != "admin":
+                sql_query += " AND hdb.MaNV = ?"
+                params.append(self.user)
+            
+            sql_query += " ORDER BY cthd.MaCTHD"
+            
+            self.cursor.execute(sql_query, params)
             rows = self.cursor.fetchall()
             self.cb_macthd["values"] = [row.MaCTHD for row in rows]
+
             if rows:
                 self.cb_macthd.current(0)
                 self.capnhat_mahd_theo_cthd()
+
         except Exception as e:
             messagebox.showerror("Lỗi", f"Không tải được danh sách CTHD: {str(e)}")
 
@@ -161,22 +174,38 @@ class tabBaoHanh(tk.Frame):
             self.trHienThi.delete(item)
 
         try:
-            self.cursor.execute("""
-                SELECT bh.MaBH, bh.MaCTHD, cthd.MaHD, bh.ThoiGianBaoHanh, bh.DieuKien, bh.NgayBaoHanh
+            sql_query = """
+                SELECT bh.MaBH, bh.MaCTHD, cthd.MaHD, hdb.MaNV, bh.ThoiGianBaoHanh, bh.DieuKien, bh.NgayBaoHanh
                 FROM BaoHanh bh
                 JOIN ChiTietHoaDon cthd ON bh.MaCTHD = cthd.MaCTHD
-                ORDER BY bh.MaBH
-                """)
+                JOIN HoaDonBan hdb ON cthd.MaHD = hdb.MaHD"""
+            params = []
+
+            if self.user != "admin":
+                sql_query += " WHERE hdb.MaNV = ?"
+                params.append(self.user)
+            
+            sql_query += " ORDER BY bh.MaBH"
+            
+            self.cursor.execute(sql_query, params)
             rows = self.cursor.fetchall()
 
             for row in rows:
                 ngay_bh = row.NgayBaoHanh.date() if hasattr(row.NgayBaoHanh, 'date') else date.fromisoformat(str(row.NgayBaoHanh).split()[0])
+                
+                # Tính Hạn/Hết Hạn dựa trên NgayBaoHanh trong CSDL
                 ngay_het = ngay_bh + timedelta(days=row.ThoiGianBaoHanh * 30)
-                trangthai = "CÒN HẠN" if ngay_het >= date.today() else "HẾT HẠN"
+                trangthai_hienthi = "CÒN HẠN" if ngay_het >= date.today() else "HẾT HẠN"
+                    
+                # Màu sắc hiển thị
+                tag = 'con_han' if trangthai_hienthi == 'CÒN HẠN' else 'het_han'
 
-                self.trHienThi.insert("", "end", values=(row.MaBH, row.MaCTHD, row.MaHD, row.ThoiGianBaoHanh, row.DieuKien or "", self.chuyen_yyyy_sang_dd(row.NgayBaoHanh), trangthai))
+                self.trHienThi.insert("", "end", 
+                    values=(row.MaBH, row.MaCTHD, row.MaHD, row.ThoiGianBaoHanh, row.DieuKien or "", self.chuyen_yyyy_sang_dd(row.NgayBaoHanh), trangthai_hienthi),
+                    tags=(tag,))
+            
         except Exception as e:
-            messagebox.showerror("Lỗi", "Không thể tải dữ liệu: " + e)
+            messagebox.showerror("Lỗi", "Không thể tải dữ liệu: " + str(e))
 
     def chuyen_yyyy_sang_dd(self, ngay_db):
         if ngay_db is None:

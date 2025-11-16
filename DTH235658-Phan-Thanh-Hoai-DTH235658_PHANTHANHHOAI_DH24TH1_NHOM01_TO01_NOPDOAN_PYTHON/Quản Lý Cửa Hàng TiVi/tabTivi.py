@@ -7,12 +7,13 @@ import io
 
 # === TAB TIVI ===
 class tabTivi(tk.Frame):
-    def __init__(self, parent, conn):
+    def __init__(self, parent, conn, user):
         super().__init__(parent, bg="white")
 
         # === CHUỖI KẾT NỐI ===
         self.conn = conn
         self.cursor = conn.cursor()
+        self.user = user
 
         self.selected_item = None
         self.image_data = None 
@@ -132,7 +133,7 @@ class tabTivi(tk.Frame):
         self.trHienThi.column("MaTivi", width=80, anchor="center")
         self.trHienThi.column("TenTivi", width=200, anchor="w")
         self.trHienThi.column("TenHang", width=100, anchor="w")
-        self.trHienThi.column("KichThuoc", width=80, anchor="center")
+        self.trHienThi.column("KichThuoc", width=100, anchor="center")
         self.trHienThi.column("DoPhanGiai", width=100, anchor="center")
         self.trHienThi.column("GiaBan", width=100, anchor="e")
         self.trHienThi.column("SoLuongTon", width=80, anchor="center")
@@ -144,6 +145,10 @@ class tabTivi(tk.Frame):
         style = ttk.Style()
         style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"))
         style.configure("Treeview", font=("Segoe UI", 10), rowheight=28)
+
+        if(self.user != "admin"):
+            self.btn_chonanh.grid_forget()
+            frame_buttons.pack_forget()
 
         self.trHienThi.bind("<<TreeviewSelect>>", self.chon_dong)
 

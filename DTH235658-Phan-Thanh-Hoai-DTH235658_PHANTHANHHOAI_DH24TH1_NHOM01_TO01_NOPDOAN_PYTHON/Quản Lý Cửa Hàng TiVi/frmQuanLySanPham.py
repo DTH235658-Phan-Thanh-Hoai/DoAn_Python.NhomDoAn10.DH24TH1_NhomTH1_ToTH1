@@ -16,6 +16,7 @@ class QuanLySanPham(tk.Frame):
         self.conn = conn
 
         self.controller = controller
+        self.user = user
 
         # === TITLE ===
         lbl_title = tk.Label(self, text="QUẢN LÝ SẢN PHẨM", font=("Segoe UI", 16, "bold"), bg="white", fg="#0D47A1")
@@ -26,15 +27,17 @@ class QuanLySanPham(tk.Frame):
         tab_control.pack(fill="both", expand=True, padx=20, pady=10)
 
         # === Các tab con ===
-        self.tab_tivi = tv.tabTivi(tab_control, conn)
+        self.tab_tivi = tv.tabTivi(tab_control, conn, self.user)
         self.tab_hang = hsx.tabHangSanXuat(tab_control, conn)
         self.tab_nhacungcap = ncc.tabNhaCungCap(tab_control, conn)
-        self.tab_bh = bh.tabBaoHanh(tab_control, conn)
-
-        # Thêm vào notebook
+        self.tab_bh = bh.tabBaoHanh(tab_control, conn, self.user)
+        
         tab_control.add(self.tab_tivi, text="📺 Tivi")
-        tab_control.add(self.tab_hang, text="🏭 Hãng sản xuất")
-        tab_control.add(self.tab_nhacungcap, text="🤝 Nhà cung cấp")
+        # Thêm vào notebook
+        if(user == "admin"):
+            tab_control.add(self.tab_hang, text="🏭 Hãng sản xuất")
+            tab_control.add(self.tab_nhacungcap, text="🤝 Nhà cung cấp")
+            
         tab_control.add(self.tab_bh, text="🧾 Bảo hành")
 
     # Hàm làm mới tab khi click vào
