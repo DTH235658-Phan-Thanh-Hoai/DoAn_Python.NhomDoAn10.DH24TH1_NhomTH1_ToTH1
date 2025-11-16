@@ -1,51 +1,158 @@
+# GIỚI THIỆU ỨNG DỤNG QUẢN LÝ CỬA HÀNG TIVI
+
+Ứng dụng **Quản lý Cửa hàng Tivi** là một hệ thống phần mềm nội bộ được phát triển bằng **Python** với giao diện **Tkinter**, kết nối cơ sở dữ liệu **SQL Server** thông qua **pyodbc**. Hệ thống hỗ trợ quản lý toàn diện các hoạt động kinh doanh, từ nhập hàng, bán hàng, quản lý kho, nhân sự đến báo cáo doanh thu.
+
+> **Mục tiêu chính**: Tối ưu hóa quy trình vận hành, tăng độ chính xác dữ liệu, phân quyền rõ ràng và cung cấp giao diện hiện đại, trực quan.
+
+Hệ thống bao gồm **hai form chính**:
+1. **Form Đăng nhập** (`frmLogin.py`)
+2. **Giao diện Chính** (`App.py`)
 
 ---
 
-## Giới thiệu
+## 2. FORM ĐĂNG NHẬP (LOGIN)
 
-> *"Chào mừng bạn đến với **màn hình đăng nhập** của **Hệ thống Quản lý Nhân sự**!  
-> Đây là cửa ngõ đầu tiên để truy cập vào hệ thống.  
-> Giao diện được thiết kế **đẹp mắt**, **dễ dùng**, **chuyên nghiệp**, chạy mượt trên **Windows** với **Python** và **Tkinter**."*
+### Mục đích
+Xác thực người dùng trước khi truy cập hệ thống, đảm bảo **bảo mật** và **phân quyền**.
+
+### Đặc điểm nổi bật
+- **Giao diện hiện đại**: Chia 2 phần (trái: hình nền trang trí, phải: form nhập liệu).
+- **Kích thước**: 850x580, căn giữa màn hình.
+- **Xử lý mật khẩu an toàn**:
+  - Ẩn ký tự (`show="●"`).
+  - **Mã hóa SHA-256** trước khi so sánh với CSDL.
+  - Nút toggle 👁 để hiện/ẩn mật khẩu.
+- **Phím tắt tiện lợi**:
+  - **Enter** để chuyển ô hoặc đăng nhập.
+- **Xử lý lỗi rõ ràng**: Thông báo đỏ khi sai tài khoản/mật khẩu hoặc thiếu thông tin.
+- **Ảnh & icon**:
+  - Nền: `nen_python.png`
+  - Avatar: `user.png`
+  - Icon ứng dụng: `icon_tivi.ico`
+
+### Kết nối CSDL
+```sql
+SERVER: LAPTOP-IFECMD9V  
+DATABASE: QLTV  
+Trusted_Connection=yes
+```
+
+## 1. TỔNG QUAN
+
+Form đăng nhập là giao diện đầu tiên của hệ thống quản lý cửa hàng bán tivi. Ứng dụng được xây dựng bằng **Python** với thư viện **Tkinter**, tích hợp kết nối cơ sở dữ liệu **SQL Server** thông qua **pyodbc**. Mật khẩu được mã hóa an toàn bằng thuật toán **SHA-256** trước khi so sánh với dữ liệu lưu trữ.
+
+> **Mục tiêu**: Xác thực người dùng trước khi truy cập vào hệ thống chính (`App.App`).
+
+---
+
+## 2. YÊU CẦU HỆ THỐNG
+
+| Thành phần             | Yêu cầu tối thiểu                          |
+|------------------------|--------------------------------------------|
+| **Hệ điều hành**       | Windows 10 trở lên                         |
+| **Python**             | 3.8 trở lên                                |
+| **Thư viện**           | `tkinter`, `pyodbc`, `Pillow`, `ctypes`     |
+| **Cơ sở dữ liệu**      | SQL Server (với database `QLTV`)           |
+| **ODBC Driver**        | ODBC Driver 17 for SQL Server              |
 
 ---
 
-## Tính năng nổi bật
+## 3. CẤU TRÚC GIAO DIỆN
 
-### 1. **Giao diện hiện đại, bắt mắt**
-> *"Bên trái là hình nền đẹp kích thước 300x580, bên phải là form đăng nhập trắng tinh tế.  
-> Màu xanh dương chủ đạo, avatar tròn 120x120, chữ SIGNIN in đậm – nhìn là muốn đăng nhập ngay!"*
+### Kích thước cửa sổ
+- **850 x 580 pixels**
+- **Cố định kích thước** (`resizable=False`)
+- **Căn giữa màn hình**
 
-### 2. **Tự động căn giữa màn hình**
-> *"Dù bạn dùng màn hình 15 inch hay 27 inch, cửa sổ luôn **căn chính giữa** – chuẩn UX!"*
-
-### 3. **Hình ảnh sắc nét trên mọi màn hình**
-> *"Hỗ trợ **DPI Scaling** – không bị mờ trên laptop 4K, Retina hay màn hình độ phân giải cao!"*
-
-### 4. **Kết nối SQL Server an toàn**
-> *"Dùng **Windows Authentication** – không cần nhập tài khoản SQL.  
-> Kết nối trực tiếp đến máy cá nhân, database **QLTV**."*
-
-### 5. **Đăng nhập nhanh bằng phím Enter**
-> *"Gõ xong tên đăng nhập → nhấn **Enter**.  
-> Gõ mật khẩu → nhấn **Enter** → **Đăng nhập ngay** – không cần click chuột!"*
-
-### 6. **Ẩn / Hiện mật khẩu bằng nút con mắt**
-> *"Click vào biểu tượng 👁 để **hiện mật khẩu**, click lại thành 🚫 để **ẩn**.  
-> Rất tiện khi bạn gõ sai!"*
-
-### 7. **Thông báo lỗi rõ ràng, thân thiện**
-> *"Thiếu tên đăng nhập? → 'Vui lòng nhập...'  
-> Sai tài khoản? → 'Sai tài khoản hoặc mật khẩu!'  
-> Hiển thị **màu đỏ**, ngay dưới form – không thể bỏ sót!"*
-
-### 8. **Nút Đăng nhập & Thoát chuyên nghiệp**
-> *"Nút **Đăng nhập** màu xanh dương, hover sáng lên.  
-> Nút **Thoát** màu đỏ, click là thoát chương trình ngay lập tức."*
-
-### 9. **Chuyển sang form chính khi đăng nhập thành công**
-> *"Đăng nhập đúng → cửa sổ tự đóng → mở ngay **App chính** với tham số người dùng!"*
+### Bố cục chính
+| Phần trái (30%)       | Phần phải (70%)                     |
+|-----------------------|-------------------------------------|
+| Hình nền trang trí    | Form đăng nhập                      |
 
 ---
+
+## 4. GIAO DIỆN CHI TIẾT
+
+### 4.1. Phần trái – Hình nền
+- **Ảnh**: `nen_python.png` (từ thư mục `images`)
+- **Kích thước**: 300 x 580 (tự động resize bằng `PIL`)
+- **Vị trí**: Đặt full khung trái
+
+### 4.2. Phần phải – Form đăng nhập
+
+| Thành phần             | Mô tả                                                                 |
+|------------------------|-----------------------------------------------------------------------|
+| **Avatar**             | Ảnh `user.png` (120x120), căn giữa                                    |
+| **Tiêu đề**            | `"SIGNIN"` – màu `#378cfc`, font **Segoe UI 18 bold**                 |
+| **Ô nhập tài khoản**   | `ttk.Entry`, width=30, focus mặc định, hỗ trợ **Enter** để đăng nhập  |
+| **Ô nhập mật khẩu**    | `ttk.Entry`, ẩn ký tự (`show="●"`), hỗ trợ **Enter**                   |
+| **Nút hiện/ẩn mật khẩu**| Biểu tượng 👁 / 🚫, toggle hiển thị mật khẩu                           |
+| **Nút "Đăng nhập"**    | Màu `#378cfc`, hover `#BBDEFB`, font bold                             |
+| **Nút "Thoát"**        | Màu đỏ `#E53935`, hover `#B71C1C`                                     |
+| **Thông báo lỗi**      | Nhãn đỏ, hiển thị dưới cùng                                           |
+
+---
+
+## 5. TÍNH NĂNG CHÍNH
+
+### 5.1. Xác thực người dùng
+1. Lấy `TenDangNhap` và `MatKhau` từ form.
+2. Kiểm tra rỗng → thông báo lỗi.
+3. Mã hóa mật khẩu nhập vào bằng **SHA-256**.
+4. Truy vấn:
+   ```sql
+   SELECT MatKhau FROM TaiKhoan WHERE TenDangNhap = ?
+   ```
+
+# GIAO DIỆN CHÍNH HỆ THỐNG QUẢN LÝ CỬA HÀNG TIVI
+
+## 1. TỔNG QUAN
+
+Giao diện chính (`App`) là **cửa sổ trung tâm** của hệ thống, được xây dựng bằng **Python Tkinter**, tích hợp đầy đủ các module quản lý. Ứng dụng sử dụng **cơ chế Frame động** để chuyển đổi giữa các trang chức năng mà không cần mở cửa sổ mới.
+
+> **Mục tiêu**: Cung cấp giao diện thống nhất, dễ điều hướng, phân quyền rõ ràng theo vai trò người dùng (`admin` hoặc `nhân viên`).
+
+---
+
+## 2. YÊU CẦU HỆ THỐNG
+
+| Thành phần             | Yêu cầu tối thiểu                          |
+|------------------------|--------------------------------------------|
+| **Hệ điều hành**       | Windows 10 trở lên                         |
+| **Python**             | 3.8 trở lên                                |
+| **Thư viện**           | `tkinter`, `pyodbc`, `Pillow`, `ctypes`     |
+| **Cơ sở dữ liệu**      | SQL Server (database `QLTV`)               |
+| **ODBC Driver**        | ODBC Driver 17 for SQL Server              |
+
+---
+
+## 3. CẤU TRÚC GIAO DIỆN
+
+### Kích thước cửa sổ
+- **Mặc định**: `1500 x 885 pixels`
+- **Có thể thay đổi kích thước** (`resizable=True`)
+- **Căn giữa màn hình**
+
+### Bố cục chính
+| Sidebar (trái) | Vùng nội dung (phải) |
+|----------------|----------------------|
+| 250px, cố định | Chiếm toàn bộ phần còn lại, mở rộng linh hoạt |
+
+---
+
+## 4. SIDEBAR – MENU ĐIỀU HƯỚNG
+
+### Thành phần
+- **Avatar người dùng**: `tivi_user.png` (80x80)
+- **Chào mừng**: `"Xin chào {tên đăng nhập}"`
+- **Các nút chức năng** (định dạng thống nhất)
+- **Nút đăng xuất** (cuối cùng)
+
+### Định dạng nút
+```python
+bg="#42A5F5", fg="white", font=("Arial", 12),
+bd=0, relief="flat", anchor="w", padx=20, pady=15
+```
 
 ## Cấu trúc thư mục cần có
 
@@ -79,7 +186,6 @@ project/
 └── tabTivi.py   
 ```
 
-# QUẢN LÝ HỆ THỐNG – README
 
 ## 1. TRANG BẢNG ĐIỀU KHIỂN TỔNG QUAN
 
