@@ -143,6 +143,7 @@ SELECT MONTH(NgayBan), SUM(TongTien)
 FROM HoaDonBan
 WHERE TrangThai = N'Đã thanh toán' AND YEAR(NgayBan) = ?
 GROUP BY MONTH(NgayBan)
+```
 
 # QUẢN LÝ SẢN PHẨM TIVI – README
 
@@ -153,7 +154,7 @@ GROUP BY MONTH(NgayBan)
 | **admin**     | **Toàn quyền**: Thêm, Sửa, Xóa, Tìm kiếm, Xem bảng |
 | **nhân viên** | **Không truy cập được trang này** |
 
-> **Chỉ admin** mới thấy menu `Quản lý Tivi`
+> **Chỉ admin** mới thấy menu `Quản lý Tivi`.
 
 ---
 
@@ -198,17 +199,17 @@ GROUP BY MONTH(NgayBan)
 ## 4. BẢNG HIỂN THỊ SẢN PHẨM (Treeview)
 
 | Cột               | Nội dung ví dụ         | Căn chỉnh |
-|-------------------|------------------------|---------|
-| Mã Tivi           | `TV-2025-SAM-001`      | Giữa    |
-| Tên Tivi          | `Samsung Crystal UHD`  | Trái    |
-| Hãng              | `Samsung`              | Giữa    |
-| Kích thước        | `55 inch`              | Giữa    |
-| Độ phân giải      | `4K UHD`               | Giữa    |
-| Loại màn          | `QLED`                 | Giữa    |
-| Tần số            | `120 Hz`               | Giữa    |
-| Giá bán           | `15,990,000 VNĐ`       | Phải    |
+|-------------------|------------------------|-----------|
+| Mã Tivi           | `TV-2025-SAM-001`      | Giữa      |
+| Tên Tivi          | `Samsung Crystal UHD`  | Trái      |
+| Hãng              | `Samsung`              | Giữa      |
+| Kích thước        | `55 inch`              | Giữa      |
+| Độ phân giải      | `4K UHD`               | Giữa      |
+| Loại màn          | `QLED`                 | Giữa      |
+| Tần số            | `120 Hz`               | Giữa      |
+| Giá bán           | `15,990,000 VNĐ`       | Phải      |
 
-**Tính năng bảng:**
+**Tính năng bảng**:
 - Cuộn dọc + ngang
 - Dòng **striped** (xen kẽ màu)
 - **Click chọn dòng** → tự động điền toàn bộ dữ liệu vào form
@@ -219,7 +220,7 @@ GROUP BY MONTH(NgayBan)
 ## 5. NÚT CHỨC NĂNG
 
 | Nút         | Màu         | Chức năng |
-|-------------|-------------|---------|
+|-------------|-------------|-----------|
 | **Thêm**    | Vàng        | Kiểm tra → thêm vào bảng + `ds_them` |
 | **Sửa**     | Cam         | Cập nhật dòng → `ds_sua` |
 | **Xóa**     | Đỏ          | Xác nhận → xóa + `ds_xoa` |
@@ -233,7 +234,7 @@ GROUP BY MONTH(NgayBan)
 ### Click chọn dòng → Tự động điền form
 Khi người dùng **bấm vào bất kỳ dòng nào trên bảng**:
 
-1. Lấy dữ liệu từ dòng được chọn
+1. Lấy dữ liệu từ dòng được chọn.
 2. Điền tự động vào **tất cả các ô input**:
    - `Mã Tivi` → `txt_maTivi`
    - `Tên Tivi` → `txt_tenTivi`
@@ -244,62 +245,62 @@ Khi người dùng **bấm vào bất kỳ dòng nào trên bảng**:
    - `Tần số quét` → `txt_tanSoQuet`
    - `Giá bán` → `txt_giaBan` (định dạng `#,##0`)
    - `Mô tả` → `txt_moTa.insert(...)`
-3. **Tự động focus** về ô **Tên Tivi**
-4. Sẵn sàng **Sửa** hoặc **Xóa** mà không cần nhấn nút khác
+3. **Tự động focus** về ô **Tên Tivi**.
+4. Sẵn sàng **Sửa** hoặc **Xóa** mà không cần nhấn nút khác.
 
 ---
 
 ### Thêm sản phẩm
-1. Kiểm tra **tất cả trường bắt buộc**
-2. **Mã Tivi**: không trùng, hợp lệ (chữ/số/gạch ngang)
-3. **Kích thước**, **Tần số quét**: số nguyên hợp lệ
-4. **Giá bán**: > 0
-5. Thêm dòng vào bảng
-6. Thêm vào `ds_them`
-7. Xóa form + thông báo thành công
+1. Kiểm tra **tất cả trường bắt buộc**.
+2. **Mã Tivi**: không trùng, hợp lệ (chữ/số/gạch ngang).
+3. **Kích thước**, **Tần số quét**: số nguyên hợp lệ.
+4. **Giá bán**: > 0.
+5. Thêm dòng vào bảng.
+6. Thêm vào `ds_them`.
+7. Xóa form + thông báo thành công.
 
 ---
 
 ### Sửa sản phẩm
-1. Phải **chọn dòng**
-2. Kiểm tra **Mã Tivi mới không trùng** (ngoại trừ chính nó)
-3. Cập nhật dòng trên bảng
-4. Nếu trong `ds_them` → cập nhật
-5. Nếu không → thêm vào `ds_sua = [(dữ liệu mới..., MaTivi_cũ)]`
-6. Xóa form + thông báo
+1. Phải **chọn dòng**.
+2. Kiểm tra **Mã Tivi mới không trùng** (ngoại trừ chính nó).
+3. Cập nhật dòng trên bảng.
+4. Nếu trong `ds_them` → cập nhật.
+5. Nếu không → thêm vào `ds_sua = [(dữ liệu mới..., MaTivi_cũ)]`.
+6. Xóa form + thông báo.
 
 ---
 
 ### Xóa sản phẩm
-1. Phải chọn dòng
-2. **Không cho xóa** nếu Tivi đang có trong **hóa đơn** hoặc **phiếu nhập**
-3. Xác nhận: `"Xóa sản phẩm [Tên Tivi]?"`
-4. Xóa dòng khỏi bảng
-5. Nếu trong `ds_them` → xóa khỏi danh sách
-6. Nếu không → thêm `MaTivi` vào `ds_xoa`
-7. Xóa form + thông báo
+1. Phải chọn dòng.
+2. **Không cho xóa** nếu Tivi đang có trong **hóa đơn** hoặc **phiếu nhập**.
+3. Xác nhận: `"Xóa sản phẩm [Tên Tivi]?"`.
+4. Xóa dòng khỏi bảng.
+5. Nếu trong `ds_them` → xóa khỏi danh sách.
+6. Nếu không → thêm `MaTivi` vào `ds_xoa`.
+7. Xóa form + thông báo.
 
 ---
 
 ### Lưu thay đổi (Transaction an toàn)
-- **Nút**: `"Lưu"` – màu xanh lá, chữ trắng, font đậm
+- **Nút**: `"Lưu"` – màu xanh lá, chữ trắng, font đậm.
 - **Khi nhấn**:
   1. Hộp thoại: *"Bạn có chắc muốn lưu tất cả thay đổi?"*
   2. Nếu **Có**:
-     - Mở **transaction**
-     - **Bước 1**: Xóa các sản phẩm trong `ds_xoa`
-     - **Bước 2**: Thêm các sản phẩm trong `ds_them`
-     - **Bước 3**: Cập nhật các sản phẩm trong `ds_sua`
-     - **Thành công**: Commit, tải lại dữ liệu, xóa buffer, thông báo *"Lưu thành công!"*
-     - **Lỗi** (trùng mã, ràng buộc...): `rollback()`, giữ buffer, thông báo lỗi chi tiết
-  3. Nếu **Không**: Hủy thao tác
+     - Mở **transaction**.
+     - **Bước 1**: Xóa các sản phẩm trong `ds_xoa`.
+     - **Bước 2**: Thêm các sản phẩm trong `ds_them`.
+     - **Bước 3**: Cập nhật các sản phẩm trong `ds_sua`.
+     - **Thành công**: Commit, tải lại dữ liệu, xóa buffer, thông báo *"Lưu thành công!"*.
+     - **Lỗi** (trùng mã, ràng buộc...): `rollback()`, giữ buffer, thông báo lỗi chi tiết.
+  3. Nếu **Không**: Hủy thao tác.
 
 ---
 
 ## 7. CẤU TRÚC BUFFER THAY ĐỔI
 
 | Danh sách   | Cấu trúc |
-|-------------|---------|
+|-------------|----------|
 | `ds_them`   | `(MaTivi, TenTivi, HangSX, KichThuoc, DoPhanGiai, LoaiManHinh, TanSoQuet, GiaBan, MoTa)` |
 | `ds_sua`    | `(dữ liệu mới..., MaTivi_cũ)` |
 | `ds_xoa`    | `(MaTivi,)` |
@@ -309,7 +310,7 @@ Khi người dùng **bấm vào bất kỳ dòng nào trên bảng**:
 ## 8. XỬ LÝ LỖI
 
 | Trường hợp                  | Thông báo |
-|-----------------------------|----------|
+|-----------------------------|-----------|
 | **Mã Tivi trùng**           | `"Mã Tivi đã tồn tại!"` |
 | **Giá bán ≤ 0**             | `"Giá bán phải lớn hơn 0"` |
 | **Kích thước không hợp lệ** | `"Kích thước từ 24 đến 100 inch"` |
