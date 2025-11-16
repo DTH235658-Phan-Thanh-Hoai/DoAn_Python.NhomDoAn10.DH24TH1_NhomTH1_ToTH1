@@ -45,7 +45,7 @@ class App(tk.Tk):
         try:
             self.conn = pyodbc.connect(
                 'DRIVER={ODBC Driver 17 for SQL Server};'
-                'SERVER=DESKTOP-LJVV0KQ;'
+                'SERVER=LAPTOP-IFECMD9V;'
                 'DATABASE=QLTV;'
                 'Trusted_Connection=yes;'
             )
