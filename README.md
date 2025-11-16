@@ -1,7 +1,6 @@
-<div align="center">
-  <h1 style="color: #378cfc; border-bottom: none;">
-    📺 Ứng dụng Quản lý Cửa hàng Tivi
-  </h1>
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00c6ff,100:0072ff&height=230&section=header&text=Ứng%20Dụng%20Quản%20Lý%20Cửa%20Hàng%20Tivi&fontSize=38&fontColor=ffffff&fontAlignY=40" />
+</p><div align="center">
   <p>
     Đồ án môn học Chuyên đề Python (COS525) tại Trường Đại học An Giang (AGU).
   </p>
@@ -12,7 +11,6 @@
   <img src="https://img.shields.io/badge/Python-3.x-1565C0?style=for-the-badge&logo=python" alt="Python">
   <img src="https://img.shields.io/badge/UI-Tkinter-42A5F5?style=for-the-badge" alt="Tkinter">
   <img src="https://img.shields.io/badge/Database-SQL%20Server-1565C0?style=for-the-badge&logo=microsoftsqlserver" alt="SQL Server">
-  <img src="https://img.shields.io/badge/License-MIT-BBDEFB?style=for-the-badge" alt="License">
 </p>
 
 ---
