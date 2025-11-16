@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/user-attachments/assets/e6981881-2c63-4f9e-a89e-2c68832a8494/Logo_AGU_2023_50cm.png" alt="Logo Trường Đại học An Giang" width="150"/>
   <h1 style="color: #378cfc; border-bottom: none;">
     📺 Ứng dụng Quản lý Cửa hàng Tivi
   </h1>
@@ -83,21 +82,6 @@ Dự án được thực hiện bởi nhóm sinh viên Khoa Công nghệ Thông 
 | 1 | **Phan Thanh Hoài** | `DTH235658` | Thiết kế giao diện, form Nhập hàng và Bán hàng,<br>tab Nhập hàng, tab Bán hàng, form Bán Hàng và Hóa đơn,<br>tab Bán hàng, tab Hóa đơn, kết nối CSDL, form App,<br>kiểm thử, sửa lỗi, nội dung báo cáo, file word. | 50% |
 | 2 | **Nguyễn Văn Hiền** | `DTH235651` | Thiết kế CSDL, form Quản lý sản phẩm, tab Tivi,<br>tab Nhà cung cấp, tab Hãng sản xuất, tab Bảo hành,<br>form Quản lý nhân viên, form Quản lý khách hàng,<br>form Login, form Hệ thống, form Thống kê và báo cáo,<br>tab Báo cáo sản phẩm, tab Thống kê doanh thu. | 50% |
 
----
-
-## 📸 Một số hình ảnh
-
-**Lưu ý:** Bạn hãy thay thế các đường dẫn bên dưới bằng link ảnh thực tế sau khi tải lên repository của mình.
-
-| Giao diện | Mô tả |
-| :---: | :--- |
-| ![Giao diện Đăng nhập](./screenshots/dang_nhap.png) | **Đăng nhập** |
-| ![Giao diện Trang tổng quan](./screenshots/tong_quan.png) | **Trang tổng quan (Dashboard)** |
-| ![Giao diện Quản lý Sản phẩm](./screenshots/ql_san_pham.png) | **Quản lý Sản phẩm (Tivi)** |
-| ![Giao diện Quản lý Bán hàng](./screenshots/ql_ban_hang.png) | **Quản lý Bán hàng** |
-| ![Giao diện Quản lý Hóa đơn](./screenshots/ql_hoa_don.png) | **Quản lý Hóa đơn** |
-| ![Giao diện Thống kê Doanh thu](./screenshots/thong_ke.png) | **Thống kê Doanh thu** |
-| ![Giao diện Quản lý Nhân viên](./screenshots/ql_nhan_vien.png) | **Quản lý Nhân viên** |
 
 ---
 
