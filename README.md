@@ -78,60 +78,54 @@ project/
 └── tabThongKeDoanhThu.py   
 └── tabTivi.py   
 
-Trang **bảng điều khiển tổng quan hệ thống** với **phân quyền chỉ admin**, **6 thẻ thống kê quan trọng**, **biểu đồ doanh thu 12 tháng**, **điều hướng năm linh hoạt**, **tự động làm mới dữ liệu**, **giao diện hiện đại, trực quan**.
+# QUẢN LÝ HỆ THỐNG – README
 
----
+## 1. TRANG BẢNG ĐIỀU KHIỂN TỔNG QUAN
 
-| Người dùng | Quyền hạn |
-|-----------|----------|
-| **admin** | **Toàn quyền**: Xem toàn bộ thẻ, biểu đồ, điều hướng năm |
-| **nhân viên bán hàng** | **Không truy cập được** |
-| **nhân viên kho** | **Không truy cập được** |
+### 1.1. Phân quyền truy cập
+| Người dùng            | Quyền hạn                                      |
+|-----------------------|------------------------------------------------|
+| **admin**             | **Toàn quyền**: Xem toàn bộ thẻ, biểu đồ, điều hướng năm |
+| **nhân viên bán hàng**| **Không truy cập được**                        |
+| **nhân viên kho**     | **Không truy cập được**                        |
 
-> **Chỉ admin** được vào trang `Tổng Quan`
+> **Chỉ admin** được vào trang `Tổng Quan`.
 
----
-
-- **Text**: `"TRANG TỔNG QUAN HỆ THỐNG"`
+### 1.2. Tiêu đề trang
+- **Text**: `TRANG TỔNG QUAN HỆ THỐNG`
 - **Font**: Segoe UI, **16**, **bold**
 - **Màu**: `#003366`
 - **Căn giữa** trên cùng
 
----
-
-| Phần trên (30%) | Phần dưới (70%) |
-|------------------|------------------|
+### 1.3. Bố cục tổng thể
+| Phần trên (30%) | Phần dưới (70%)                          |
+|------------------|------------------------------------------|
 | **6 thẻ thống kê** | **Biểu đồ doanh thu + Điều khiển năm** |
 
----
+### 1.4. Các thẻ thống kê (3x2)
+| Thẻ                | Icon     | Truy vấn                              | Ý nghĩa                     |
+|--------------------|----------|---------------------------------------|-----------------------------|
+| **Tổng nhân viên** | Person   | `COUNT(*) FROM NhanVien`              | Số NV đang làm              |
+| **Tổng khách hàng**| People   | `COUNT(*) FROM KhachHang`             | Tổng KH trong hệ thống      |
+| **Hãng sản xuất**  | Factory  | `COUNT(*) FROM HangSanXuat`           | Số thương hiệu              |
+| **Nhà cung cấp**   | Building | `COUNT(*) FROM NhaCungCap`            | Số đối tác                  |
+| **Sản phẩm**       | TV       | `COUNT(*) FROM Tivi`                  | Tổng TV trong kho           |
+| **Phiếu nhập hàng**| Box      | `COUNT(*) FROM PhieuNhapHang`         | Tổng lần nhập               |
 
-| Thẻ | Icon | Truy vấn | Ý nghĩa |
-|-----|------|--------|--------|
-| **Tổng nhân viên** | Person | `COUNT(*) FROM NhanVien` | Số NV đang làm |
-| **Tổng khách hàng** | People | `COUNT(*) FROM KhachHang` | Tổng KH trong hệ thống |
-| **Hãng sản xuất** | Factory | `COUNT(*) FROM HangSanXuat` | Số thương hiệu |
-| **Nhà cung cấp** | Building | `COUNT(*) FROM NhaCungCap` | Số đối tác |
-| **Sản phẩm** | TV | `COUNT(*) FROM Tivi` | Tổng TV trong kho |
-| **Phiếu nhập hàng** | Box | `COUNT(*) FROM PhieuNhapHang` | Tổng lần nhập |
+**Thiết kế thẻ**:
+- Nền: `#d6eaff`
+- Viền: `ridge`, `bd=2`
+- Kích thước: `180x100`
+- Số liệu: **font 20, bold**, màu `#002b80`
+- Tiêu đề: **font 10, bold**, màu `#003366`
 
-- **Bố cục**: 3x2 (3 thẻ/hàng)
-- **Thiết kế thẻ**:
-  - Nền: `#d6eaff`
-  - Viền: `ridge`, `bd=2`
-  - Kích thước: `180x100`
-  - Số liệu: **font 20, bold**, màu `#002b80`
-  - Tiêu đề: **font 10, bold**, màu `#003366`
-- **Tự động cập nhật** khi vào trang
+> **Tự động cập nhật** khi vào trang.
 
----
-
-> **Khung chính**: `frame_chart` → chia 2 khung con
-
-| Khung con 1 (`frame_ve`) | Khung con 2 (`frame_dieu_khien`) |
-|--------------------------|----------------------------------|
-| **Chứa canvas biểu đồ** | **Nút điều khiển năm** |
-
----
+### 1.5. Biểu đồ doanh thu
+- **Khung chính**: `frame_chart` → chia 2 khung con  
+  | Khung con 1 (`frame_ve`) | Khung con 2 (`frame_dieu_khien`) |
+  |--------------------------|----------------------------------|
+  | **Chứa canvas biểu đồ**  | **Nút điều khiển năm**           |
 
 - **Loại**: Cột (`bar chart`)
 - **Kích thước**: `7x4 inches`
