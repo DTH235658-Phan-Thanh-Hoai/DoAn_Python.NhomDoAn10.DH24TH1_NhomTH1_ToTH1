@@ -8,9 +8,39 @@ Hệ thống bao gồm **hai form chính**:
 1. **Form Đăng nhập** (`frmLogin.py`)
 2. **Giao diện Chính** (`App.py`)
 
----
+## Cấu trúc thư mục cần có
 
-## 2. FORM ĐĂNG NHẬP (LOGIN)
+```bash
+project/
+├── images/
+│   ├── icon_tivi.ico      
+│   ├── icon_tivi.png      
+│   └── nen_python.png   
+│   └── tivi_user.png       
+│   └── tv1.png
+│   └── user.png                               
+├── App.py                  
+└── frmBanHangVaHoaDon.py          
+└── frmLogin.py   
+└── frmNhapHangVaPhieuNhap.py   
+└── frmQuanLyKhachHang.py   
+└── frmQuanLyNhanVien.py   
+└── frmQuanLySanPham.py   
+└── frmThongKeVaBaoCao.py   
+└── frmTongQuan.py   
+└── tabBanHang.py   
+└── tabBaoCaoSanPham.py   
+└── tabBaoHang.py   
+└── tabHangSanXuat.py   
+└── tabHoaDon.py   
+└── tabNhaCungCap.py   
+└── tabNhapHang.py   
+└── tabPhieuNhapHang.py   
+└── tabThongKeDoanhThu.py   
+└── tabTivi.py   
+```
+
+## FORM ĐĂNG NHẬP (LOGIN)
 
 ### Mục đích
 Xác thực người dùng trước khi truy cập hệ thống, đảm bảo **bảo mật** và **phân quyền**.
@@ -153,39 +183,6 @@ Giao diện chính (`App`) là **cửa sổ trung tâm** của hệ thống, đ�
 bg="#42A5F5", fg="white", font=("Arial", 12),
 bd=0, relief="flat", anchor="w", padx=20, pady=15
 ```
-
-## Cấu trúc thư mục cần có
-
-```bash
-project/
-├── images/
-│   ├── icon_tivi.ico      
-│   ├── icon_tivi.png      
-│   └── nen_python.png   
-│   └── tivi_user.png       
-│   └── tv1.png
-│   └── user.png                               
-├── App.py                  
-└── frmBanHangVaHoaDon.py          
-└── frmLogin.py   
-└── frmNhapHangVaPhieuNhap.py   
-└── frmQuanLyKhachHang.py   
-└── frmQuanLyNhanVien.py   
-└── frmQuanLySanPham.py   
-└── frmThongKeVaBaoCao.py   
-└── frmTongQuan.py   
-└── tabBanHang.py   
-└── tabBaoCaoSanPham.py   
-└── tabBaoHang.py   
-└── tabHangSanXuat.py   
-└── tabHoaDon.py   
-└── tabNhaCungCap.py   
-└── tabNhapHang.py   
-└── tabPhieuNhapHang.py   
-└── tabThongKeDoanhThu.py   
-└── tabTivi.py   
-```
-
 
 ## 1. TRANG BẢNG ĐIỀU KHIỂN TỔNG QUAN
 
