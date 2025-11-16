@@ -214,6 +214,8 @@ class tabHoaDon(tk.Frame):
             messagebox.showwarning("Thông báo", "Vui lòng chọn 1 hoa đơn để duyệt.")
             return
         ma_hd= self.trHienThi.item(selected[0], "values")[0]
+        # Bổ sung lấy MaNV và kiểm tra quyền nếu cần thiết ở đây
+
         trang_thai = self.trHienThi.item(selected[0], "values")[5]
 
         if trang_thai != "Chờ thanh toán":
@@ -224,41 +226,55 @@ class tabHoaDon(tk.Frame):
         if traloi:
             try:
                 cursor = self.conn.cursor()
-                # Cập nhật thanh toán
-                cursor.execute("""
-                    UPDATE HOADONBAN
-                    SET TrangThai = N'Đã thanh toán'
-                    WHERE MaHD = ?
-                """, (ma_hd,))
 
-                # Lấy chi tiết hóa đơn để cập nhật tồn kho
+                # Lấy chi tiết hóa đơn VÀ TỒN KHO hiện tại
                 cursor.execute("""
-                    SELECT MaTivi, SoLuong
-                    FROM CHITIETHOADON
-                    WHERE MaHD = ?
+                    SELECT cthd.MaTivi, cthd.SoLuong, tv.SoLuongTon
+                    FROM CHITIETHOADON cthd
+                    JOIN TIVI tv ON cthd.MaTivi = tv.MaTivi
+                    WHERE cthd.MaHD = ?
                 """, (ma_hd,))
-
                 chitiet = cursor.fetchall()
+                
+                # KIỂM TRA TỒN KHO TRƯỚC KHI THỰC HIỆN GIAO DỊCH 
+                for item in chitiet:
+                    ma_tivi = item.MaTivi
+                    so_luong_ban = item.SoLuong
+                    ton_kho_hien_tai = item.SoLuongTon
+                    
+                    if so_luong_ban > ton_kho_hien_tai:
+                        messagebox.showerror("Lỗi tồn kho", f"Không đủ tồn kho để thanh toán! Tivi {ma_tivi} cần {so_luong_ban} nhưng kho chỉ còn {ton_kho_hien_tai}.")
+                        cursor.close()
+                        return # Dừng toàn bộ giao dịch ngay lập tức
 
+                # THỰC HIỆN GIAO DỊCH (Nếu kiểm tra thành công)
+                
+                # Trừ kho trước
                 for item in chitiet:
                     ma_tivi = item.MaTivi
                     so_luong = item.SoLuong
-
-                    # Cập nhật số lượng tồn kho của tivi
+                    
                     cursor.execute("""
                         UPDATE TIVI
                         SET SoLuongTon = SoLuongTon - ?
                         WHERE MaTivi = ? """, (so_luong, ma_tivi))
                 
+                # Cập nhật trạng thái sau khi trừ kho thành công
+                cursor.execute("""
+                    UPDATE HOADONBAN
+                    SET TrangThai = N'Đã thanh toán'
+                    WHERE MaHD = ?
+                """, (ma_hd,))
+                
                 self.conn.commit()
-
                 cursor.close()
                 messagebox.showinfo("Thành công", "Hóa đơn đã thanh toán thành công!")
 
                 # Làm mới lại danh sách hóa đơn
                 self.load_hoa_don()
-                            
+                                
             except Exception as e:
+                self.conn.rollback() # Hoàn tác mọi thay đổi nếu có lỗi
                 messagebox.showerror("Lỗi", "Đã xảy ra lỗi khi thanh toán hóa đơn:\n" + str(e))
 
     def HuyHoaDonBan(self):

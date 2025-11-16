@@ -266,6 +266,17 @@ class tabBanHang(tk.Frame):
         so_luong = int(so_luong_str)
         gia_ban = float(self.txt_giaban.get().replace(",", ""))
         thanh_tien = so_luong * gia_ban
+
+        # === KIỂM TRA TỒN KHO TRƯỚC KHI THỰC HIỆN ===
+        ton_kho_hien_tai = self.KiemTraTonKho(ma_tivi)
+        
+        if so_luong <= 0:
+            messagebox.showwarning("Cảnh báo", "Số lượng bán phải lớn hơn 0!")
+            return
+            
+        if so_luong > ton_kho_hien_tai:
+            messagebox.showwarning("Cảnh báo", f"Số lượng tồn kho của {ma_tivi} chỉ còn {ton_kho_hien_tai}!")
+            return
         
         if self.KiemTraMaCTHD(ma_cthd):
             messagebox.showwarning("Cảnh báo", f"Mã CTHD '{ma_cthd}' đã tồn tại trong hệ thống!")
@@ -282,6 +293,12 @@ class tabBanHang(tk.Frame):
                             # Cộng dồn số lượng và cập nhật thành tiền
                             soluongcu = int(values[8])
                             soluongmoi = soluongcu + so_luong
+
+                            # === KIỂM TRA TỒN KHO CHO TRƯỜNG HỢP CỘNG DỒN ===
+                            if soluongmoi > ton_kho_hien_tai:
+                                messagebox.showwarning("Cảnh báo", f"Tổng số lượng ({soluongmoi}) vượt quá tồn kho ({ton_kho_hien_tai})! Không thể cộng dồn.")
+                                return
+                        
                             thanhtienmoi = soluongmoi * gia_ban
                             self.trHienThi.item(item, values=(ma_hd, ngay_ban.strftime("%d/%m/%Y"), ma_nv, ten_nv, ma_kh, ten_kh, ma_tivi, ten_tivi, soluongmoi, f"{gia_ban:,.0f}", f"{thanhtienmoi:,.0f}"))
                         return
@@ -379,6 +396,17 @@ class tabBanHang(tk.Frame):
         gia_ban = float(self.txt_giaban.get().replace(",", ""))
         thanh_tien = so_luong * gia_ban
 
+        # === KIỂM TRA TỒN KHO TRƯỚC KHI SỬA ===
+        ton_kho_hien_tai = self.KiemTraTonKho(ma_tivi)
+        
+        if so_luong <= 0:
+            messagebox.showwarning("Cảnh báo", "Số lượng bán phải lớn hơn 0!")
+            return
+            
+        if so_luong > ton_kho_hien_tai:
+            messagebox.showwarning("Cảnh báo", f"Số lượng tồn kho của {ma_tivi} chỉ còn {ton_kho_hien_tai}! Không thể sửa với số lượng này.")
+            return    
+
         # Kiểm tra MaCTHD trùng (trừ dòng hiện tại)
         old_ma_cthd = self.trHienThi.item(selected[0], "text")
         if ma_cthd != old_ma_cthd and self.KiemTraMaCTHD(ma_cthd):
@@ -400,6 +428,11 @@ class tabBanHang(tk.Frame):
                         soluongcu = int(values[8])
                         soluongmoi = soluongcu + so_luong
                         thanhtienmoi = soluongmoi * gia_ban
+
+                        if soluongmoi > ton_kho_hien_tai:
+                            messagebox.showwarning("Cảnh báo", f"Tổng số lượng ({soluongmoi}) vượt quá tồn kho ({ton_kho_hien_tai})! Không thể gộp.")
+                            return
+                    
                         self.trHienThi.item(item, values=(ma_hd, ngay_ban.strftime("%d/%m/%Y"), ma_nv, ten_nv, ma_kh, ten_kh, ma_tivi, ten_tivi, int(soluongmoi), f"{gia_ban:,.0f}", f"{thanhtienmoi:,.0f}"))
                         self.trHienThi.item(item, text=ma_cthd)
 
@@ -515,4 +548,16 @@ class tabBanHang(tk.Frame):
 
         except Exception as e:
             self.conn.rollback()
-            messagebox.showerror("Lỗi", "Đã xảy ra lỗi khi tạo đơn hàng:\n" + str(e))
+            messagebox.showerror("Lỗi", "Đã xảy ra lỗi khi tạo đơn hàng:\n" + str(e))\
+            
+
+    def KiemTraTonKho(self, ma_tivi):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT SoLuongTon FROM TIVI WHERE MaTivi = ?", (ma_tivi,))
+            ton_kho = cursor.fetchone()
+            cursor.close()
+            return ton_kho[0] if ton_kho else 0
+        except Exception as e:
+            print(f"Lỗi truy vấn tồn kho: {e}")
+            return 0

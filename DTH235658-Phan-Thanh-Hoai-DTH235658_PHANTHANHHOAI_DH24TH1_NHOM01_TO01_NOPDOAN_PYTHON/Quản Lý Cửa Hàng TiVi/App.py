@@ -123,11 +123,11 @@ class App(tk.Tk):
             btn_tongquan = tk.Button(pnlGiaoDien, text="🏠 Tổng quan", command=lambda: self.HienThiFrame("TongQuan"), **self.DinhDangNut())
             btn_tongquan.pack(fill="x")
 
-            btn_quanlysanpham = tk.Button(pnlGiaoDien, text="📦 Quản lý Sản phẩm", command=lambda: self.HienThiFrame("QuanLySanPham"),**self.DinhDangNut())
-            btn_quanlysanpham.pack(fill="x")
+        btn_quanlysanpham = tk.Button(pnlGiaoDien, text="📦 Quản lý Sản phẩm", command=lambda: self.HienThiFrame("QuanLySanPham"),**self.DinhDangNut())
+        btn_quanlysanpham.pack(fill="x")
 
-            btn_quanlykhachhang = tk.Button(pnlGiaoDien, text="👥 Quản lý Khách hàng", command=lambda: self.HienThiFrame("QuanLyKhachHang"), **self.DinhDangNut())
-            btn_quanlykhachhang.pack(fill="x")
+        btn_quanlykhachhang = tk.Button(pnlGiaoDien, text="👥 Quản lý Khách hàng", command=lambda: self.HienThiFrame("QuanLyKhachHang"), **self.DinhDangNut())
+        btn_quanlykhachhang.pack(fill="x")
 
         btn_quanlynhanvien = tk.Button(pnlGiaoDien, text="🧑‍💼 Quản lý Nhân viên", command=lambda: self.HienThiFrame("QuanLyNhanVien"), **self.DinhDangNut())
         btn_quanlynhanvien.pack(fill="x")

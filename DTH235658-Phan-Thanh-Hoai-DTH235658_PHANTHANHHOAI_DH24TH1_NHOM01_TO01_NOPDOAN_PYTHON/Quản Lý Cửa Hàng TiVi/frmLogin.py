@@ -6,6 +6,7 @@ import App
 import os
 import sys
 from PIL import Image, ImageTk
+import hashlib
 
 # === BẢNG MÀU ===
 PRIMARY_COLOR = "#378cfc"
@@ -128,13 +129,17 @@ class Login(tk.Tk):
 
     def toggle_password(self):
         if self.show_pass:
-            self.txt_password.config(show="*")
+            self.txt_password.config(show="●")
             self.eye_btn.config(text="👁")
         else:
             self.txt_password.config(show="")
             self.eye_btn.config(text="🚫")
         self.show_pass = not self.show_pass
 
+    def hash_password(self, password):
+        # Mã hóa mật khẩu bằng SHA-256.
+        return hashlib.sha256(password.encode('utf-8')).hexdigest()
+    
     def dangnhap(self, event=None):
         user = self.txt_user.get().strip()
         pw = self.txt_password.get().strip()
@@ -143,13 +148,19 @@ class Login(tk.Tk):
             self.lbl_error.config(text="Vui lòng nhập tên đăng nhập và mật khẩu!")
             return
 
+        hashed_pw = self.hash_password(pw)
         cursor = self.conn.cursor()
-        cursor.execute("SELECT TenDangNhap, MatKhau FROM TaiKhoan WHERE TenDangNhap = ? AND MatKhau = ?", (user, pw),)
+        cursor.execute("SELECT MatKhau FROM TaiKhoan WHERE TenDangNhap = ?", (user,))
 
         row = cursor.fetchone()
 
         if row:
-            self.mo_form(user)
+            stored_hash = row[0] 
+            # Mật khẩu nhập vào (đã hash) có khớp với mật khẩu đã lưu không?
+            if hashed_pw == stored_hash:
+                 self.mo_form(user)
+            else:
+                 self.lbl_error.config(text="Sai tài khoản hoặc mật khẩu!")
         else:
             self.lbl_error.config(text="Sai tài khoản hoặc mật khẩu!")
 

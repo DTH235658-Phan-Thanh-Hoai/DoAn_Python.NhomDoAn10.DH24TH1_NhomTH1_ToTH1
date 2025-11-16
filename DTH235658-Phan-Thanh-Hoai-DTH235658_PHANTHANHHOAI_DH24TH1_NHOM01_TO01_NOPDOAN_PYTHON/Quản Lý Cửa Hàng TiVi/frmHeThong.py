@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import pyodbc
+import hashlib
 
 PRIMARY_COLOR = "#0D47A1"
 SECONDARY_COLOR = "#1565C0"
@@ -43,7 +44,7 @@ class HeThong(tk.Frame):
         self.txt_ten.grid(row=0, column=1, pady=5, padx=5)
 
         tk.Label(frame_form, text="Mật khẩu:", bg="white", font=("Segoe UI", 10)).grid(row=0, column=2, sticky="w", pady=5, padx=5)
-        self.txt_mk = ttk.Entry(frame_form, font=("Segoe UI", 10), width=48)
+        self.txt_mk = ttk.Entry(frame_form, font=("Segoe UI", 10), width=48, show="●")
         self.txt_mk.grid(row=0, column=3, pady=5, padx=5)
 
         frame_buttons = tk.Frame(self, bg="white")
@@ -125,7 +126,9 @@ class HeThong(tk.Frame):
                 rows = self.cursor.fetchall()
 
                 for row in rows:
-                    self.trHienThi.insert("", "end", values=(row[0], row[1]))
+                    mat_khau_che = '●' * 12 
+                    
+                    self.trHienThi.insert("", "end", values=(row[0], mat_khau_che)) # <-- Đã che
 
         except Exception as e:
             messagebox.showerror("Lỗi", f"Không thể tải dữ liệu: {str(e)}")
@@ -152,7 +155,7 @@ class HeThong(tk.Frame):
 
     def them(self):
         ten = self.txt_ten.get().strip()
-        mk = self.txt_mk.get().strip()
+        mk = self.hash_password(self.txt_mk.get().strip())
 
         if not ten:
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập Tên đăng nhập!")
@@ -174,13 +177,31 @@ class HeThong(tk.Frame):
         messagebox.showinfo("Thêm tài khoản", "Thêm tài khoản thành công!")
 
     def sua(self):
+        ten = self.txt_ten.get().strip() 
+        mk = self.hash_password(self.txt_mk.get().strip())
+
+        if not mk:
+            messagebox.showwarning("Cảnh báo", "Vui lòng nhập Mật khẩu mới!")
+            return
+
+        if self.user != "admin":
+            if ten != self.user:
+                 messagebox.showwarning("Cảnh báo", "Bạn chỉ có thể sửa tài khoản của chính mình!")
+                 return
+                 
+            self.ds_sua = [(ten, mk, ten)] 
+            
+            messagebox.showinfo("Cập nhật tài khoản", "Mật khẩu đã được cập nhật tạm thời. Nhấn 'Lưu' để lưu vào CSDL.")
+            self.xoa_form()
+            return
+        
         selected = self.trHienThi.selection()
         if not selected:
             messagebox.showwarning("Cảnh báo", "Vui lòng chọn dòng cần sửa!")
             return
 
         ten = self.txt_ten.get().strip()
-        mk = self.txt_mk.get().strip()
+        mk = self.hash_password(self.txt_mk.get().strip())
 
         if not ten:
             messagebox.showwarning("Cảnh báo", "Vui lòng nhập Tên đăng nhập!")
@@ -333,3 +354,8 @@ class HeThong(tk.Frame):
     def huy(self):
         self.txt_timkiem.delete(0, tk.END)
         self.load_data()
+
+    def hash_password(self, password):
+        if not password:
+            return ""
+        return hashlib.sha256(password.encode('utf-8')).hexdigest()
