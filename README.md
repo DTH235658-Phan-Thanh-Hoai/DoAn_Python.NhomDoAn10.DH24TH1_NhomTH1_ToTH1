@@ -49,6 +49,35 @@
 
 ## Cấu trúc thư mục cần có
 
+```bash
+project/
+├── images/
+│   ├── icon_tivi.ico      
+│   ├── icon_tivi.png      
+│   └── nen_python.png   
+│   └── tivi_user.png       
+│   └── tv1.png
+│   └── user.png                               
+├── App.py                  
+└── frmBanHangVaHoaDon.py          
+└── frmLogin.py   
+└── frmNhapHangVaPhieuNhap.py   
+└── frmQuanLyKhachHang.py   
+└── frmQuanLyNhanVien.py   
+└── frmQuanLySanPham.py   
+└── frmThongKeVaBaoCao.py   
+└── frmTongQuan.py   
+└── tabBanHang.py   
+└── tabBaoCaoSanPham.py   
+└── tabBaoHang.py   
+└── tabHangSanXuat.py   
+└── tabHoaDon.py   
+└── tabNhaCungCap.py   
+└── tabNhapHang.py   
+└── tabPhieuNhapHang.py   
+└── tabThongKeDoanhThu.py   
+└── tabTivi.py   
+```
 
 # QUẢN LÝ HỆ THỐNG – README
 
