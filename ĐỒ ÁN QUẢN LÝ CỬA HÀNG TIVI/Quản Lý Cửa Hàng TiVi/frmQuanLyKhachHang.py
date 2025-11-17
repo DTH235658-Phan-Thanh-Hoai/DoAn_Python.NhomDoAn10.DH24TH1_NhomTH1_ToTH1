@@ -76,7 +76,7 @@ class QuanLyKhachHang(tk.Frame):
         btn_lammoi = tk.Button(frame_buttons, text="🔄 Làm mới", bg="#1E88E5", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.lammoi)
         btn_lammoi.grid(row=0, column=3, padx=10)
 
-        btn_luu = tk.Button(frame_buttons, text="💾 Lưu", bg="#43A047", fg="white", font=("Segoe UI", 10, "bold"), padx=20, pady=5, bd=0, command=self.luu)
+        btn_luu = tk.Button(frame_buttons, text="💾 Lưu", bg="#43A047", fg="white", font=("Segoe UI", 11, "bold"), padx=20, pady=5, bd=0, command=self.luu)
         btn_luu.grid(row=0, column=4, padx=10)
 
         # === BẢNG KHÁCH HÀNG ===
