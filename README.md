@@ -2,10 +2,6 @@
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00c6ff,100:0072ff&height=230&section=header&text=ỨNG%20DỤNG%20QUẢN%20LÝ%20CỬA%20HÀNG%20TIVI&fontSize=38&fontColor=ffffff&fontAlignY=40" />
 </p>
 
-<div align="center">
-  <i>Đồ án môn học Chuyên đề Python (COS525) – Trường Đại học An Giang (AGU)</i>
-</div>
-
 <br>
 
 <p align="center">
@@ -115,7 +111,19 @@ Dưới đây là các nhóm chức năng nổi bật:
 
 - **Xuất file Word (Hóa đơn, Phiếu nhập, Phiếu bảo hành)** bằng `python-docx`.  
 - **Giao diện hiện đại**: icon, màu nền, layout thân thiện.  
-- **tkcalendar (DateEntry)** giúp chọn ngày chính xác & nhanh chóng.  
+- **tkcalendar (DateEntry)** giúp chọn ngày chính xác & nhanh chóng.
+
+---
+## **SƠ ĐỒ QUAN HỆ**
+<p align="center">
+  <img src="https://img.shields.io/badge/Database-SQL%20Server-cc2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white" />
+  <img src="https://img.shields.io/badge/Model-ERD%20Design-0ba5e6?style=for-the-badge&logo=databricks&logoColor=white" />
+  <img src="https://img.shields.io/badge/Normalization-3NF-success?style=for-the-badge&logo=checkmarx&logoColor=white" />
+  <img src="https://raw.githubusercontent.com/DTH235658-Phan-Thanh-Hoai/DoAn_Python.NhomDoAn10.DH24TH1_NhomTH1_ToTH1/master/diagram%20tivi.jpg" alt="ERD Diagram" width="800"> 
+</p>
+</p> <p align="center">
+  <b> Sơ đồ quan hệ - Hệ thống Quản lý cửa hàng Tivi </b>
+</p>
 
 ## **CÔNG NGHỆ SỬ DỤNG**
 
