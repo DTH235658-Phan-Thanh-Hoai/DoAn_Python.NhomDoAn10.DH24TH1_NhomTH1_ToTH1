@@ -197,7 +197,7 @@ class TongQuan(tk.Frame):
                 "hsx": "SELECT COUNT(*) FROM HangSanXuat",
                 "ncc": "SELECT COUNT(*) FROM NhaCungCap",
                 "sp": "SELECT COUNT(*) FROM Tivi",
-                "pn": "SELECT COUNT(*) FROM PhieuNhapHang",}
+                "pn": "SELECT COUNT(*) FROM PhieuNhapHang WHERE TrangThai = N'Đã duyệt'",}
 
             for key, query in queries.items():
                 cursor.execute(query)

@@ -28,7 +28,7 @@ class tabBaoHanh(tk.Frame):
         frame_search.pack(fill="x", padx=20, pady=5)
 
         tk.Label(frame_search, text="Tìm kiếm:", font=("Segoe UI", 10), bg="#E3F2FD").pack(side="left", padx=5)
-        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=30, bg="white")
+        self.txt_timkiem = tk.Entry(frame_search, font=("Segoe UI", 10), width=35, bg="white")
         self.txt_timkiem.pack(side="left", padx=5)
         self.txt_timkiem.bind("<Return>", lambda e: self.timkiem())
 

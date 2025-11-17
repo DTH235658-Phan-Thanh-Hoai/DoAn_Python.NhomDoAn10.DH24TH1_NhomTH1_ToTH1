@@ -125,8 +125,8 @@ class tabBaoCaoSanPham(tk.Frame):
                     ISNULL(SUM(ct.ThanhTien), 0) AS TongDoanhThu,
                     ISNULL(AVG(pn.DonGia), 0) AS GiaNhap
                 FROM Tivi t
-                LEFT JOIN ChiTietHoaDon ct ON t.MaTivi = ct.MaTivi
-                LEFT JOIN HoaDonBan hd 
+                JOIN ChiTietHoaDon ct ON t.MaTivi = ct.MaTivi
+                JOIN HoaDonBan hd 
                     ON ct.MaHD = hd.MaHD
                     AND hd.TrangThai = N'Đã thanh toán'
                 LEFT JOIN (

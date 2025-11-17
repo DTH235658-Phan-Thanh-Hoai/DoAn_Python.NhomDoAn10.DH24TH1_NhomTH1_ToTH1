@@ -94,7 +94,7 @@ class tabPhieuNhapHang(tk.Frame):
                 ngay_nhap = datetime.strptime(str(row.NgayNhap).split(" ")[0], "%Y-%m-%d")
 
                 formatted_row = (
-                    row.MaPhieuNhap, ngay_nhap.strftime("%d/%m/%y"), row.MaNV, row.MaNCC,
+                    row.MaPhieuNhap, ngay_nhap.strftime("%d/%m/%Y"), row.MaNV, row.MaNCC,
                     f"{float(row.TongTien):,.0f}" if row.TongTien else "0", row.TrangThai)
                 
                 self.trHienThi.insert("", tk.END, values=formatted_row)
@@ -454,7 +454,7 @@ class tabPhieuNhapHang(tk.Frame):
             
             # --- Bố trí Thông tin chung  ---
             
-            # Thiết lập Tab Stop: Căn lề trái tại vị trí 8.0 cm 
+            # Thiết lập Tab Stop: Căn lề trái tại vị trí 5.0 cm 
             TAB_STOP_POS = Cm(5.0) 
             
             # Thông tin Nhân viên
@@ -465,7 +465,7 @@ class tabPhieuNhapHang(tk.Frame):
             run.bold = True
             run.font.color.rgb = RGBColor(0x15, 0x65, 0xC0) 
             p1.add_run('\t') 
-            p1.add_run("Tên nhân viên: ").bold = False
+            p1.add_run("Tên nhân viên: ").bold =False 
             run = p1.add_run(thong_tin.TenNV)
             run.bold = True
             run.font.color.rgb = RGBColor(0x15, 0x65, 0xC0) 
